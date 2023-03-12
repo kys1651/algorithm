@@ -1,10 +1,6 @@
 class Solution {
-    public long solution(int price, int money, int count) {
-        long answer = (long)money;
-        for(int i = 1; i <= count; i++){
-            answer -= (long)(i * price);
-        }
-        return answer *= answer > 0?0:-1;
-        
+    public long solution(long price, long money, long count) {
+        long answer = (long)Math.max(price * (count * (count+1))/2-money,0);
+        return answer;
     }
 }
