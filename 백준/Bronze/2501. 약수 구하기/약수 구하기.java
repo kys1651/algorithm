@@ -11,20 +11,16 @@ class Main {
 
         int n = Integer.parseInt(st.nextToken());
         int k = Integer.parseInt(st.nextToken());
-        int i = 1;
-        int count = 1;
-        while(k != 0){
-            if(n%i==0) {
-                k--;
-            }else{
-                count++;
-            }
-            i++;
-            if(count > n) {
-                i = 1;
+        int result = 0;
+        int count = 0;
+
+        for(int i = 1 ; i <= n; i++){
+            if(n%i==0) count ++;
+            if(count == k){
+                result = i;
                 break;
             }
         }
-        System.out.println(i-1);
+        System.out.println(result);
     }
 }
