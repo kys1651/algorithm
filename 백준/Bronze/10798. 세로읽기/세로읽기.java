@@ -9,18 +9,23 @@ class Main {
         StringTokenizer st ;
         StringBuilder sb = new StringBuilder();
         int max =0;
-        String[] arr = new String[5];
+        char[][] arr = new char[5][15];
 
         for(int i = 0 ; i < 5; i++){
-            arr[i] = br.readLine();
-            if(max < arr[i].length()) max = arr[i].length();
+            String str = br.readLine();
+
+            if(max < str.length()) max = str.length();
+            for(int j = 0; j < str.length(); j++){
+                arr[i][j] = str.charAt(j);
+            }
         }
         for(int i = 0 ; i < max; i++){
             for(int j = 0 ; j < 5; j++){
-                if(arr[j].length() <= i ) continue;
-                sb.append(arr[j].charAt(i)+"");
+                if(arr[j][i] == '\0') continue;
+                sb.append(arr[j][i]);
             }
         }
+
         System.out.println(sb.toString());
 
     }
