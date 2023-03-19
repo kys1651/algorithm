@@ -6,6 +6,12 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 class Main {
+    static boolean isPrime(long n){
+        for(long i = 2; i <= Math.sqrt(n); i++){
+            if(n%i==0) return false;
+        }
+        return true;
+    }
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -14,14 +20,9 @@ class Main {
         for(int i = 0 ; i < t; i++){
             st = new StringTokenizer(br.readLine());
             long n = Long.parseLong(st.nextToken());
-            BigInteger b = BigInteger.valueOf(n);
-
-            if(b.isProbablePrime(10)){
-                System.out.println(n);
-            }else{
-                System.out.println(b.nextProbablePrime());
-            }
-
+            n = Math.max(n,2);
+            while(!isPrime(n)) n++;
+            System.out.println(n);
         }
     }
 }
