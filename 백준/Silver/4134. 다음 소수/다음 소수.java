@@ -20,7 +20,7 @@ class Main {
         for(int i = 0 ; i < t; i++){
             st = new StringTokenizer(br.readLine());
             long n = Long.parseLong(st.nextToken());
-            n = Math.max(n,2);
+            if(n==1||n==0) n = 2;
             while(!isPrime(n)) n++;
             System.out.println(n);
         }
