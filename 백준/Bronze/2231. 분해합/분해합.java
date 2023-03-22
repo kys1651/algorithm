@@ -8,19 +8,18 @@ class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        StringTokenizer st = new StringTokenizer(br.readLine());
-        int result = Integer.parseInt(br.readLine());
-        int n = result;
+        int n = Integer.parseInt(br.readLine());
         int answer = 0;
-        while(n > 0){
-            String tmp = String.valueOf(n);
-            int sum = 0;
-
-            for(int i = 0 ; i < tmp.length(); i++){
-                sum += tmp.charAt(i) - '0';
+        for(int i = 0 ; i < n ; i++){
+            int a = i, b = 0;
+            while(a != 0){
+                b += a%10;
+                a /= 10;
             }
-            sum += n;
-            if(sum == result) answer = n;
-            n--;
+            if(i+b==n){
+                answer = i;
+                break;
+            }
         }
         System.out.println(answer);
     }
