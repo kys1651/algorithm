@@ -12,25 +12,20 @@ class Main {
         int M = Integer.parseInt(st.nextToken());
         int count = 0;
 
-        Map<String,Integer> map = new HashMap<>();
-        List<String> list = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
+        String[] arr = new String[N + M];
 
-        for(int i = 1; i <= N; i++){
-            String tmp = br.readLine();
-            map.put(tmp, 1);
+        for(int i = 0; i < N+M; i++){
+            arr[i] = br.readLine();
         }
-
-        while(M --> 0){
-            String check = br.readLine();
-            map.put(check, map.getOrDefault(check, 0) + 1);
-            if(map.get(check)==2) list.add(check);
+        Arrays.sort(arr);
+        for(int i = 0 ; i < N+M-1; i++){
+            if(arr[i].equals(arr[i+1])) {
+                sb.append(arr[i++] + "\n");
+                count++;
+            }
         }
-        Collections.sort(list);
-        sb.append(list.size() + "\n");
-        for(String s:list){
-            sb.append(s +"\n");
-        }
+        System.out.println(count);
         System.out.println(sb);
     }
 }
