@@ -1,62 +1,62 @@
 import java.io.BufferedReader;
         import java.io.InputStreamReader;
         import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int[] arr;
-
+    static ArrayList<Integer> list = new ArrayList<>();
+    static int n;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
 
-        int n = Integer.parseInt(br.readLine());
-        arr = new int[n+1];
+        n = Integer.parseInt(br.readLine());
+        getPrime();
 
-        Prime(n);
+        int left = 0, right = 0;
+        int ans = 0, sum = 0;
+        int size = list.size();
 
-        int answer = solution(n);
-        System.out.println(answer);
-    }
-
-    private static int solution(int result) {
-        int answer = 0;
-
-        for (int i = 2; i < arr.length; i++) {
-            if(arr[i] == 0) continue;
-            int sum = arr[i];
-            if(sum == result) return answer+1;
-
-
-            for(int j = i+1; j < arr.length; j++){
-                if(sum == result){
-                    answer ++;
-                    break;
-                }else if(sum > result){
-                    break;
-                }
-                sum += arr[j];
-
+        while(true){
+            if(sum >= n){
+                sum -= list.get(left++);
+            }else if(right == size){
+                break;
+            }else {
+                sum += list.get(right++);
             }
+            if(sum == n) ans ++;
         }
-        
-        return answer;
+        System.out.println(ans);
+
     }
 
-    private static void Prime(int n) {
-        for (int i = 2; i <= n; i++) {
-            arr[i] = i;
-        }
+    private static void getPrime() {
+        int[] tmp = new int[n + 1];
+        int root = (int) Math.sqrt(n);
 
         for (int i = 2; i <= n; i++) {
-            if(arr[i] == 0) continue;
+            tmp[i] = i;
+        }
 
-            for (int j = 2 * i; j <= n; j += i) {
-                arr[j] = 0;
+        for (int i = 2; i <= root; i++) {
+            if(tmp[i] == 0) continue;
+
+            for (int j = i * 2; j <= n; j += i) {
+                tmp[j] = 0;
             }
         }
+
+        for (int i = 2; i <= n; i++) {
+            if(tmp[i] == 0) continue;
+
+            list.add(tmp[i]);
+        }
+
     }
+
 
 }
