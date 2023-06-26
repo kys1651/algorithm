@@ -4,37 +4,28 @@ import java.io.BufferedReader;
 import java.util.*;
 
 public class Main {
-    static int [] arr;
-    static Integer [] dp;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int N = Integer.parseInt(br.readLine());
-
-        arr = new int[N + 1];
-        dp = new Integer[N + 1];
+        int N = Integer.parseInt(st.nextToken());
+        int[] S = new int[301];
+        int[][] DP = new int[301][3];
 
         for (int i = 1; i <= N; i++) {
-            arr[i] = Integer.parseInt(br.readLine());
+            S[i] = Integer.parseInt(br.readLine());
         }
 
-        dp[0] = arr[0];
-        dp[1] = arr[1];
-
-        if (N >= 2) {
-            dp[2] = arr[1] + arr[2];
+        DP[1][1] = S[1];
+        DP[1][2] = 0;
+        DP[2][1] = S[2];
+        DP[2][2] = S[1] + S[2];
+        for (int i = 3; i <= N; i++) {
+            DP[i][1] = Math.max(DP[i - 2][1], DP[i - 2][2]) + S[i];
+            DP[i][2] = DP[i - 1][1] + S[i];
         }
 
-        System.out.println(find(N));
-        
-    }
+        System.out.println(Math.max(DP[N][1], DP[N][2]));
 
-    static int find(int n) {
-        if (dp[n] == null) {
-            dp[n] = Math.max(find(n - 2), find(n - 3) + arr[n - 1]) + arr[n];
-        }
-
-
-        return dp[n];
     }
 }
