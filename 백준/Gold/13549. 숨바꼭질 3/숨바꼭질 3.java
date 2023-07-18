@@ -34,11 +34,11 @@ public class Main {
         while (!q.isEmpty()) {
             Point tmp = q.poll();
 
-            // 앞으로 한칸
-            if (tmp.idx + 1 >= 0 && tmp.idx + 1 <= 100000) {
-                if (map[tmp.idx + 1] == 0 || map[tmp.idx + 1] > tmp.count + 1) {
-                    map[tmp.idx + 1] = tmp.count + 1;
-                    q.add(new Point(tmp.idx + 1, tmp.count + 1));
+            // 순간이동 경우
+            if (2 * tmp.idx >= 0 && 2 * tmp.idx <= 100000) {
+                if(map[2 * tmp.idx] == 0 || map[2 * tmp.idx] > tmp.count){
+                    map[2 * tmp.idx] = tmp.count;
+                    q.add(new Point(2 * tmp.idx, tmp.count));
                 }
             }
 
@@ -50,13 +50,17 @@ public class Main {
                 }
             }
 
-            // 순간이동 경우
-            if (2 * tmp.idx >= 0 && 2 * tmp.idx <= 100000) {
-                if(map[2 * tmp.idx] == 0 || map[2 * tmp.idx] > tmp.count){
-                    map[2 * tmp.idx] = tmp.count;
-                    q.add(new Point(2 * tmp.idx, tmp.count));
+            // 앞으로 한칸
+            if (tmp.idx + 1 >= 0 && tmp.idx + 1 <= 100000) {
+                if (map[tmp.idx + 1] == 0 || map[tmp.idx + 1] > tmp.count + 1) {
+                    map[tmp.idx + 1] = tmp.count + 1;
+                    q.add(new Point(tmp.idx + 1, tmp.count + 1));
                 }
             }
+
+
+
+
         }
 
         System.out.println(map[K]-1);
