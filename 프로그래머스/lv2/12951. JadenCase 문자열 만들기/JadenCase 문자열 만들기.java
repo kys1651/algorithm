@@ -1,26 +1,14 @@
 class Solution {
     public String solution(String s) {
         StringBuilder sb = new StringBuilder();
+        String check = s.toLowerCase();
         
         boolean flag = true;
-        for(int i = 0; i < s.length(); i++){
-            char ch = s.charAt(i);
-            
-            if(Character.isAlphabetic(ch)){
-                if(flag == true){
-                    ch = Character.toUpperCase(ch);
-                    flag = false;
-                }else{
-                    ch = Character.toLowerCase(ch);
-                }
-            }else if(ch == ' '){
-                flag = true;
-            }else{
-                flag = false;
-            }
-            
-            sb.append(ch);
+        for(char ch : check.toCharArray()){
+            sb.append(flag ? Character.toUpperCase(ch) : ch);
+            flag = ch == ' '?true : false;
         }
+        
         return sb.toString();
     }
 }
