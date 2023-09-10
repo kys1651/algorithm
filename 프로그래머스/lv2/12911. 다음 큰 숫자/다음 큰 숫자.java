@@ -1,22 +1,15 @@
 class Solution {
     public int solution(int n) {
-        int answer = 0;
-        int nCount = oneCount(n);
-        int check = ++n;
+        // 정수의 이진수에서 true bit의 개수를 리턴해주는 메서드
+        int nCount = Integer.bitCount(n);
+        int compare = n + 1;
         
-        while(nCount != oneCount(check)){
-            check++;
+        while(true){
+            if(Integer.bitCount(compare)==nCount)
+                break;
+            compare++;
         }
-        return check;
-    }
-    
-    public int oneCount(int num){
-        String binary = Integer.toBinaryString(num);
-        int count = 0;
-        for(int i = 0; i < binary.length(); i++){
-            if(binary.charAt(i)=='1')
-                count++;
-        }
-        return count;
+        
+        return compare;
     }
 }
