@@ -2,9 +2,7 @@ class Solution {
     public int solution(int n, int k) {
         int answer = 0;
         
-        String base = parse(n,k);
-        
-        for(String check : base.split("0")){
+        for(String check : Integer.toString(n, k).split("0")){
             if(check.equals(""))
                 continue;
             
@@ -15,18 +13,6 @@ class Solution {
                 
         }
         return answer;
-    }
-    
-    // 진법 변환 메서드
-    public String parse(int n, int k){
-        StringBuilder sb = new StringBuilder();
-        
-        while(n != 0){
-            sb.append(n % k);
-            n /= k;
-        }
-        
-        return sb.reverse().toString();
     }
     
     // 소수 확인 메서드
