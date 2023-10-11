@@ -1,29 +1,17 @@
 class Solution {
     public int solution(int n, int k) {
         int answer = 0;
+        String[] tmp = Integer.toString(n, k).split("0");
         
-        for(String check : Integer.toString(n, k).split("0")){
-            if(check.equals(""))
-                continue;
+        Loop: for(String check : tmp){
+            if(check.length() == 0) continue;
+            long a = Long.valueOf(check);
+            if(a == 1) continue;
+            for(int i = 2; i <= Math.sqrt(a); i++)
+                if(a % i == 0) continue Loop;
             
-            if(isPrime(Long.valueOf(check))){
-                
-                answer++;
-            }
-                
+            answer++;    
         }
         return answer;
-    }
-    
-    // 소수 확인 메서드
-    public boolean isPrime(long n){
-        if(n == 1) return false;
-        
-        for(int i = 2; i <= Math.sqrt(n); i++){
-            if(n % i == 0){
-                return false;
-            }
-        }
-        return true;
     }
 }
