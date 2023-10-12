@@ -4,11 +4,10 @@ class Solution {
     public int solution(String s) {
         int answer = 0;
         StringBuilder sb = new StringBuilder(s);
-        int len = s.length();
         
-        while(len --> 0){
+        for(int i = 0; i < s.length(); i++){
             sb.append(sb.charAt(0));
-            sb.delete(0,1);
+            sb.deleteCharAt(0);
             if(isCheck(sb.toString()))
                 answer++;
         }
@@ -25,16 +24,7 @@ class Solution {
                 stack.push(ch);
             }
         }
-        
-        while(!stack.isEmpty()){
-            char ch = stack.pop();
-            if(!stack.isEmpty() && match(ch,stack.peek())){
-                stack.pop();
-            }else{
-                return false;
-            }
-        }
-        return true;
+        return stack.isEmpty();
     }
     
     public boolean match(char cur, char prev){
