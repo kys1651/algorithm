@@ -10,35 +10,35 @@ public class Main {
         int N = Integer.parseInt(st.nextToken());
         int L = Integer.parseInt(st.nextToken());
 
+        Deque<Point> deque = new ArrayDeque<>();
+
         st = new StringTokenizer(br.readLine());
-
-        Deque<Node> deque = new LinkedList<>();
         for (int i = 0; i < N; i++) {
-            int tmp = Integer.parseInt(st.nextToken());
+            Point cur = new Point(i, Integer.parseInt(st.nextToken()));
 
-            while (!deque.isEmpty() && deque.getLast().value > tmp) {
+            while (!deque.isEmpty() && deque.peekLast().value > cur.value) {
                 deque.removeLast();
             }
+            deque.add(cur);
 
-            deque.addLast(new Node(i, tmp));
-
-            if (deque.getFirst().idx <= i - L) {
+            if (deque.peekFirst().idx < i - L + 1) {
                 deque.removeFirst();
             }
-            bw.write(deque.getFirst().value + " ");
+
+            bw.write(deque.peekFirst().value + " ");
         }
         bw.flush();
         bw.close();
     }
 
+    static class Point {
+        int idx;
+        int value;
 
-    static class Node {
-        public int idx;
-        public int value;
-
-        Node(int idx, int value) {
+        Point(int idx, int value) {
             this.idx = idx;
             this.value = value;
         }
+
     }
 }
