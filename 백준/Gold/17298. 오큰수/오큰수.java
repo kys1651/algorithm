@@ -10,25 +10,29 @@ public class Main {
         int[] arr = new int[N];
 
         StringTokenizer st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < N; i++) {
-            arr[i] = Integer.parseInt(st.nextToken());
-        }
 
         Stack<Integer> stack = new Stack<>();
-        for (int i = N - 1; i >= 0; i--) {
-            int tmp = arr[i];
+        for (int i = 0; i < N; i++) {
+            arr[i] = Integer.parseInt(st.nextToken());;
+        }
 
-            while (!stack.isEmpty() && stack.peek() <= arr[i]) {
-                stack.pop();
+        /**
+         * 스택이 비어있지 않으면서
+         * 현재 원소가 스택의 Top 원소보다 큰 경우
+         * 해당 조건을 만족할 때 까지 stack에서 pop
+         * 해당 인덱스의 값을 현재원소로 교체함
+         * 
+         * 쉽게 표현하면 스택에 들어있는 인덱스의 value를 가장 크면 바로 교체해주는 것임
+         */
+        for (int i = 0; i < N; i++) {
+            while (!stack.isEmpty() && arr[stack.peek()] < arr[i]) {
+                arr[stack.pop()] = arr[i];
             }
 
-            if (stack.isEmpty()) {
-                arr[i] = -1;
-            } else {
-                arr[i] = stack.peek();
-            }
-
-            stack.push(tmp);
+            stack.push(i);
+        }
+        while (!stack.isEmpty()) {
+            arr[stack.pop()] = -1;
         }
 
         for (int n : arr) {
