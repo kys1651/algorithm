@@ -1,90 +1,82 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.util.StringTokenizer;
-import java.util.ArrayDeque;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-    public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    public static StringBuilder sb = new StringBuilder();
+    static StringBuilder sb;
 
-    public static void main(String[] args) throws IOException {
-        ArrayDeque<Integer> q;
-        StringTokenizer st;
+    public static void main(String[] args) throws NumberFormatException, IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        sb = new StringBuilder();
 
         int T = Integer.parseInt(br.readLine());
 
-        while(T --> 0) {
+        Deque<Integer> deque;
+        StringTokenizer st;
 
+        while (T-- > 0) {
             String command = br.readLine();
             int n = Integer.parseInt(br.readLine());
+
             st = new StringTokenizer(br.readLine(), "[],");
 
-            q = new ArrayDeque<Integer>();
+            deque = new ArrayDeque<>();
 
-            // 덱에 배열 원소를 넣어준다.
-            for(int i = 0; i < n; i++) {
-                q.add(Integer.parseInt(st.nextToken()));
+            for (int i = 0; i < n; i++) {
+                deque.add(Integer.parseInt(st.nextToken()));
             }
 
-            AC(command, q);
+            AC(command, deque);
         }
-
         System.out.println(sb);
-
     }
 
-    public static void AC(String command, ArrayDeque<Integer> deque) {
+    private static void AC(String command, Deque<Integer> deque) throws IOException {
+        boolean isRight = true;
 
-        boolean Right = true;
+        for (char ch : command.toCharArray()) {
 
-        for(char cmd : command.toCharArray()) {
-
-            if(cmd == 'R') {
-                Right = !Right;
+            if (ch == 'R') {
+                isRight = !isRight;
                 continue;
             }
 
-            if(Right) {
+            // 뒤집어진 경우
+            if (isRight) {
 
-                if(deque.pollFirst() == null) {
+                if (deque.pollFirst() == null) {
                     sb.append("error\n");
                     return;
                 }
+            } else {
 
-            }
-            else {
-                if(deque.pollLast() == null) {
+                if (deque.pollLast() == null) {
                     sb.append("error\n");
                     return;
                 }
             }
         }
 
-        // 모든 함수들이 정상적으로 작동했다면 덱의 남은 요소들을 출력문으로 만들어준다.
-        makePrintString(deque, Right);
+        sb.append("[");
 
-    }
+        if (!deque.isEmpty()) {
 
-    public static void makePrintString(ArrayDeque<Integer> deque, boolean isRight) {
+            if (isRight) {
 
-        sb.append('[');
-        if(deque.size() > 0) {
-            if(isRight) {
                 sb.append(deque.pollFirst());
-                while(!deque.isEmpty()) {
-                    sb.append(',').append(deque.pollFirst());
+
+                while (!deque.isEmpty()) {
+                    sb.append(",").append(deque.pollFirst());
                 }
-            }
-            else {
+            } else {
+
                 sb.append(deque.pollLast());
 
-                while(!deque.isEmpty()) {
-                    sb.append(',').append(deque.pollLast());
+                while (!deque.isEmpty()) {
+                    sb.append(",").append(deque.pollLast());
                 }
             }
         }
 
-        sb.append(']').append('\n');	// 닫는 대괄호 및 개행으로 마무리
+        sb.append("]").append("\n");
     }
 }
