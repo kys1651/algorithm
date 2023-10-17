@@ -19,12 +19,25 @@ class Solution
             
             // Arrays.sort(input); -> 가장 기본
             // bubbleSort(input); -> bubble sort
-            selectionSort(input);
+            // selectionSort(input); -> select sort
+            insertionSort(input);
             
             System.out.print("#" + tc + " ");
             printArray(input);
 		}
 	}
+    
+    private static void insertionSort(int[] arr){
+        for(int i = 1; i < arr.length; i++){
+            int tmp = arr[i];
+            int j = i - 1;
+            while(j >= 0 && tmp < arr[j]){
+                arr[j+1] = arr[j];
+                j--;
+            }
+            arr[j+1] = tmp;
+        }
+    }
     
     private static void selectionSort(int[] arr){
         for(int i = 0; i < arr.length - 1; i++){
