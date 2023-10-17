@@ -18,12 +18,28 @@ class Solution
             }
             
             // Arrays.sort(input); -> 가장 기본
-            bubbleSort(input);
+            // bubbleSort(input); -> bubble sort
+            selectionSort(input);
             
             System.out.print("#" + tc + " ");
             printArray(input);
 		}
 	}
+    
+    private static void selectionSort(int[] arr){
+        for(int i = 0; i < arr.length - 1; i++){
+            // 최소값을 가지는 idx
+            int minIdx = i;
+            // i + 1부터 끝까지 비교해서 최소값인 인덱스를 찾음
+            for(int j = i + 1; j < arr.length; j++){
+                if(arr[j] < arr[minIdx]){
+                    minIdx = j;
+                }
+            }
+            swap(arr,i,minIdx);
+        }
+    }
+    
     private static void bubbleSort(int[] arr){
         for(int i = 0; i < arr.length - 1; i++){
         	for(int j = 0; j < arr.length - 1 - i; j++){
