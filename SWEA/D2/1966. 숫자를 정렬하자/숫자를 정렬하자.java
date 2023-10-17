@@ -1,0 +1,33 @@
+import java.util.*;
+import java.io.*;
+
+class Solution
+{
+	public static void main(String args[]) throws Exception
+	{
+		Scanner sc = new Scanner(System.in);
+        int[] input;
+
+        int T=sc.nextInt();
+		for(int tc = 1; tc <= T; tc++)
+		{
+            int N = sc.nextInt();
+        	input = new int[N];    
+            for(int i = 0; i < N; i++){
+                input[i] = sc.nextInt();
+            }
+            
+            Arrays.sort(input);
+            
+            System.out.print("#" + tc + " ");
+            printArray(input);
+		}
+	}
+    
+    private static void printArray(int[] arr){
+        for(int num : arr){
+            System.out.print(num + " ");
+        }
+        System.out.println();
+    }
+}
