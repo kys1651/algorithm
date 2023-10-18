@@ -22,21 +22,10 @@ class Solution
             int d = 0;
             while(num <= N * N){
                map[x][y] = num++;
-                // 오른쪽으로 가다가 벽 만나거나 이미 방문함
-                if(d == 0 && (y == N - 1 || map[x][y+1] != 0)){
-                    d++;
-                }
-                // 아래로 가다가 벽 만나거나 이미 방문함
-                else if(d == 1 && ( x == N -1 || map[x +1][y] != 0)){
-                    d++;
-                }
-                // 왼쪽으로 가다가 벽 or 방문
-                else if(d == 2 && ( y == 0 || map[x-1][y] != 0)){
-                    d++;
-                }
-                // 위로 가다가 방문한 곳
-                else if(d == 3 && map[x-1][y] != 0){
-                    d = 0;
+               int nextX = x + dirX[d];
+                int nextY = y + dirY[d];
+                if(nextX >= N || nextX < 0 || nextY >= N || nextY < 0 || map[nextX][nextY] != 0){
+                    d = (d + 1) % 4;
                 }
                 x += dirX[d];
                 y += dirY[d];
