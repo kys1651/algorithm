@@ -11,8 +11,8 @@ class Solution
 
 		for(int tc = 1; tc <= T; tc++)
 		{
-            BigInteger A = sc.nextBigInteger();
-            BigInteger B = sc.nextBigInteger();;
+            String A = sc.next();
+            String B = sc.next();
             
             System.out.println("#" + tc + " " + (A.equals(B)? A : "1"));
 		}
