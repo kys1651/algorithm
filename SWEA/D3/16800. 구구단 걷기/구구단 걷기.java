@@ -11,21 +11,19 @@ class Solution
 		for(int tc = 1; tc <= T; tc++)
 		{
             long N = sc.nextLong();
-            long a = 0;
-            long b = 0;
+            long result = 0;
             
             if(isPrime(N)){
-                a = 1;
-                b = N;
+                result = N - 1;
             }else{
-                    for(int i = 1; i <= Math.sqrt(N); i++){
+                    for(int i = (int)Math.sqrt(N); i >= 1; i--){
                         if(N % i == 0){
-                            a = i;
-                            b = N / i;
+                            result = (i + N / i) -2;
+                            break;
                         }
                     }
             }        
-            System.out.println("#" + tc +" " + (a+b-2));
+            System.out.println("#" + tc + " " + result);
         }
     }
     
