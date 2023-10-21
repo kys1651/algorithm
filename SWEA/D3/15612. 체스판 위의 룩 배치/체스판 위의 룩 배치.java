@@ -6,43 +6,36 @@ class Solution
 	public static void main(String args[]) throws Exception
 	{
 		Scanner sc = new Scanner(System.in);
-		Set<Integer> set;
         
-        boolean result;
-        int arr[];
-		int count = 0;
+        boolean arr[][];
+        String result;
+		int count;
         int T = sc.nextInt();
 		for(int tc = 1; tc <= T; tc++)
 		{
-            set = new HashSet<>();
-            arr = new int[9];
+            arr = new boolean[2][8];
             count = 0;
-            result = true;
-			for(int i = 1; i <= 8; i++){
+            result = "yes";
+			for(int i = 0; i < 8; i++){
                 String line = sc.next();
                 
-                for(int j = 1; j <= 8; j++){
-                    char ch = line.charAt(j-1);
-                    if(ch == 'O'){
-                        if(arr[j] != 0){
-                            result = false;
+                for(int j = 0; j < line.length(); j++){
+                    if(line.charAt(j) == 'O'){
+                        if(arr[0][i] || arr[1][j]){
+                            result = "no";
+                            break;
                         }
-                        arr[j] = i;
+                        arr[0][i] = arr[1][j] = true;
                         count++;
                     }
                 }
             }
             
-            for(int i = 1; i <= 8; i++){
-                int n = arr[i];
-                if(set.contains(n) || n == 0){
-                    result = false;
-                }
-                set.add(n);
+            if(count != 8){
+                result = "no";
             }
             
-            
-            System.out.println("#" + tc + " " + (result?"yes":"no"));
+            System.out.println("#" + tc + " " + result);
 		}
 	}
 }
