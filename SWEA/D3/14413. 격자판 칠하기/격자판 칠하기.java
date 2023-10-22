@@ -11,7 +11,7 @@ class Solution
         int T = sc.nextInt();
 		for(int tc = 1; tc <= T; tc++)
 		{
-            String result = "possible";
+            String result = "impossible";
             int a = sc.nextInt();
             int b = sc.nextInt();
             
@@ -22,58 +22,24 @@ class Solution
                     map[i][j] = line.charAt(j);
                 }
             }
-
-            loop : for(int i = 0; i < a; i++){
-                for(int j = 0; j < b; j++){
-                    if(map[i][j] != '?'){
-                        if(!solution(map,i,j)){
-                            result = "impossible";
-                            break loop;
-                        }
-                    }
-                }
+			if(check(map,'#','.') || check(map,'.','#')) {
+                result = "possible";
             }
             
             System.out.printf("#%d %s\n",tc,result);
         }
 	}
     
-    private static boolean solution(char[][] map, int x, int y){
-        int[] dirX = {1,-1,0,0};
-        int[] dirY = {0,0,-1,1};
-        
-        Queue<int[]> queue = new LinkedList<>();
-        queue.offer(new int[] {x,y});
-        while(!queue.isEmpty()){
-            int[] cur = queue.poll();
-            int curX = cur[0];
-            int curY = cur[1];
-            
-            for(int i =0; i < 4; i++){
-                int nextX = curX + dirX[i];
-                int nextY = curY + dirY[i];
-                
-                // 범위보다 크거나 이미 문자가 존재할 때
-                if((nextX < 0 || nextY < 0 || nextX >= map.length || nextY >= map[0].length)){
-                    continue;
-                }
-
-                if(map[nextX][nextY] == map[curX][curY]){
+	private static boolean check(char[][] map,char a,char b){
+        for(int i =0; i < map.length; i++){
+            for(int j = 0; j < map[0].length; j++){
+                if((i + j) % 2 == 0 && map[i][j] == a){
+                    return false;
+                }else if((i + j) % 2 == 1 && map[i][j] == b){
                     return false;
                 }
-                
-                if(map[nextX][nextY] != '?'){
-                    continue;
-                }
-
-                if(map[curX][curY] == '#'){
-                    map[nextX][nextY] = '.';
-                }else{
-                    map[nextX][nextY] = '#';
-                }
-                queue.offer(new int[]{nextX,nextY});
             }
         }
-       	return true;
+        return true;
     }
 }
