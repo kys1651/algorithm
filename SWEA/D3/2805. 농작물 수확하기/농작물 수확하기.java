@@ -19,21 +19,19 @@ class Solution
                 }
             }
             
-            int mid = n / 2;
-            int valid = 1;
+            int start = n / 2;
+            int end = n / 2;
             int sum = 0;
-            boolean oper = true;
             for(int i = 0; i < n; i++){
-                for(int j = 0;  j < valid; j++){
-                    sum += map[i][mid + j];
+                for(int j = start;  j <= end; j++){
+                    sum += map[i][j];
                 }
-                if(oper){
-                    mid --;
-                    valid += 2;
-                    oper = mid == 0? false: true;
+                if(i < n / 2){
+                    start--;
+                    end++;
                 }else{
-                    mid ++;
-                    valid -= 2;
+                    start++;
+                    end--;
                 }
             }
             System.out.println("#" +tc + " " + sum);
