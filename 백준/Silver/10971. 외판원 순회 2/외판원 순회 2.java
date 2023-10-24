@@ -4,7 +4,6 @@ class Main
 {
     static int map[][]; // n x n값이 저장된 배열
     static int n;
-    static int[] route;
     static boolean[] visit;
     static int minCost = Integer.MAX_VALUE;
 
@@ -13,7 +12,6 @@ class Main
 		Scanner sc = new Scanner(System.in);
         
         n = sc.nextInt();
-        route = new int[n];
         visit = new boolean[n];
         map = new int[n][n];
         for(int i = 0 ; i < n; i++){
@@ -22,41 +20,35 @@ class Main
             }
         }
         
-        go(0);
+        for(int i = 0; i < n; i++){
+            visit[i] = true;
+            go(i,i,0,0);
+        }
 
         System.out.println(minCost);
     }
 
-    private static void go(int depth) {
-        if(depth == n){
-            // cost 값 구하기
-            int cost = 0;
-            int tmpCost = 0;
-            for(int i = 0; i < n; i++){
-                if(i == n-1){
-                    tmpCost = map[route[n-1]][route[0]];
-                }else{
-                    tmpCost = map[route[i]][route[i+1]];
-                }
-                
-                if(cost > minCost || tmpCost == 0){
-                    return;
-                }
-                cost += tmpCost ;
+    private static void go(int start, int now, int depth, int sum) {
+        if(depth == n - 1){
+            // 마지막 위치에서 출발 지점까지 0이 아니라면(갈 수 있음)
+            if(map[now][start] != 0){
+                sum += map[now][start];
+                minCost = Math.min(sum, minCost);
             }
-            minCost = Math.min(minCost, cost);
-            
             return;
         }
-        
+
         for(int i = 0; i < n; i++){
-            if(visit[i]){
+            // i 도시로 간 적 있거나 가는 비용이 0이라면 갈 이유가 없음
+            if(visit[i] || map[now][i] == 0){
                 continue;
             }
-            route[depth] = i;
+
             visit[i] = true;
-            go(depth+1);
+            // start는 계속 유지, now는 i로 초기화
+            go(start, i, depth + 1, sum + map[now][i]);
             visit[i] = false;
         }
+        
     }
 }
