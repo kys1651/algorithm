@@ -28,11 +28,14 @@ class Solution
 		}
 	}
     private static void combination(int depth,int curCal, int score){
-        for(int i = depth; i < ingredients.length; i++){
-            if(curCal + ingredients[i][1] <= l){
-                combination(i+1,curCal + ingredients[i][1], score + ingredients[i][0]);
-            }
+        if(curCal > l){
+            return;
         }
-        result = Math.max(result, score);
+        if(depth == n){
+            result = Math.max(result , score);
+            return;
+        }
+        combination(depth+1,curCal + ingredients[depth][1], score + ingredients[depth][0]);
+        combination(depth+1,curCal,score);
     }
 }
