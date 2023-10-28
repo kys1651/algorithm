@@ -16,26 +16,13 @@ class Solution
                 customers[i] = sc.nextInt();
             }
             Arrays.sort(customers);
-            int time = 0;
-            int makeTime = 0,makeCount = 0;
-            int idx = 0;
             String result = "Possible";
-            while(time <= customers[n-1]){
-                if(makeTime == m){
-                    makeCount += k;
-                    makeTime = 0;
-                }
-                if(customers[idx] == time){
-                    makeCount--;
-                    idx++;
-                }
-                if(makeCount < 0){
+			for(int i = 0; i < customers.length; i++){
+                if((customers[i] / m * k) - i < 1){
                     result = "Impossible";
                     break;
                 }
-                time++; makeTime++;
             }
-            
             System.out.println("#" + tc + " " + result);
 		}
 	}
