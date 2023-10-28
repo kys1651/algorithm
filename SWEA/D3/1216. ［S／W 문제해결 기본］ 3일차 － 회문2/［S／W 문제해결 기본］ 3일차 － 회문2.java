@@ -12,27 +12,20 @@ class Solution
                 map[i] = sc.next().toCharArray();
             }
             
-            int answer = 0;
-            boolean check = false;
-            for(int len = 0; len <= map.length; len++){
+            int answer = 1;
+            for(int len = 2; len <= map.length; len++){
                 for(int i = 0; i < map.length ; i++){
                     for(int j = 0; j <= map.length - len; j++){
-                        check = true;
+                        boolean check1 = true, check2 = true;
                         for(int k = 0; k < len/2; k++){
                             if(map[ i ][ j + k ] != map[ i ][ j + len - k - 1]){
-                                check = false; break;
+                                check1 = false;
+                            }
+                            if(map[j + k][ i ] != map[j + len - k - 1][ i]){
+                                check2 = false;
                             }
                         }
-                        if(check){
-                            answer = Math.max(answer, len);
-                        }
-                        check = true;
-                         for(int k = 0; k < len / 2; k++){
-                            if(map[ j + k  ][ i ] != map[ j + len - k - 1][ i ]){
-                                check = false; break;
-                            }
-                        }
-                        if(check){
+                        if(check1 || check2){
                             answer = Math.max(answer, len);
                         }
                     }
