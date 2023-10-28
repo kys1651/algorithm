@@ -1,5 +1,5 @@
 import java.util.Scanner;
-
+import java.util.HashSet;
 class Solution
 {
 	public static void main(String args[]) throws Exception{
@@ -8,15 +8,11 @@ class Solution
 		for(int tc = 1; tc <= T; tc++)
 		{
             String str = sc.next();
-            String result = "Yes";
-            str = str.replaceAll(String.valueOf(str.charAt(0)),"");
-            if(str.length() != 2){
-                result = "No";
+            HashSet<Character> set = new HashSet<>();
+            for(char ch : str.toCharArray()){
+                set.add(ch);
             }
-            if(str.length() == 2 && str.replaceAll(String.valueOf(str.charAt(0)),"").length() != 0){
-                result = "No";
-            }
-            System.out.println("#" + tc +  " " + result);
+            System.out.println("#" + tc +  " " + (set.size() == 2?"Yes":"No"));
 		}
 	}
 }
