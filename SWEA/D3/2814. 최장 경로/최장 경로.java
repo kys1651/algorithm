@@ -24,17 +24,17 @@ class Solution
                 map[a][b] = map[b][a] = 1;
             }
             for(int i = 1; i <= n; i++){
-                solution(0,i,0);
+                solution(i,0);
             }
             System.out.println("#" + tc + " " + result);
 		}
 	}
     
-    private static void solution(int depth, int pos, int count){
+    private static void solution(int pos, int count){
         for(int i = 1; i < map.length; i++){
             if(!visit[i] && map[pos][i] == 1){
                 visit[i] = true;
-                solution(depth+1,i,count+1);
+                solution(i,count+1);
                 visit[i] = false;
             }
         }
