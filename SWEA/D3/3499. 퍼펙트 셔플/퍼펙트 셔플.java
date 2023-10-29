@@ -7,20 +7,16 @@ class Solution
 		for(int tc = 1; tc <= T; tc++)
 		{
             int n = sc.nextInt();
-            Queue<String> queue1 = new LinkedList<>();
-            Queue<String> queue2 = new LinkedList<>();
-            for(int i = 0; i < (n/2 + n % 2); i++){
-                queue1.add(sc.next());
-            }
-            for(int i = 0; i < n/2; i++){
-                queue2.add(sc.next());
-            }
+            String[] cards = new String[n];
+            for(int i = 0; i < n; i++){cards[i] = sc.next();}
             StringBuilder sb = new StringBuilder();
-            while(!queue2.isEmpty()){
-                sb.append(queue1.poll()+ " " );
-                sb.append(queue2.poll() + " ");
+            for(int i = 0; i < n/2; i++){
+                sb.append(cards[i] + " ");
+                sb.append(cards[i + (n / 2 + n % 2)] + " ");
             }
-            if(!queue1.isEmpty()) sb.append(queue1.poll());
+            if(n % 2 != 0){
+                sb.append(cards[n / 2]);
+            }
             System.out.println("#" + tc + " " + sb.toString());
         }
 	}
