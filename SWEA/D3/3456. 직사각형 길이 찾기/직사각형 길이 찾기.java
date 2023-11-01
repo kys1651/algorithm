@@ -5,11 +5,11 @@ class Solution {
 		int T = sc.nextInt();
 		for(int tc = 1; tc <= T; tc++)
 		{
-            int a = sc.nextInt();
-            int b = sc.nextInt();
-            int c = sc.nextInt();
-            int d = (a == b ? c : (b == c ? a : b));
-            System.out.println("#" + tc + " " + d);
+            int n = 0;
+            for(int i = 0; i < 3; i++){
+                n ^= sc.nextInt();
+            }
+            System.out.println("#" + tc + " " + n);
 		}
 	}
 }
