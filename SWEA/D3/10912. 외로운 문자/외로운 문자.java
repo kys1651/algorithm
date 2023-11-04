@@ -5,21 +5,17 @@ class Solution {
 		int T = sc.nextInt();
 		for(int tc = 1; tc <= T; tc++) {
             String str = sc.next();
-            HashMap<Character, Integer> map = new HashMap<>();
-            ArrayList<Character> list = new ArrayList<>();
+            int[] nums = new int[26];
             for(char ch : str.toCharArray()){
-                map.put(ch, map.getOrDefault(ch,0) + 1);
+                nums[ch - 'a']++;
             }
-            for(char ch : map.keySet()){
-                if(map.get(ch) % 2 != 0){
-                    list.add(ch);
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0; i < 26; i++){
+                if(nums[i] % 2 != 0){
+                    sb.append(String.valueOf((char)('a' + i)));
                 }
             }
-            Collections.sort(list);
-            System.out.print("#" + tc + " ");
-            if(list.isEmpty()) {System.out.print("Good");}
-            else{for(char ch : list) System.out.print(ch);}
-            System.out.println();
+            System.out.println("#" + tc + " " + (sb.toString().isEmpty() ? "Good" : sb.toString()));
         }
 	}
 }
