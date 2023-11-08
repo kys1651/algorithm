@@ -1,61 +1,27 @@
-import java.io.*;
 import java.util.*;
 
-class Main
-{
-    static class Problem implements Comparable{
-        int deadline;
-        int ramen;
-
-        public Problem(int deadline, int ramen) {
-            this.deadline = deadline;
-            this.ramen = ramen;
+class Main {
+    public static void main(String args[]) throws Exception {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        PriorityQueue<int[]> problems =
+                new PriorityQueue<>((o1, o2) -> o1[0] != o2[0] ? o1[0] - o2[0] : o2[1] - o1[1]);
+        PriorityQueue<int[]> pq =
+                new PriorityQueue<>((o1, o2) -> o1[1] != o2[1] ? o1[1] - o2[1] : o2[0] - o1[0]);
+        for (int i = 0; i < n; i++) {
+            problems.offer(new int[] {sc.nextInt(), sc.nextInt()});
         }
-
-        @Override
-        public int compareTo(Object o) {
-            Problem p = (Problem) o;
-            if(this.deadline != p.deadline){
-                return this.deadline - p.deadline;
+        while (!problems.isEmpty()) {
+            int[] problem = problems.poll();
+            pq.offer(problem);
+            if (problem[0] < pq.size()) {
+                int[] t = pq.poll();
             }
-            return p.ramen - this.ramen;
         }
+        long sum = 0;
+        while (!pq.isEmpty()) {
+            sum += pq.poll()[1];
+        }
+        System.out.println(sum);
     }
-
-	public static void main(String args[]) throws IOException
-	{
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        ArrayList<Problem> list = new ArrayList<>();
-        PriorityQueue<Integer> pq = new PriorityQueue<>();
-        StringTokenizer st;
-
-        int n = Integer.parseInt(br.readLine());
-        for(int i = 0; i < n; i++){
-            st = new StringTokenizer(br.readLine());
-            int deadline = Integer.parseInt(st.nextToken());
-            int ramen = Integer.parseInt(st.nextToken());
-            list.add(new Problem(deadline, ramen));
-        }
-
-        Collections.sort(list);
-        
-        for(Problem p : list){
-            int dead = p.deadline;
-            int ramen = p.ramen;
-            pq.offer(ramen);
-
-            // pq의 사이즈는 여태까지 흘러간 시간 
-            // 만약 데드라인이 pq.size()보다 크다면 poll
-            if(dead < pq.size()){
-                pq.poll();
-            }
-        }
-
-        int result = 0;
-        while(!pq.isEmpty()){
-            result += pq.poll();
-        }
-
-        System.out.println(result);
-	}
 }
