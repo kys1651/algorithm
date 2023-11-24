@@ -13,18 +13,17 @@ public class Main {
         for(int i = 1; i <= n ;i++){
             arr[i] = Integer.parseInt(st.nextToken());
         }
-        int[][] dp = new int[n+1][2];
+        int[] dp = new int[n+1];
         
         for(int i = 1; i <= n ;i++){
             int val = 0;
             for(int j = 0; j < i; j++){
-                if(dp[j][1] > arr[i] && dp[j][0] > val){
-                    val = dp[j][0];
+                if(arr[j] > arr[i] && dp[j] > val){
+                    val = dp[j];
                 }
             }
-            dp[i][0] = val + 1;
-            dp[i][1] = arr[i];
-            result = Math.max(dp[i][0],result);
+            dp[i] = val + 1;
+            result = Math.max(dp[i],result);
         }
         System.out.println(result);
 
