@@ -29,11 +29,7 @@ class Main {
             }
             // 만약 이미 나온 수라면? 반복수열임으로 인덱스를 찾아서 반환
             if (list.contains(tmp)) {
-                for (int i = 0; i < list.size(); i++) {
-                    if (list.get(i) == tmp) {
-                        return i;
-                    }
-                }
+                return list.indexOf(tmp);
             }
             // 나오지 않은 수라면 리스트에 추가 해줌
             else {
