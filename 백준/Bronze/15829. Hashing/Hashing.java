@@ -8,11 +8,13 @@ public class Main {
         int L = Integer.valueOf(br.readLine());
         String word = br.readLine();
 
-        int result = 0;
+        long result = 0;
+        long pow = 1;
         for(int i = 0; i < L; i++){
             int n = word.charAt(i) - 'a' + 1;
-            result += n * Math.pow(r,i) % M;
+            result += n * pow;
+            pow = (pow * r) % M;
         }
-        System.out.println(result);
+        System.out.println(result % M);
     }
 }
