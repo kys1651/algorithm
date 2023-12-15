@@ -52,7 +52,7 @@ public class Main {
             return;
         }
 
-        time = Math.min(tmpTime, time);
+        time = tmpTime;
         height = ground;
     }
 }
