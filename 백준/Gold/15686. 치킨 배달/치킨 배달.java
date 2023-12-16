@@ -1,88 +1,81 @@
 import java.io.BufferedReader;
-        import java.io.InputStreamReader;
-        import java.io.IOException;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
-class Point{
-    int x;
-    int y;
-
-    public Point(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-}
 public class Main {
-    static int[][] map;
-    static boolean[] visited;
-    static ArrayList<Point> house;
-    static ArrayList<Point> chicken;
-    static int N,M;
-    static int answer = Integer.MAX_VALUE;
+    static class Point {
+        int x;
+        int y;
+
+        Point(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    static int n, m, result;
+    static ArrayList<Point> chicken = new ArrayList<>();
+    static ArrayList<Point> house = new ArrayList<>();
+    static boolean[] visit;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-
-        map = new int[N][N];
-        house = new ArrayList<>();
-        chicken = new ArrayList<>();
-
-        for (int i = 0; i < N; i++) {
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+        for (int i = 0; i < n; i++) {
             st = new StringTokenizer(br.readLine());
-
-            for (int j = 0; j < N; j++) {
-                map[i][j] = Integer.parseInt(st.nextToken());
-
-                if (map[i][j] == 1) {
+            for (int j = 0; j < n; j++) {
+                int value = Integer.parseInt(st.nextToken());
+                // 집
+                if (value == 1) {
                     house.add(new Point(i, j));
-                } else if (map[i][j] == 2) {
+                }
+                // 치킨집
+                else if (value == 2) {
                     chicken.add(new Point(i, j));
                 }
             }
         }
-
-        visited = new boolean[chicken.size()];
-        solution(0,0);
-        System.out.println(answer);
+        // 치킨집 사이즈만큼 배열 생성 -> M개를 뽑아주기 위해서
+        visit = new boolean[chicken.size()];
+        result = Integer.MAX_VALUE;
+        dfs(0, 0);
+        System.out.println(result);
     }
 
-    private static void solution(int idx,int depth) {
-        // 치킨집을 M개 골랐을 때 계산함
-        if(depth == M){
-            // 계산하는 함수
-            cal();
+    // M개의 치킨집을 뽑는 메서드
+    private static void dfs(int depth, int pos) {
+        // M를 뽑아준 뒤 계산해준다.
+        if (depth == m) {
+            calc();
             return;
         }
+        // pos부터 하는 이유는 M개를 뽑을거니까 0에서부터 할 필요없고 전에 뽑은 치킨집을 또 뽑을 일 없음
+        for (int i = pos; i < chicken.size(); i++) {
+            if (visit[i]) continue;
 
-        for (int i = idx; i < chicken.size(); i++) {
-            if(!visited[i]){
-                visited[i] = true;
-                solution(i+1, depth+1);
-                visited[i] = false;
-            }
+            visit[i] = true;
+            dfs(depth + 1, i + 1);
+            visit[i] = false;
         }
     }
 
-    // 계신헤주는 함수
-    private static void cal() {
-        int result = 0;
-
+    // 치킨 거리를 구해주는 함수
+    private static void calc() {
+        int sumDistance = 0;
         for (Point h : house) {
-            int tmp = Integer.MAX_VALUE;
-
+            int distance = Integer.MAX_VALUE;
             for (int i = 0; i < chicken.size(); i++) {
-                if(!visited[i]) continue;
+                if (!visit[i]) continue;
 
-                int distance = Math.abs(h.x - chicken.get(i).x) + Math.abs(h.y - chicken.get(i).y);
-                tmp = Math.min(tmp, distance);
+                Point c = chicken.get(i);
+                distance = Math.min(distance, Math.abs(h.x - c.x) + Math.abs(h.y - c.y));
             }
-            result += tmp;
+            sumDistance += distance;
         }
-
-        answer = Math.min(answer, result);
+        result = Math.min(sumDistance, result);
     }
 }
