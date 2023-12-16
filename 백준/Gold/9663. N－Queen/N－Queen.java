@@ -1,50 +1,45 @@
 import java.io.BufferedReader;
-        import java.io.InputStreamReader;
-        import java.io.IOException;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
-    static int N;
-    static int[] map;
-    static int count = 0;
-
+    static int[] visit;
+    static int n;
+    static int result = 0;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-
-        N = Integer.parseInt(st.nextToken());
-
-        map = new int[N];
-
-        NQueen(0);
-
-        System.out.println(count);
+        n = Integer.parseInt(br.readLine());
+        visit = new int[n];
+        dfs(0);
+        System.out.println(result);
     }
 
-    private static void NQueen(int pos) {
-        if(pos == N){
-            count++;
+    private static void dfs(int depth) {
+        if (depth == n) {
+            result++;
             return;
         }
-
-        for(int i = 0; i < N; i++){
-            map[pos] = i;
-            if(checkQueen(pos)){
-                NQueen(pos+1);
+        for(int i = 0; i < n; i++){
+            visit[depth] = i;
+            if (check(depth)) {
+                dfs(depth + 1);
             }
         }
-
-
     }
 
-    private static boolean checkQueen(int pos) {
-        for(int i = 0; i < pos; i++){
-            if(map[i] == map[pos])
+    private static boolean check(int depth) {
+        for (int i = 0; i < depth; i++) {
+            // 같은 행에 존재 
+            if (visit[i] == visit[depth]) {
                 return false;
-            else if(Math.abs(i-pos) == Math.abs(map[i]- map[pos]))
+            }
+            // 대각선 존재
+            else if (Math.abs(i - depth) == Math.abs(visit[i] - visit[depth])) {
                 return false;
+            }
         }
-
+        
+        // 유효한 위치
         return true;
     }
 }
