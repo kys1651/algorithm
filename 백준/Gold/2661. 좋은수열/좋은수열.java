@@ -1,45 +1,44 @@
 import java.io.BufferedReader;
-        import java.io.InputStreamReader;
-        import java.io.IOException;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
-    static int N;
-    static int start = 1;
-    static int end = 3;
-
+    static int n;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-//        StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(br.readLine());
-
-        solution("");
-
+        n = Integer.parseInt(br.readLine());
+        dfs("");
     }
 
-    private static void solution(String str) {
-        // 문자열의 길이가 N이 되면 처음 나온 좋은 수열이 최소값이므로 출력 후 프로그램 종료
-        if(str.length() == N){
-            System.out.println(str);
+    private static void dfs(String sequence) {
+        // 문자열 길이가 n과 같다면 좋은 수열을 이루는 수 중 가장 작은 수임
+        if (sequence.length() == n) {
+            // 호출 후 종료해줌
+            System.out.println(sequence);
             System.exit(0);
         }
 
-        for (int i = start; i <= end; i++) {
-            if(Make(str+i)){ // 좋은 숫자를 추가 했을 때 좋은 수열이라면 재귀함수
-                solution(str + i);
+        for(int i = 1; i <= 3; i++){
+            String nextSequence = sequence + i;
+            if (goodSequence(nextSequence)) {
+                dfs(nextSequence);
             }
         }
-
-
     }
 
-    private static boolean Make(String str) {
-        for (int i = 1; i <= str.length() / 2; i++) {
-            String front = str.substring(str.length() - i * 2, str.length() - i);
-            String back = str.substring(str.length() - i, str.length());
-            if(front.equals(back)) return false;
+    private static boolean goodSequence(String nextSequence) {
+        int len = nextSequence.length();
+        for (int i = 1; i <= len / 2; i++) {
+            // 인접한 수열의 앞 부분(2길이라면 앞에서 1개, 4길이라면 앞에서 1개,2개
+            String front = nextSequence.substring(len - 2 * i, len - i);
+            // 인접한 수열의 뒷 부분(2길이라면 뒤에서 1개, 4길이라면 뒤에서 1개, 2개
+            String back = nextSequence.substring(len - i);
+            // 같다면 나쁜 수열임
+            if (front.equals(back)) {
+                return false;
+            }
         }
+        // for문을 빠져나왔다면 좋은 수열이다.
         return true;
     }
-
 }
