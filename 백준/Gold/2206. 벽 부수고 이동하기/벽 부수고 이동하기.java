@@ -1,83 +1,88 @@
 import java.io.BufferedReader;
-        import java.io.InputStreamReader;
-        import java.io.IOException;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
-    // 상, 하, 좌, 우
-    static int[] posx = {0, 0, -1, 1};
-    static int[] posy = {1, -1, 0, 0};
+    static class Point {
+        int x;
+        int y;
+        int count;
 
+        public Point(int x, int y, int count) {
+            this.x = x;
+            this.y = y;
+            this.count = count;
+        }
+    }
+
+    static int n, m;
+    static int[][] map;
+    static boolean[][][] visit;
+    static int result = -1;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-
-        // N, M 입력받음
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
-
-        // 시작 위치와 종료 위치가 같은 경우
-        if (N - 1 == 0 && M - 1 == 0) {
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+        map = new int[n + 1][m + 1];
+        visit = new boolean[2][n + 1][m + 1];
+        for (int i = 1; i <= n; i++) {
+            String line = br.readLine();
+            for (int j = 1; j <= m; j++) {
+                map[i][j] = line.charAt(j - 1) - '0';
+            }
+        }
+        if (n == 1 && m == 1) {
             System.out.println(1);
             System.exit(0);
         }
+        bfs();
+    }
 
-        int[][] miro = new int[N][M];
-        int[][] map = new int[N][M];
-        boolean[][][] visited = new boolean[2][N][M];
-        Queue<int[]> q = new LinkedList<>();
+    private static void bfs() {
+        int[] dirX = {-1, 1, 0, 0};
+        int[] dirY = {0, 0, -1, 1};
+        Queue<Point> queue = new LinkedList<>();
+        queue.offer(new Point(1, 1, 0));
 
-        for (int i = 0; i < N; i++) {
-            String tmp = br.readLine();
-            for (int j = 0; j < M; j++) {
-                miro[i][j] = tmp.charAt(j) - '0';
-            }
-        }
-
-        // 시작 점 좌표(0,0) 부신 적 x
-        q.offer(new int[]{0, 0, 0});
-
-        while (!q.isEmpty()) {
-            int[] cur = q.poll();
+        while (!queue.isEmpty()) {
+            Point pos = queue.poll();
 
             for (int i = 0; i < 4; i++) {
-                int nX = cur[0] + posx[i];
-                int nY = cur[1] + posy[i];
+                int nx = pos.x + dirX[i];
+                int ny = pos.y + dirY[i];
 
-                // 미로 밖으로 나간 범위 일 때 넘겨줌
-                if (nX < 0 || nX >= N || nY < 0 || nY >= M) {
+                if (nx < 1 || nx > n || ny < 1 || ny > m) {
                     continue;
                 }
-
-                // 다음 칸에 벽이 있을 때
-                // 1. 벽을 부순 적 있는가?
-                // 2. 벽을 방문한 적 있는가?
-                if (miro[nX][nY] == 1) {
-                    // cur[2]가 0이면 부순 적 없음  visited[1][nX][nY]가 false면 방문한 적 없음
-                    if (cur[2] == 0 && !visited[1][nX][nY]) {
-                        visited[cur[2]][nX][nY] = true; // 방문 표시
-                        map[nX][nY] = map[cur[0]][cur[1]] + 1; // 다음 거리에 현재 거리에서 1 더해줌
-                        // 다음 위치를 넣어주고 벽 부순적 있다고 넣어줌
-                        q.offer(new int[]{nX, nY, 1});
+                // 벽인 경우
+                if (map[nx][ny] == 1) {
+                    // 1. 벽을 부순적 있는가? count가 0이면 부순적 없음
+                    // 2. 방문한 적 있는가? visit[1][nx][ny]가 false면 방문한 적 없음
+                    if(pos.count == 0 && !visit[1][nx][ny]){
+                        visit[0][nx][ny] = true; // 방문
+                        map[nx][ny] = map[pos.x][pos.y] + 1; // 현재 거리에서 + 1
+                        queue.offer(new Point(nx, ny, 1)); // 다음 위치를 넣어줌
                     }
-                }
-                else{ // 벽이 아닐 경우
-                    // 내가 부수고 왔는지 아닌지 메모 해야함
-                    if (!visited[cur[2]][nX][nY]) {// 방문 안 했을 때
-                        visited[cur[2]][nX][nY] = true;
-                        map[nX][nY] = map[cur[0]][cur[1]] + 1;
-                        q.offer(new int[]{nX, nY, cur[2]});
-                    }
-                }
 
-                // 도착 지점에 방문 했을 때 확인
-                if (nX == N - 1 && nY == M - 1) {
-                    System.out.println(map[N - 1][M - 1] + 1);
-                    System.exit(0);
+                }
+                // 벽이 아닌 경우
+                else {
+                    if (!visit[pos.count][nx][ny]) {
+                        visit[pos.count][nx][ny] = true;
+                        map[nx][ny] = map[pos.x][pos.y] + 1;
+                        queue.offer(new Point(nx, ny, pos.count));
+                    }
+                    if (nx == n && ny == m) {
+                        System.out.println(map[n][m] + 1);
+                        System.exit(0);
+                    }
                 }
             }
         }
-
         System.out.println(-1);
     }
 }
