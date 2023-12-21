@@ -19,6 +19,9 @@ public class Main {
     }
 
     static int n, m, h;
+    static int[] dirH = {0, 0, 0, 0, -1, 1};
+    static int[] dirX = {1, -1, 0, 0, 0, 0};
+    static int[] dirY = {0, 0, -1, 1, 0, 0};
     static int[][][] map;
     static Queue<Tomato> queue = new LinkedList<>();
 
@@ -40,28 +43,12 @@ public class Main {
                 }
             }
         }
-        bfs();
-        int result = 0;
-        loop:
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[i].length; j++) {
-                for (int k = 0; k < map[i][j].length; k++) {
-                    if (map[i][j][k] == 0) {
-                        result = 0;
-                        break loop;
-                    } else {
-                        result = Math.max(result, map[i][j][k]);
-                    }
-                }
-            }
-        }
-        System.out.println(result - 1);
+        int result = bfs();
+        System.out.println(result);
     }
 
-    private static void bfs() {
-        int[] dirH = {0, 0, 0, 0, -1, 1};
-        int[] dirX = {1, -1, 0, 0, 0, 0};
-        int[] dirY = {0, 0, -1, 1, 0, 0};
+    private static int bfs() {
+
         while (!queue.isEmpty()) {
             int size = queue.size();
 
@@ -87,6 +74,19 @@ public class Main {
 
             }
         }
+        int result = 0;
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
+                for (int k = 0; k < map[i][j].length; k++) {
+                    if (map[i][j][k] == 0) {
+                        return -1;
+                    } else {
+                        result = Math.max(result, map[i][j][k]);
+                    }
+                }
+            }
+        }
+        return result -1;
     }
 
     private static boolean check(int nZ, int nX, int nY) {
