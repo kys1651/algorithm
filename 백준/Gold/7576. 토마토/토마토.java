@@ -1,89 +1,74 @@
 import java.io.BufferedReader;
-        import java.io.InputStreamReader;
-        import java.io.IOException;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
-    // 토마토의 위치 저장
-    static class tomato {
-        int x;
-        int y;
-
-        public tomato(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
-    // 상, 하, 좌, 우
-    static int[] posx = {0, 0, -1, 1};
-    static int[] posy = {1, -1, 0, 0};
+    static int n, m;
+    static int[][] map;
+    static Queue<int[]> queue = new LinkedList<>();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-
-        // N, M 입력받음
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
-
-        int[][] map = new int[M][N];
-        Queue<tomato> q = new LinkedList<>();
-
-        for (int i = 0; i < M; i++) {
+        m = Integer.parseInt(st.nextToken());
+        n = Integer.parseInt(st.nextToken());
+        map = new int[n][m];
+        for (int i = 0; i < map.length; i++) {
             st = new StringTokenizer(br.readLine());
-
-            for (int j = 0; j < N; j++) {
-                int n = Integer.parseInt(st.nextToken());
-                map[i][j] = n;
-
-                if (n == 1) {
-                    // 토마토의 위치를 저장해줌
-                    q.offer(new tomato(i, j));
-                }
-            }
-
-        }
-
-
-        while (!q.isEmpty()) {
-            // 현재 위치
-            tomato cur = q.poll();
-
-            // 상,하,좌,우 확인
-            for (int i = 0; i < 4; i++) {
-                int nX = cur.x + posx[i];
-                int nY = cur.y + posy[i];
-
-                // 범위 밖이면 넘겨준다.
-                if (nX < 0 || nX >= M || nY < 0 || nY >= N) {
-                    continue;
-                }
-
-                // 토마토가 안 익었을 때만 처리한다.
-                if (map[nX][nY] == 0) {
-                    map[nX][nY] = map[cur.x][cur.y] + 1;
-                    q.offer(new tomato(nX, nY));
+            for (int j = 0; j < map[i].length; j++) {
+                map[i][j] = Integer.parseInt(st.nextToken());
+                if (map[i][j] == 1) {
+                    queue.offer(new int[] {i, j});
                 }
             }
         }
-
-        // 최대값을 찾아준다.
-        int answer = Integer.MIN_VALUE;
-        boolean flag = false;
-        for (int[] checks : map) {
-            for (int check : checks) {
-                answer = Math.max(answer, check);
-                if (check == 0) {
-                    flag = true;
+        bfs();
+        int result = -1;
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
+                if (map[i][j] == 0) {
+                    result = 0;
+                    break;
+                } else {
+                    result = Math.max(result, map[i][j]);
                 }
             }
+            if (result == 0) {
+                break;
+            }
         }
-
-        if(flag){
-            System.out.println(-1);
-        }else{
-            System.out.println(answer - 1);
-        }
-
+        System.out.println(result - 1);
     }
+
+    private static void bfs() {
+        int[] dirX = {-1, 1, 0, 0};
+        int[] dirY = {0, 0, -1, 1};
+
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+
+            for (int k = 0; k < size; k++) {
+                int[] tomato = queue.poll();
+
+                for (int d = 0; d < 4; d++) {
+                    int nX = tomato[0] + dirX[d];
+                    int nY = tomato[1] + dirY[d];
+
+                    // 배열의 범위 밖인 경우
+                    if (nX < 0 || nX >= map.length || nY < 0 || nY >= map[nX].length) {
+                        continue;
+                    }
+                    // 익지 않은 토마토인 경우
+                    if (map[nX][nY] == 0) {
+                        map[nX][nY] = map[tomato[0]][tomato[1]] + 1;
+                        queue.offer(new int[] {nX, nY});
+                    }
+                }
+            }
+        }
+    }
+
 }
