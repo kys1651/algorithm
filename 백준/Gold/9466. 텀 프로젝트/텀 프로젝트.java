@@ -1,66 +1,68 @@
 import java.io.BufferedReader;
-        import java.io.InputStreamReader;
-        import java.io.IOException;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-    static int[] arr;
-    static int count,n;
-    static boolean[] checked;
-    static boolean[] finished;
+    static boolean[] visit, finish;
+    static int[] students;
+    static int n, answer;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-//        StringTokenizer st = new StringTokenizer(br.readLine());
         StringBuilder sb = new StringBuilder();
-        int T = Integer.parseInt(br.readLine());
+        StringTokenizer st;
 
-        while (T-- > 0) {
+        int TC = Integer.parseInt(br.readLine());
+        for (int t = 0; t < TC; t++) {
             n = Integer.parseInt(br.readLine());
+            answer = 0;
 
-            arr = new int[n+1];
-            checked = new boolean[n+1];
-            finished = new boolean[n+1];
-            count = 0;
-
-            StringTokenizer st = new StringTokenizer(br.readLine());
+            // 싸이클이 생성된 결과를 저장하는 result 배열
+            visit = new boolean[n + 1];
+            // 방문한 경로를 저장하는 visit 배열
+            finish = new boolean[n + 1];
+            // 학생들이 선택한 학생을 저장하는 students 배열
+            students = new int[n + 1];
+            st = new StringTokenizer(br.readLine());
             for (int i = 1; i <= n; i++) {
-                arr[i] = Integer.parseInt(st.nextToken());
+                students[i] = Integer.parseInt(st.nextToken());
+            }
+            // 자기 자신을 가르키는 학생을 먼저 처리해준다.
+            for (int i = 1; i <= n; i++) {
+                if (i == students[i]) {
+                    // 처리 완료
+                    finish[i] = visit[i] = true;
+                    // 구성원에 있으므로 더해준다.
+                    answer++;
+                }
             }
 
             for (int i = 1; i <= n; i++) {
-                dfs(i);
+                // 방문한 적 있는 학생이라면 굳이 dfs 할 필요 없다.
+                if (!visit[i]) {
+                    dfs(i);
+                }
             }
-
-            sb.append(n - count).append("\n");
+            sb.append(n - answer).append("\n");
         }
         System.out.println(sb);
     }
 
-    private static void dfs(int idx) {
-        if (checked[idx]) {
-            return;
-        }
-
-        // 방문 했다고 표시
-        checked[idx] = true;
-        // idx번째 학생이 지목한 idx 구하기
-        int select = arr[idx];
-
-        // 방문 안한 학생이라면
-        if (!checked[select]) {
+    private static void dfs(int cur) {
+        visit[cur] = true;
+        int select = students[cur];
+        if (!visit[select]) {
             dfs(select);
-        }else{
-            if (!finished[select]) {
-
-                count++;
-                for (int i = select; i != idx; i = arr[i]) {
-                    count++;
+        } else {
+            if (!finish[select]) {
+                answer++;
+                for (int s = select; s != cur; s = students[s]) {
+                    answer++;
                 }
             }
         }
 
-        finished[idx] = true;
+        finish[cur] = true;
     }
-
 }
