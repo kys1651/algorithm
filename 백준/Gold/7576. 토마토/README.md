@@ -1,5 +1,5 @@
 # [Gold V] 토마토 - 7576 
-  
+   
 [문제 링크](https://www.acmicpc.net/problem/7576) 
 
 ### 성능 요약
