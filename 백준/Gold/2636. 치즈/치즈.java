@@ -1,95 +1,83 @@
 import java.io.BufferedReader;
-        import java.io.InputStreamReader;
-        import java.io.IOException;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
     static int[][] map;
-    static boolean[][] visited;
-    static int a, b;
-    static int cheeseCount;
-
-    // 상하좌우
-    static int[] dirX = {0, 0, -1, 1};
-    static int[] dirY = {1, -1, 0, 0};
-
+    static boolean[][] visit;
+    static int[] dirX = {-1, 1, 0, 0};
+    static int[] dirY = {0, 0, -1, 1};
+    static int n,m,time,cheeseCount;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+        map = new int[n][m];
+        visit = new boolean[n][m];
 
-        a = Integer.parseInt(st.nextToken());
-        b = Integer.parseInt(st.nextToken());
-
-        map = new int[a][b];
-        // 치즈 입력 받기
-        for (int i = 0; i < a; i++) {
+        for (int i = 0; i < n; i++) {
             st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < b; j++) {
+            for (int j = 0; j < m; j++) {
                 map[i][j] = Integer.parseInt(st.nextToken());
             }
         }
-
-        int time = 0;
-        // 치즈 제거 후 횟수 세기
-        while (cheeseCheck()) {
+        
+        while (cheesesCheck()){
             time++;
-            visited = new boolean[a][b];
-            cheeseCount = 0;
+            visit = new boolean[n][m];
             dfs(0, 0);
+            cheeseCount = 0;
         }
+
         System.out.println(time);
         System.out.println(cheeseCount);
-
     }
 
-    // 치즈가 있는지 없는지 체크함
-    private static boolean cheeseCheck() {
-        // 판 위에 치즈를 전부 제거
-        for (int i = 0; i < a; i++) {
-            for (int j = 0; j < b; j++) {
-                if (map[i][j] == 2) {
+    private static boolean cheesesCheck() {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if(map[i][j] == 2){
                     map[i][j] = 0;
+                    cheeseCount++;
                 }
             }
         }
-
-        for (int i = 0; i < a; i++) {
-            for (int j = 0; j < b; j++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
                 if (map[i][j] == 1) {
                     return true;
                 }
             }
         }
-        return false;
 
+        return false;
     }
 
-    private static void dfs(int row, int col) {
-        // 0,0부터 시작함 0,0은 무조건 공기임
+    private static void dfs(int x, int y) {
+        for (int d = 0; d < 4; d++) {
+            int nX = x + dirX[d];
+            int nY = y + dirY[d];
 
-        for (int i = 0; i < 4; i++) {
-            int nextX = row + dirX[i];
-            int nextY = col + dirY[i];
-
-
-            // 유효하지않거나 방문했다면 넘어가기
-            if (!isValid(nextX, nextY) || visited[nextX][nextY]) {
+            if (check(nX, nY) || visit[nX][nY]) {
                 continue;
             }
-            
-            visited[nextX][nextY] = true;
-            if (map[nextX][nextY] == 1) {
-                map[nextX][nextY] = 2;
-                cheeseCount++;
-            }
-            else{// 공기라면
-                dfs(nextX, nextY);
+
+            visit[nX][nY] = true;
+            if (map[nX][nY] == 1) {
+                map[nX][nY] = 2;
+            }else{
+                dfs(nX, nY);
             }
         }
     }
 
-    private static boolean isValid(int row, int col) {
-
-        return row >= 0 && row < a && col >= 0 && col < b;
+    private static boolean check(int x, int y) {
+        return x < 0 || x >= n || y < 0 || y >= m;
     }
+
+
 }
