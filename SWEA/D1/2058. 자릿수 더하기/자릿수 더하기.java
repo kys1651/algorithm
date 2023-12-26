@@ -5,9 +5,10 @@ class Solution {
 	public static void main(String args[]) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int result = 0;
-        String num = br.readLine();
-        for(char n : num.toCharArray()){
-            result += n - '0';
+        int num = Integer.parseInt(br.readLine());
+        while(num != 0){
+            result += num % 10;
+            num /= 10;
         }
         System.out.println(result);
 	}
