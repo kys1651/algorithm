@@ -1,41 +1,52 @@
-import java.util.*;
-import java.io.*;
+import java.util.StringTokenizer;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
-class Solution
-{
-	public static void main(String args[]) throws Exception
-	{
-		Scanner sc = new Scanner(System.in);
-		int[] A;
-        int[] B;
+class Solution {
+	public static void main(String args[]) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
+        StringTokenizer st;
+		int T = Integer.parseInt(br.readLine());
+		for(int tc = 1; tc <= T; tc++) {
+            st = new StringTokenizer(br.readLine());
+            int n = Integer.parseInt(st.nextToken());
+            int m = Integer.parseInt(st.nextToken());
 
-        int T=sc.nextInt();;
-		for(int tc = 1; tc <= T; tc++)
-		{
-        	int N = sc.nextInt();
-            int M = sc.nextInt();
-            A = new int[N];
-            B = new int[M];
-            for(int i = 0; i < N; i++){
-                A[i] = sc.nextInt();
+            int[] A = new int[n];
+            st = new StringTokenizer(br.readLine());
+            for(int i = 0; i < n; i++){
+                A[i] = Integer.parseInt(st.nextToken());
             }
-            for(int j = 0; j < M; j++){
-                B[j] = sc.nextInt();
+            
+            int[] B = new int[m];
+            st = new StringTokenizer(br.readLine());
+            for(int i = 0; i < m; i++){
+                B[i] = Integer.parseInt(st.nextToken());
             }
-            int result = searchMax(N < M ? A : B, N <= M ? B : A );
-            System.out.printf("#%d %d\n",tc,result);
+			
+            int result = 0;
+            if(n < m){
+                result = multiply(A,B);
+            }else{
+                result = multiply(B,A);
+            }
+            sb.append("#" + tc + " " + result).append("\n");
 		}
+        System.out.println(sb);
 	}
     
-    private static int searchMax(int[] A, int[] B){
-        int max = 0;
-        for(int i = 0 ; i <= B.length- A.length; i++){
+	private static int multiply(int[] min, int[] max){
+        int result = 0;
+        int minLen = min.length;
+        int maxLen = max.length;
+        for(int i = 0; i <= maxLen - minLen; i++){
             int tmp = 0;
-            for(int j = 0; j < A.length; j++){
-                tmp += A[j] * B[i + j];
+            for(int j = 0; j < minLen; j++){
+                tmp += min[j] * max[i + j];
             }
-            max = Math.max(tmp, max);
+            result = Math.max(result,tmp);
         }
-        return max;
+        return result;
     }
 }
