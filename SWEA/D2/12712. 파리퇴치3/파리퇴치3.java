@@ -1,25 +1,29 @@
-import java.util.Scanner;
+import java.util.StringTokenizer;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 class Solution {
     static int n,m;
     static int[][] map;
     public static void main(String args[]) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
+        StringTokenizer st;
         // 상하좌우
-        int[] cX = {-1,1,0,0};
-        int[] cY = {0,0,-1,1};
-
+        int[] cX = {-1,1,0,0}; int[] cY = {0,0,-1,1};
         // 대각선
-        int[] xX = {-1,-1,1,1};
-        int[] xY ={1,-1,1,-1};
-        Scanner sc = new Scanner(System.in);
-        int T = sc.nextInt();
+        int[] xX = {-1,-1,1,1}; int[] xY ={1,-1,1,-1};
+        
+        int T = Integer.parseInt(br.readLine());
         for(int tc = 1; tc <= T; tc++){
-            n = sc.nextInt();
-            m = sc.nextInt();
+            st = new StringTokenizer(br.readLine());
+            n = Integer.parseInt(st.nextToken());
+            m = Integer.parseInt(st.nextToken());
             map = new int[n][n];
             for(int i = 0; i < n; i++){
+                st = new StringTokenizer(br.readLine());
                 for(int j = 0; j < n; j++){
-                    map[i][j] = sc.nextInt();
+                    map[i][j] = Integer.parseInt(st.nextToken());
                 }
             }
 
@@ -43,6 +47,7 @@ class Solution {
             int nX = x + dirX[i];
             int nY = y + dirY[i];
             int count = 1;
+            // 범위 밖이거나 세기만큼 쏜 경우
             while(check(nX,nY) && count < m){
                 result += map[nX][nY];
                 nX += dirX[i];
