@@ -1,19 +1,14 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 class Solution {
-    public static void main(String args[]) throws Exception {
+	public static void main(String args[]) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-
-        String line = br.readLine();
         int result = 0;
-
-        for (char ch : line.toCharArray()) {
-            result += (ch - '0');
+        String num = br.readLine();
+        for(char n : num.toCharArray()){
+            result += n - '0';
         }
-        bw.write(result + "\n");
-        bw.flush();
-        bw.close();
-    }
+        System.out.println(result);
+	}
 }
