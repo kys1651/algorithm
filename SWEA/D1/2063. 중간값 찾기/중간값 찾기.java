@@ -1,40 +1,17 @@
-import java.io.*;
-import java.util.*;
-
+import java.util.StringTokenizer;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.util.Arrays;
 class Solution {
-    public static void main(String args[]) throws Exception {
+	public static void main(String args[]) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        int N = Integer.parseInt(br.readLine().trim());
-
+        int n = Integer.parseInt(br.readLine());
+        int[] arr = new int[n];
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int[] arr = new int[N];
-        for (int i = 0; i < N; i++) {
+        for(int i = 0; i < n; i++){
             arr[i] = Integer.parseInt(st.nextToken());
         }
-
-        bubbleSort(arr, N);
-
-        bw.write(arr[N / 2] + "\n");
-        bw.flush();
-        bw.close();
-    }
-
-    private static void bubbleSort(int[] arr, int size) {
-        for (int i = 1; i < size; i++) {
-
-            for (int j = 0; j < size - i; j++) {
-
-                if (arr[j] > arr[j + 1]) {
-                    swap(arr, j, j + 1);
-                }
-            }
-        }
-    }
-
-    private static void swap(int[] arr, int i, int j) {
-        int tmp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = tmp;
-    }
+        Arrays.sort(arr);
+        System.out.println(arr[n/2]);
+	}
 }
