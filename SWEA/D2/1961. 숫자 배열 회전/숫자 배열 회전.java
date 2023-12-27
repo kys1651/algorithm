@@ -1,50 +1,42 @@
-import java.util.*;
-import java.io.*;
+import java.util.StringTokenizer;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
-class Solution
-{
-	public static void main(String args[]) throws Exception
-	{
-		Scanner sc = new Scanner(System.in);
-		int[][] map;
-        int T=sc.nextInt();;
-	
-        
-		for(int tc = 1; tc <= T; tc++)
-		{
-            int N = sc.nextInt();
-            map = new int[N][N];
-            
-            for(int i = 0; i < N; i++){
-                for(int j = 0; j < N; j++){
-                    map[i][j] = sc.nextInt();
+class Solution {
+    static StringBuilder sb = new StringBuilder();
+	public static void main(String args[]) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
+        int T = Integer.parseInt(br.readLine());
+		for(int tc = 1; tc <= T; tc++) {
+            sb.append("#" + tc + " ").append("\n");
+            int n = Integer.parseInt(br.readLine());
+            int[][] map = new int[n][n];
+            for(int i = 0; i < n; i++){
+                st = new StringTokenizer(br.readLine());
+                for(int j = 0; j < n; j++){
+                    map[i][j] = Integer.parseInt(st.nextToken());
                 }
             }
-            
-            System.out.println("#" + tc);
-            printArray(map);
+            rotation(map);
 		}
+        System.out.println(sb);
 	}
-    
-    private static void printArray(int[][] arr){
-        StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < arr.length; i++){
-            for(int a = arr.length - 1; a >= 0; a--){
-                sb.append(arr[a][i]);
+    private static void rotation(int[][] map){
+        int len = map.length;
+        for(int i = 0; i < len; i++){
+            for(int j = 0; j < len; j++){
+                sb.append(map[len - 1 - j][i]);
             }
             sb.append(" ");
-            
-            for(int b = arr.length -1; b >= 0; b --){
-                sb.append(arr[arr.length - 1 - i][b]);
+            for(int j = 0; j < len; j++){
+                sb.append(map[len - 1 - i][len - 1 - j]);
             }
             sb.append(" ");
-
- 			for(int c = 0; c < arr.length ; c++){
-                sb.append(arr[c][arr.length - 1 - i]);
+            for(int j = 0; j < len; j++){
+                sb.append(map[j][len - 1 - i]);
             }
             sb.append("\n");
         }
-        
-        System.out.print(sb.toString());
     }
 }
