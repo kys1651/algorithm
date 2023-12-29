@@ -1,10 +1,9 @@
-import java.util.Queue;
-import java.util.LinkedList;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 class Solution {
     static char[][] map;
+    static int result = 0;
     // 상하좌우,왼쪽(위,아래),오른쪽(위,아래)
     static int[] dirX = {-1, 1, 0, 0, -1, 1, -1, 1};
     static int[] dirY = {0, 0, -1, 1, -1, -1, 1, 1};
@@ -16,20 +15,16 @@ class Solution {
         int T = Integer.parseInt(br.readLine());
         for (int tc = 1; tc <= T; tc++) {
             int n = Integer.parseInt(br.readLine());
-
             map = new char[n][n];
             for (int i = 0; i < n; i++) {
-                String tmp = br.readLine();
-                for (int j = 0; j < n; j++) {
-                    map[i][j] = tmp.charAt(j);
-                }
+                map[i] = br.readLine().toCharArray();
             }
 
-            int result = 0;
+            result = 0;
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++) {
-                    if (map[i][j] == '.' && countMine(i, j, false)) {
-                        result++;
+                    if (map[i][j] == '.') {
+                        countMine(i, j, false);
                     }
                 }
             }
@@ -46,8 +41,7 @@ class Solution {
         System.out.println(sb);
     }
 
-    private static boolean countMine(int x, int y, boolean mem) {
-        Queue<int[]> queue = new LinkedList<>();
+    private static void countMine(int x, int y, boolean mem) {
         int count = 0;
         for (int i = 0; i < dirX.length; i++) {
             int nX = x + dirX[i];
@@ -57,25 +51,30 @@ class Solution {
                 continue;
             }
 
-            if(map[nX][nY] == '*'){
+            if (map[nX][nY] == '*') {
                 count++;
-            } else if (map[nX][nY] == '.') {
-                queue.offer(new int[]{nX, nY});
             }
         }
 
         if (count == 0) {
             map[x][y] = '0';
-            while (!queue.isEmpty()) {
-                int[] cur = queue.poll();
-                countMine(cur[0], cur[1], true);
+            for (int i = 0; i < dirX.length; i++) {
+                int nX = x + dirX[i];
+                int nY = y + dirY[i];
+                if (check(nX, nY)) {
+                    continue;
+                }
+                if (map[nX][nY] == '.') {
+                    countMine(nX, nY, true);
+                }
             }
-            return true;
+            if(!mem){
+                result++;
+            }
         }
-        if (mem) {
+        else if (mem) {
             map[x][y] = (char) ('0' + count);
         }
-        return false;
     }
 
     private static boolean check(int x, int y) {
