@@ -6,14 +6,14 @@ import java.io.InputStreamReader;
 class Solution {
     static int[][] graph;
     static boolean[] visit;
-	public static void main(String args[]) throws Exception {
+    public static void main(String args[]) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
-		for(int tc = 1; tc <= 10; tc++) {
+        for(int tc = 1; tc <= 10; tc++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
             st.nextToken();
             int n = Integer.parseInt(st.nextToken());
-            
+
             graph = new int[100][2];
             visit = new boolean[100];
             st = new StringTokenizer(br.readLine());
@@ -26,22 +26,26 @@ class Solution {
                     graph[start][1] = end;
                 }
             }
-            
+
             sb.append("#" + tc + " " + (checkPath() ? "1" : "0")).append("\n");
-		}
+        }
         System.out.println(sb);
-	}
+    }
     private static boolean checkPath(){
         Stack<Integer> stack = new Stack<>();
         stack.push(0);
         while(!stack.isEmpty()){
             int cur = stack.pop();
+            visit[cur] = true;
             if(cur == 99) return true;
-            if(graph[cur][0] != 0){
-                stack.push(graph[cur][0]);
+
+            int next = graph[cur][0];
+            if(next != 0 && !visit[next]){
+                stack.push(next);
             }
-            if(graph[cur][1] != 0){
-                stack.push(graph[cur][1]);
+            next = graph[cur][1];
+            if(next != 0 && !visit[next]){
+                stack.push(next);
             }
         }
         return false;
