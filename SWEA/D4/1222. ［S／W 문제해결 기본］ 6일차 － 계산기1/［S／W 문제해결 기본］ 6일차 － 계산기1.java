@@ -1,19 +1,18 @@
-import java.util.Scanner;
-import java.util.Stack;
+import java.util.StringTokenizer;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 class Solution {
 	public static void main(String args[]) throws Exception {
-		Scanner sc = new Scanner(System.in);
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		for(int tc = 1; tc <= 10; tc++) {
-            sc.nextInt();
-            Stack<Integer> stack = new Stack<>();
-            String line = sc.next();
-            stack.push(line.charAt(0) - '0');
-            for(int i = 1; i < line.length(); i++){
-                if(line.charAt(i) != '+'){
-                    stack.push(stack.pop() + line.charAt(i) - '0');                   
-                }
+            br.readLine();
+            StringTokenizer st = new StringTokenizer(br.readLine(),"+");
+            int sum = 0;
+            while(st.hasMoreTokens()){
+                sum += Integer.parseInt(st.nextToken());
             }
-            System.out.println("#" + tc + " " + stack.pop());
+            System.out.println("#" + tc + " " + sum);
 		}
 	}
 }
