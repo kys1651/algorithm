@@ -1,31 +1,35 @@
-import java.util.*;
-class Solution
-{
-	public static void main(String args[]) throws Exception
-	{
-		Scanner sc = new Scanner(System.in);
-		for(int tc = 1; tc <= 10; tc++)
-		{
-            int n = sc.nextInt();
-            List<Integer> list = new LinkedList<>();
+import java.util.LinkedList;
+import java.util.StringTokenizer;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+class Solution {
+    public static void main(String args[]) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
+        for(int tc = 1; tc <= 10; tc++) {
+            int n = Integer.parseInt(br.readLine());
+            LinkedList<Integer> list = new LinkedList<>();
+            StringTokenizer st = new StringTokenizer(br.readLine());
             for(int i = 0; i < n; i++){
-                list.add(sc.nextInt());	
+                list.add(Integer.parseInt(st.nextToken()));
             }
-            int command = sc.nextInt();
+            int command =  Integer.parseInt(br.readLine());
+            st = new StringTokenizer(br.readLine());
             for(int i = 0; i < command; i++){
-                sc.next();
-                int pos = sc.nextInt();
-                int count = sc.nextInt();
+                st.nextToken();
+                int pos = Integer.parseInt(st.nextToken());
+                int count = Integer.parseInt(st.nextToken());
                 for(int j =0; j < count; j++){
-                    list.add(pos+j,sc.nextInt());
+                    list.add(pos+j,Integer.parseInt(st.nextToken()));
                 }
             }
-                
-            System.out.print("#" + tc+ " ");
+
+            sb.append("#" + tc+ " ");
             for(int i = 0; i < 10; i++){
-                System.out.print(list.get(i)+ " " );
+                sb.append(list.get(i)+ " " );
             }
-            System.out.println();
-		}
-	}
+            sb.append("\n");
+        }
+        System.out.println(sb);
+    }
 }
