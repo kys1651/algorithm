@@ -38,6 +38,7 @@ class Solution {
                 }
             }
             
+            // for문을 통해서 전부 bfs를 통해 각 값 확인
             for(int i = 0; i < n; i++){
                 for(int j = 0; j < n; j++){
                     bfs(new Point(i,j,1));
@@ -49,12 +50,14 @@ class Solution {
 	}
     
     private static void bfs(Point start){
+        // 큐 선언 후 시작점을 넣어줌
         Queue<Point> rooms = new LinkedList<>();
         rooms.offer(start);
         
         while(!rooms.isEmpty()){
             Point cur = rooms.poll();
             
+            // 상하좌우 확인 후 범위밖이면 continue
             for(int i = 0; i < 4; i++){
                 int nX = cur.x + dirX[i];
                 int nY = cur.y + dirY[i];
@@ -63,19 +66,21 @@ class Solution {
                     continue;
                 }
                 
+                // 다음 방의 번호가 현재 방의 번호 +1 이라면 갈 수 있음
                 if(map[nX][nY] == map[cur.x][cur.y] + 1){
                     rooms.offer(new Point(nX,nY,cur.count+1));
-                }else{
-                    if(resultCount <= cur.count){
-                        int startRoom = map[start.x][start.y];                        
-                        if(resultCount == cur.count){
-                            resultNum = Math.min(resultNum, startRoom);
-                        }else{
-                            resultNum = startRoom;
-                        }
-                        resultCount = cur.count;
-                        
+                }
+                // 못간다면 resultCount를 최신화 할 수 있다.
+                else if(resultCount <= cur.count){
+                    // 시작 방
+                    int startRoom = map[start.x][start.y];
+                    // 같다면 방의 번호가 더 작은 것으로 최신화
+                    if(resultCount == cur.count){
+                        resultNum = Math.min(resultNum, startRoom);
+                    }else{
+                        resultNum = startRoom;
                     }
+                    resultCount = cur.count;
                 }
             }
         }
