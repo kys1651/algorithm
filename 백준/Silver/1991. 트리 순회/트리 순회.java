@@ -21,7 +21,7 @@ class Main {
             }
             // 값이 다르다면 오른쪽과 왼쪽을 다 확인해야함.
             // 이진 트리이고 다른 조건은 존재하지 않기 때문에
-            else{
+            else {
                 if (left != null) {
                     left.insert(node);
                 }
@@ -34,6 +34,7 @@ class Main {
 
     // 순회하는데에 출력을 저장하기 위한 StringBuilder
     static StringBuilder sb;
+
     public static void main(String args[]) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         sb = new StringBuilder();
@@ -49,10 +50,10 @@ class Main {
             char right = st.nextToken().charAt(0);
             // 일단 임시로 노드를 만들어준다.
             Node tmp = new Node(node);
-            if(left != '.'){
+            if (left != '.') {
                 tmp.left = new Node(left);
             }
-            if(right != '.'){
+            if (right != '.') {
                 tmp.right = new Node(right);
             }
             // 임시 노드를 root를 기준으로 삽입하여준다.
@@ -69,6 +70,7 @@ class Main {
         System.out.println(sb);
     }
 
+    // VLR -> ROOT,LEFT,RIGHT
     private static void VLR(Node root) {
         sb.append(root.value);
         if (root.left != null) {
@@ -78,6 +80,8 @@ class Main {
             VLR(root.right);
         }
     }
+
+    // LVR -> LEFT, ROOT, RIGHT
     private static void LVR(Node root) {
         if (root.left != null) {
             LVR(root.left);
@@ -87,6 +91,8 @@ class Main {
             LVR(root.right);
         }
     }
+
+    // LRV -> LEFT, RIGHT, ROOT
     private static void LRV(Node root) {
         if (root.left != null) {
             LRV(root.left);
