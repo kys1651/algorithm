@@ -12,7 +12,7 @@ public class Main {
             Arrays.fill(map[i], ' ');
         }
 
-        star(n-1, 0, 2 * n, n);
+        star(n - 1, 0, n * 2);
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 sb.append(map[i][j]);
@@ -22,18 +22,16 @@ public class Main {
         System.out.println(sb);
     }
 
-    private static void star(int x, int y, int lenW, int lenH) {
-        if (lenW == 6 && lenH == 3) {
-            for (int i = 0; i < 5; i++) {
-                map[x][y + i] = '*';
-            }
+    private static void star(int x, int y, int len) {
+        if (len == 6) {
+            // 밑 한 줄
+            map[x][y] = map[x][y+1] = map[x][y+2] = map[x][y+3] = map[x][y+4] = '*';
             map[x - 1][y + 1] = map[x - 1][y + 3] = map[x - 2][y + 2] = '*';
             return;
         }
-        int nextW = lenW / 2;
-        int nextH = lenH / 2;
-        star(x, y, nextW, nextH);
-        star(x, y + nextW, nextW, nextH);
-        star(x - nextH, y + nextH, nextW, nextH);
+        int nextLen = len / 2;
+        star(x, y, nextLen);
+        star(x, y + nextLen, nextLen);
+        star(x - nextLen / 2, y + nextLen / 2, nextLen);
     }
 }
