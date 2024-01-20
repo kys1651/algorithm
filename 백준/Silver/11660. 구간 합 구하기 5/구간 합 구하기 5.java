@@ -10,38 +10,19 @@ public class Main {
         int n = Integer.parseInt(st.nextToken());
         int m = Integer.parseInt(st.nextToken());
         int[][] map = new int[n + 1][n + 1];
-        for (int i = 0; i < n; i++) {
+        for (int i = 1; i <= n; i++) {
             st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < n; j++) {
-                int value = Integer.parseInt(st.nextToken());
-                if (j != 0) {
-                    map[i][j] += map[i][j-1];
-                }
-                if (i != 0) {
-                    map[i][j] += map[i-1][j];
-                }
-                if (i != 0 && j != 0) {
-                    map[i][j] -= map[i-1][j-1];
-                }
-                map[i][j] += value;
+            for (int j = 1; j <= n; j++) {
+                map[i][j] = map[i - 1][j] + map[i][j - 1] - map[i - 1][j - 1] + Integer.parseInt(st.nextToken());
             }
         }
         for (int k = 0; k < m; k++) {
             st = new StringTokenizer(br.readLine());
             int startX = Integer.parseInt(st.nextToken()) - 1;
             int startY = Integer.parseInt(st.nextToken()) - 1;
-            int endX = Integer.parseInt(st.nextToken()) - 1;
-            int endY = Integer.parseInt(st.nextToken()) - 1;
-            int tmp = map[endX][endY];
-            if (startX != 0) {
-                tmp -= map[startX - 1][endY];
-            }
-            if (startY != 0) {
-                tmp -= map[endX][startY - 1];
-            }
-            if (startX != 0 && startY != 0) {
-                tmp += map[startX - 1][startY - 1];
-            }
+            int endX = Integer.parseInt(st.nextToken());
+            int endY = Integer.parseInt(st.nextToken());
+            int tmp = map[endX][endY] - map[startX][endY] - map[endX][startY] + map[startX][startY];
             sb.append(tmp).append("\n");
         }
         System.out.println(sb);
