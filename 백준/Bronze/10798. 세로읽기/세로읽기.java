@@ -1,32 +1,30 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.io.*;
 
-class Main {
+public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st ;
         StringBuilder sb = new StringBuilder();
-        int max =0;
-        char[][] arr = new char[5][15];
+        char[][] text = new char[5][];
 
-        for(int i = 0 ; i < 5; i++){
-            String str = br.readLine();
-
-            if(max < str.length()) max = str.length();
-            for(int j = 0; j < str.length(); j++){
-                arr[i][j] = str.charAt(j);
-            }
-        }
-        for(int i = 0 ; i < max; i++){
-            for(int j = 0 ; j < 5; j++){
-                if(arr[j][i] == '\0') continue;
-                sb.append(arr[j][i]);
-            }
+        // 가장 긴 문자열의 길이
+        int max = 0;
+        for (int i = 0; i < 5; i++) {
+            // 문자열들을 문자 배열로 만들어서 넣어줌
+            text[i] = br.readLine().toCharArray();
+            max = Math.max(text[i].length, max);
         }
 
-        System.out.println(sb.toString());
-
+        // 가장 긴 길이까지 확인
+        for (int i = 0; i < max; i++) {
+            // 5개의 배열 중 현재 길이보다 짦다면 넘어감
+            for(int j = 0; j < 5 ;  j++) {
+                if(i >= text[j].length){
+                    continue;
+                }
+                sb.append(text[j][i]);
+            }
+        }
+        System.out.println(sb);
     }
 }
