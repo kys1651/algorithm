@@ -1,37 +1,25 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.io.*;
 
-class Main {
+public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int[][] arr = new int[100][100];
-        int n = Integer.parseInt(st.nextToken());
-
-        for(int i = 0 ; i < n; i++) {
-            st = new StringTokenizer(br.readLine());
-
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
-
-            for (int x = a; x < a + 10; x++) {
-                for (int y = b; y < b + 10; y++) {
-                    arr[x][y]++;
+        int[][] map = new int[100][100];
+        int n = Integer.parseInt(br.readLine());
+        int result = 0;
+        for (int i = 0; i < n; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int sX = Integer.parseInt(st.nextToken());
+            int sY = Integer.parseInt(st.nextToken());
+            for (int x = sX; x < sX + 10 && x < 100; x++) {
+                for (int y = sY; y < sY + 10 && y < 100; y++) {
+                    if (map[x][y] != 1) {
+                        map[x][y] = 1;
+                        result++;
+                    }
                 }
             }
         }
-
-        int count = 0 ;
-        for(int i = 0; i < 100; i++){
-            for(int j = 0 ; j < 100; j++){
-                if(arr[i][j] > 1){
-                    count += arr[i][j] - 1;
-                }
-            }
-        }
-        System.out.println(n*100-count);
-
+        System.out.println(result);
     }
 }
