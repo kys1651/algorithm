@@ -17,7 +17,13 @@ public class Main {
                 if (j != 0) {
                     map[i][j] += map[i][j-1];
                 }
-                 map[i][j] += value;
+                if (i != 0) {
+                    map[i][j] += map[i-1][j];
+                }
+                if (i != 0 && j != 0) {
+                    map[i][j] -= map[i-1][j-1];
+                }
+                map[i][j] += value;
             }
         }
         for (int k = 0; k < m; k++) {
@@ -26,10 +32,15 @@ public class Main {
             int startY = Integer.parseInt(st.nextToken()) - 1;
             int endX = Integer.parseInt(st.nextToken()) - 1;
             int endY = Integer.parseInt(st.nextToken()) - 1;
-            int tmp = 0;
-            for (int i = startX; i <= endX; i++) {
-                int value = map[i][endY] - (startY == 0 ? 0 : map[i][startY - 1]);
-                tmp += value;
+            int tmp = map[endX][endY];
+            if (startX != 0) {
+                tmp -= map[startX - 1][endY];
+            }
+            if (startY != 0) {
+                tmp -= map[endX][startY - 1];
+            }
+            if (startX != 0 && startY != 0) {
+                tmp += map[startX - 1][startY - 1];
             }
             sb.append(tmp).append("\n");
         }
