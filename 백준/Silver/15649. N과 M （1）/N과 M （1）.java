@@ -1,47 +1,46 @@
-import java.io.BufferedReader;
-        import java.io.InputStreamReader;
-        import java.io.IOException;
-        import java.util.StringTokenizer;
-        import java.util.ArrayDeque;
+import java.util.*;
+import java.io.*;
 
 public class Main {
-    static int N,M;
-    static boolean[] check;
+    // 총 개수 n과 뽑아야 하는 수 M
+    static int m, n;
+    // 정답을 담는 answer 배열
     static int[] answer;
+    // 방문처리 해주는 visit 배열
+    static boolean[] visit;
     static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+        visit = new boolean[n + 1];
+        answer = new int[m];
 
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-
-        check = new boolean[N + 1];
-        answer = new int[N + 1];
-        dfs(0);
-
+        solution(0);
         System.out.println(sb);
     }
 
-    private static void dfs(int index) {
-        //인덱스가 마지막 개수를 채울시 출력
-        if(index == M){
-            for(int i = 0 ; i < M ;i++){
+    private static void solution(int depth) {
+        // n개의 숫자 중 m개를 뽑았다면 StringBuilder에 추가
+        if (depth == m) {
+            for (int i = 0; i < answer.length; i++) {
                 sb.append(answer[i]).append(" ");
             }
             sb.append("\n");
             return;
         }
 
-        // 1 ~ N개의 수를 출력
-        for (int i = 1; i <= N; i++) {
-            if(check[i]) continue; // 이미 온 적 있으면 다음으로
-            check[i] = true;
-            answer[index] = i;
-            dfs(index+1); // 1증가 시키고 재귀함
-            check[i] = false; // 여기서 나올 모든 경우를 넣었기에 i를 사용하지 않음으로 교체
+        // 1~n까지 순회한다.
+        for (int i = 1; i <= n; i++) {
+            // 방문한 배열은 넘어간다.
+            if (visit[i]) continue;
+            // 방문처리 후 현재 depth에 i 값을 넣고 재귀 호출
+            visit[i] = true;
+            answer[depth] = i;
+            solution(depth + 1);
+            visit[i] = false;
         }
-
     }
 }
