@@ -2,7 +2,7 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-    // 지도, DP배열
+    // 지도, 디피배열
     static int[][] map, dp;
     // 세로,가로
     static int m, n;
@@ -42,7 +42,7 @@ public class Main {
             return dp[x][y];
         }
 
-        dp[x][y] = 0;
+        int count = 0;
         for (int d = 0; d < 4; d++) {
             int nX = x + dirX[d];
             int nY = y + dirY[d];
@@ -53,9 +53,9 @@ public class Main {
             }
 
             // 내리막 길인 경우
-            dp[x][y] += dfs(nX, nY);
+            count += dfs(nX, nY);
         }
-
+        dp[x][y] = count;
         return dp[x][y];
     }
 }
