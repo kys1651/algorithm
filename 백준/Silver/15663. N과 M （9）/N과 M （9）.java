@@ -4,23 +4,23 @@ import java.io.*;
 /*
 	작성자 : 김용수
 	문제 : [백준] 15663번 : N과 M(9) Silve2(실버2)
-	제출 : 
-	결과 : 
-	성능 요약 : 
+	제출 :
+	결과 :
+	성능 요약 :
 
 	접근 방법
 	1. 숫자 N개 중 M개를 중복 허용없이 뽑는 것이다.
     2. 중복되는 수열을 여러번 출력하면 안되기 때문에 List에 결과를 삽입한다.
 */
 public class Main {
+    // 메모리 절약을 위한 StringBuilder
+    static StringBuilder sb = new StringBuilder();
     // M개를 뽑아서 저장하는 answer
-    static int[] answer,num;
+    static int[] answer, num;
     // 방문처리를 하는 visit
     static boolean[] visit;
     // 입력값 N과 M
     static int n, m;
-    // 정답을 저장하는 List
-    static ArrayList<String> result = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -40,10 +40,7 @@ public class Main {
         Arrays.sort(num);
 
         combination(0);
-        StringBuilder sb = new StringBuilder();
-        for (String s : result) {
-            sb.append(s).append("\n");
-        }
+
         System.out.println(sb);
     }
 
@@ -51,23 +48,24 @@ public class Main {
     private static void combination(int depth) {
         // 현재 뽑아온 숫자가 m개면 값을 저장한다.
         if (depth == m) {
-            StringBuilder sb = new StringBuilder();
-            // 배열에 있는 숫자를 전부 저장 후 hashSet에 넣어줌(중복되는 수열 제거)
+            // 배열에 있는 숫자를 전부 저장
             for (int i = 0; i < m; i++) {
                 sb.append(answer[i]).append(" ");
             }
-            if(!result.contains(sb.toString())){
-                result.add(sb.toString());
-            }
+            sb.append("\n");
             return;
         }
 
-        // 1부터 n까지 중복 가능한 비내림차순. 오름차순된 배열이기 때문에 at부터 삽입 후 i로 dfs
+        // 1부터 n까지 중복 되는 수열을 여러 번 출력하면 안된다.
+        // 중복 되는 수열이 여러번 호출되는 과정 -> 같은 숫자가 두번 반복 호출됨.
+        // -> 이전에 호출한 값이 현재 호출값보다 같다면 호출하지 않으면 된다.
+        int prev = 0;
         for (int i = 0; i < n; i++) {
-            if(visit[i]) continue;
+            // 방문했거나 이전에 호출한 적 있다면 넘어감
+            if (visit[i] || prev == num[i]) continue;
 
             visit[i] = true;
-            answer[depth] = num[i];
+            answer[depth] = prev = num[i];
             combination(depth + 1);
             visit[i] = false;
         }
