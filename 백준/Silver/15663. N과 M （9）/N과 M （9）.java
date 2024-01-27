@@ -1,56 +1,74 @@
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
+import java.io.*;
 
-class Main
-{
-    static StringBuilder sb = new StringBuilder();
-    static int arr[]; // 출력값들이 저장된 arr배열
-    static int num[];
-    static boolean visit[];
-    static int n,m;
+/*
+	작성자 : 김용수
+	문제 : [백준] 15663번 : N과 M(9) Silve2(실버2)
+	제출 : 
+	결과 : 
+	성능 요약 : 
 
-	public static void main(String args[]) throws Exception
-	{
-		Scanner sc = new Scanner(System.in);
-        
-        n = sc.nextInt();
-        m = sc.nextInt();
+	접근 방법
+	1. 숫자 N개 중 M개를 중복 허용없이 뽑는 것이다.
+    2. 중복되는 수열을 여러번 출력하면 안되기 때문에 List에 결과를 삽입한다.
+*/
+public class Main {
+    // M개를 뽑아서 저장하는 answer
+    static int[] answer,num;
+    // 방문처리를 하는 visit
+    static boolean[] visit;
+    // 입력값 N과 M
+    static int n, m;
+    // 정답을 저장하는 List
+    static ArrayList<String> result = new ArrayList<>();
 
-        arr = new int[m];
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+        // m개의 숫자를 뽑는 것이니까 m개로 선언
+        answer = new int[m];
+        num = new int[n];
         visit = new boolean[n];
 
-        num = new int[n];
-        for(int i = 0; i < n; i++){
-            num[i] = sc.nextInt();
+        // 입력 받은 뒤 정렬
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < n; i++) {
+            num[i] = Integer.parseInt(st.nextToken());
         }
-        // 수열은 사전 순으로 증가하는 순서로 출력해야함 그러므로 정렬
         Arrays.sort(num);
 
-        solution(0);
-
-        System.out.println(sb.toString());
+        combination(0);
+        StringBuilder sb = new StringBuilder();
+        for (String s : result) {
+            sb.append(s).append("\n");
+        }
+        System.out.println(sb);
     }
 
-    private static void solution(int depth) {
-        // depth == m 일 때 배열의 끝까지 간 것임
-        if(depth == m){
-            for(int num : arr){
-                sb.append(num + " ");
+    // 조합을 뽑는 메서드 dfs를 기반으로 로직을 처리
+    private static void combination(int depth) {
+        // 현재 뽑아온 숫자가 m개면 값을 저장한다.
+        if (depth == m) {
+            StringBuilder sb = new StringBuilder();
+            // 배열에 있는 숫자를 전부 저장 후 hashSet에 넣어줌(중복되는 수열 제거)
+            for (int i = 0; i < m; i++) {
+                sb.append(answer[i]).append(" ");
             }
-            sb.append("\n");
+            if(!result.contains(sb.toString())){
+                result.add(sb.toString());
+            }
             return;
         }
 
-        // 방금 출력한 값을 뜻하는 before
-        int before = -1;
-        for(int i = 0; i < n; i++){
-            // i 인덱스를 이미 방문 했거나 방금 배열에 넣은 값인 before와 num[i]가 같다면 continue;
-            if(visit[i] || before == num[i]){
-                continue;
-            }
-            arr[depth] = before = num[i];
+        // 1부터 n까지 중복 가능한 비내림차순. 오름차순된 배열이기 때문에 at부터 삽입 후 i로 dfs
+        for (int i = 0; i < n; i++) {
+            if(visit[i]) continue;
+
             visit[i] = true;
-            solution(depth+1);
+            answer[depth] = num[i];
+            combination(depth + 1);
             visit[i] = false;
         }
     }
