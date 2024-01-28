@@ -1,40 +1,30 @@
-import java.lang.reflect.Array;
 import java.util.*;
 import java.io.*;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int N = sc.nextInt();
-
-        char[] charArr = new char[N*2];
-
-        for (int i = 0; i < N - 1; i++) {
-            charArr[i] = ' ';
-        }
-        int middle = N-1;
-
-        for (int i = 0; i < N ; i++) {
-            charArr[middle+i] = '*';
-            charArr[middle-i] = '*';
-
-            for(int j = 0; j <= middle + i; j++){
-                System.out.print(charArr[j]);
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
+        // 상반부
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j < n - i; j++) {
+                System.out.print(" ");
+            }
+            for (int j = 0; j < 2 * i - 1; j++) {
+                System.out.print("*");
             }
             System.out.println();
-//            System.out.println(String.valueOf(charArr));
         }
-
-        for (int i = N-1; 0 < i; i--) {
-            charArr[middle+i] = ' ';
-            charArr[middle-i] = ' ';
-
-            for (int j = 0; j < middle + i; j++) {
-                System.out.print(charArr[j]);
+        // 하반부
+        for (int i = 1; i <= n - 1; i++) {
+            for (int j = 0; j < i; j++) {
+                System.out.print(" ");
+            }
+            for (int j = 0; j < 2 * (n - i) - 1; j++) {
+                System.out.print("*");
             }
             System.out.println();
-//            System.out.println(String.valueOf(charArr));
         }
-        sc.close();
+
     }
 }
