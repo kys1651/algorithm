@@ -1,50 +1,42 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.io.*;
 
 public class Main {
-    static int[] nums;
+    static StringBuilder sb = new StringBuilder();
+    static int[] num;
     static int[] result = new int[6];
-    static boolean[] visit;
-    static StringBuilder sb;
-
+    static int n;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
-        sb = new StringBuilder();
-        result = new int[6];
         while (true) {
             st = new StringTokenizer(br.readLine());
-            int k = Integer.parseInt(st.nextToken());
-            if (k == 0) {
-                break;
-            }
+            n = Integer.parseInt(st.nextToken());
+            if(n == 0) break;
 
-            visit = new boolean[k];
-            nums = new int[k];
-            for (int i = 0; i < k; i++) {
-                nums[i] = Integer.parseInt(st.nextToken());
+            num = new int[n];
+            for (int i = 0; i < n; i++) {
+                num[i] = Integer.parseInt(st.nextToken());
             }
-            dfs(0,0);
-
+            combination(0,0);
             sb.append("\n");
         }
         System.out.println(sb);
     }
 
-    private static void dfs(int depth,int pos) {
+    // N개 중 6개를 뽑는 숫자
+    private static void combination(int depth,int at) {
         if (depth == 6) {
             for (int i = 0; i < 6; i++) {
-                sb.append(result[i] + " ");
+                sb.append(result[i]).append(" ");
             }
             sb.append("\n");
             return;
         }
 
-        for (int i = pos; i < nums.length; i++) {
-            result[depth] = nums[i];
-            dfs(depth + 1, i + 1);
+        for (int i = at; i < n; i++) {
+            result[depth] = num[i];
+            combination(depth + 1, i + 1);
         }
     }
 }
