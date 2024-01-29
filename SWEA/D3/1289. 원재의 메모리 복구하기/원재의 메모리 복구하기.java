@@ -1,23 +1,23 @@
-import java.util.Scanner;
+import java.io.*;
 
-class Solution
-{
-	public static void main(String args[]) throws Exception
-	{
-		Scanner sc = new Scanner(System.in);
-        int T = sc.nextInt();
-		for(int tc = 1; tc <= T; tc++)
-		{
-            String origin = sc.next();
-            char bit = origin.charAt(0);
-            int result = bit - '0';
-            for(char ch : origin.toCharArray()){
-                if(bit != ch){
+class Solution{
+	public static void main(String args[]) throws Exception{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
+        int T = Integer.parseInt(br.readLine());
+        
+        for(int tc = 1; tc <= T; tc++){
+			String input = br.readLine();
+            int result = 0;
+            char prev = '0';
+            for(char ch : input.toCharArray()){
+            	if(prev != ch){
                     result++;
-                    bit = ch;
+                    prev = ch;
                 }
             }
-             System.out.println("#"+tc+" "+result);
-		}
+            sb.append(String.format("#%d %d\n",tc,result));
+        }
+        System.out.println(sb);
 	}
 }
