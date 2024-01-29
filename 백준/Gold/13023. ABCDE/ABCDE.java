@@ -11,7 +11,7 @@ public class Main {
 		n = Integer.parseInt(st.nextToken());
 		m = Integer.parseInt(st.nextToken());
 		visit = new boolean[n];
-		graph = new ArrayList[n+1];
+		graph = new ArrayList[n];
 		for(int i = 0; i < n; i++) {
 			graph[i] = new ArrayList<>();
 		}
@@ -30,12 +30,14 @@ public class Main {
 		}
 		
 		for(int i = 0; i < n; i++) {
+			visit[i] = true;
 			searchABCDE(i,1);
+			visit[i] = false;
 		}
 		System.out.println(0);
 	}
+	
 	private static void searchABCDE(int pos, int count) {
-		visit[pos] = true;
 		if(count == 5) {
 			System.out.println("1");
 			System.exit(0);
@@ -47,8 +49,5 @@ public class Main {
 			searchABCDE(next,count+1);
 			visit[next] = false;
 		}
-		visit[pos] = false;
-		
 	}
-
 }
