@@ -24,12 +24,12 @@ public class Main {
 			line[a][b + 1] = b;
 		}
 		result = Integer.MAX_VALUE;
-		lineInstall(0);
+		lineInstall(0,1);
 		System.out.println(result == Integer.MAX_VALUE ? -1 : result);
 	}
 
 	//
-	private static void lineInstall(int count) {
+	private static void lineInstall(int count, int x) {
 		// 현재 설치한 경로에서 각 줄로 갈 수 있는지 확인하는 메서드
 		if (isPossible()) {
 			// count가 0이라면 최소값
@@ -47,8 +47,7 @@ public class Main {
 			return;
 		}
 
-		// 행
-		for (int i = 1; i <= H; i++) {
+		for (int i = x; i <= H; i++) {
 			for (int j = 2; j <= N; j++) {
 				// 왼쪽을 바라보는 방향으로 설치가 가능한지만 확인하면 된다.(마지막은 오른쪽으로 설치 못하기에)
 				int left = j - 1;
@@ -58,7 +57,7 @@ public class Main {
 					// 설치할 수 있는 곳이라면 연결해준다.
 					line[i][j] = left;
 					line[i][left] = j;
-					lineInstall(count + 1);
+					lineInstall(count + 1,i);
 					// 다시 줄을 초기화 시켜줌
 					line[i][j] = line[i][left] = 0;
 				}
