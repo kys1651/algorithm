@@ -1,89 +1,148 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
+
+/*
+
+https://www.acmicpc.net/source/41137243
+-> 순수 DFS로 풀어서 500ms 가 나옴
+
+https://www.acmicpc.net/source/17374138
+-> 코드 참고하여 어떻게 개선할 수 있는지 확인
+
+*/
 
 public class Main {
-	static int result, N, M, H;
-	static int[][] line;
 
-	public static void main(String[] args) throws IOException {
+	static int N;
+	static int M;
+	static int H;
+
+	static int[][] map;
+
+	public static void main(String[] args) throws Exception {
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
+		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
 		H = Integer.parseInt(st.nextToken());
 
-		line = new int[H + 1][N + 1];
+		map = new int[H + 1][N];
+
 		for (int i = 0; i < M; i++) {
-			st = new StringTokenizer(br.readLine());
-			int a = Integer.parseInt(st.nextToken());
-			int b = Integer.parseInt(st.nextToken());
-			// 두개를 서로 연결 시켜준다.
-			line[a][b] = b + 1;
-			line[a][b + 1] = b;
-		}
-		result = Integer.MAX_VALUE;
-		lineInstall(0,1);
-		System.out.println(result == Integer.MAX_VALUE ? -1 : result);
-	}
+			st = new StringTokenizer(br.readLine(), " ");
 
-	//
-	private static void lineInstall(int count, int x) {
-		// 현재 설치한 경로에서 각 줄로 갈 수 있는지 확인하는 메서드
-		if (isPossible()) {
-			// count가 0이라면 최소값
-			if (count == 0) {
-				System.out.println(0);
-				System.exit(0);
-			}
-			// 현재 경로에서 각 줄로 갈 수 있다면 결과값 갱신 후 return;
-			result = Math.min(result, count);
+			int a = Integer.parseInt(st.nextToken()) - 1;
+			int b = Integer.parseInt(st.nextToken()) - 1;
+
+			// 개선점 1 : index 대신 1, -1을 써서 가는 방향만 저장
+			map[a][b] = 1;
+			map[a][b + 1] = -1;
+		}
+
+		// 개선점 2 : 어떤 사다리가 자기의 위치로 돌아가기 위해서는
+		/* 반드시 사다리 사이에 있는 연결다리의 수가 짝수여야 한다
+		 	이 문제에서 다리의 수는 최대 3개까지 놓을 수 있으므로
+		 	사다리 사이 다리가 홀수인 곳이 3군데 이상이면, 실패이다.
+		 */
+		if (betweenOdd() > 3) {
+			System.out.print(-1);
 			return;
 		}
 
-		// count가 3이라면 더 큰 값은 의미가 없음
-		if (count == 3) {
-			return;
+		// 최대 3개까지 다리를 놓으면서 체크한다.
+		for (int i = 0; i <= 3; i++) {
+			// 안에서 true를 return했으면 종료하면 된다
+			if(combination(0, 0, i)) return;
 		}
 
-		for (int i = x; i <= H; i++) {
-			for (int j = 2; j <= N; j++) {
-				// 왼쪽을 바라보는 방향으로 설치가 가능한지만 확인하면 된다.(마지막은 오른쪽으로 설치 못하기에)
-				int left = j - 1;
-
-				// 현재 위치와 왼쪽 세로선이 모두 비어있다면 연결하기
-				if (line[i][j] == 0 && line[i][left] == 0) {
-					// 설치할 수 있는 곳이라면 연결해준다.
-					line[i][j] = left;
-					line[i][left] = j;
-					lineInstall(count + 1,i);
-					// 다시 줄을 초기화 시켜줌
-					line[i][j] = line[i][left] = 0;
-				}
-			}
-		}
+		System.out.print(-1);
 	}
 
-	// 현재 상태로 i -> i로 내려갈 수 있는지 확인하는 메서드
-	private static boolean isPossible() {
-		for (int i = 1; i <= N; i++) {
-			// 출발 지점 설정
-			int x = 1, y = i;
-			// 현재 x가 끝까지 내려간다면
-			for (; x <= H; x++) {
-				// 연결안된다면 쭉 내려간다.
-				if (line[x][y] == 0)
-					continue;
-				// 연결된 곳을 찾았다면 y로 이동함
-				y = line[x][y];
+	/** 조합 뽑기 */
+	public static boolean combination(int cnt, int start, int limit) {
+		// 기저조건 : 모두 뽑은 경우
+		if (cnt == limit) {
+			// 조건을 만족했다면, 출력 후 즉시 종료
+			if (isBridgeDone()) {
+				System.out.print(cnt);
+				return true;
 			}
 
-			if (i != y) {
-				return false;
-			}
+			return false;
 		}
+
+		// 세로선, 가로선을 따라서 순차적으로 고르기
+		for (int i = start; i < N * H; i++) {
+
+			int sr = i / N;
+			int sc = i % N;
+
+			// 개선점 3 : 조건이 간단해져서 따로 함수를 호출하면 비효율적
+
+			if (sc == N - 1) continue; // 맨 오른쪽에서는 다리를 이을 수 없다
+
+			// 위치 기준 오른쪽으로 다리를 이으므로, 오른쪽 값도 체크한다
+			if (map[sr][sc] != 0 || map[sr][sc + 1] != 0) continue;
+
+			// 개선점 4 : 여기에서 map을 수정해서 다리 체크 조건을 더 간단하게 만든다.
+			map[sr][sc] = 1;
+			map[sr][sc + 1] = -1;
+			if(combination(cnt + 1, i + 1, limit)) return true;
+			map[sr][sc] = map[sr][sc + 1] = 0;
+		}
+		
+		return false;
+	}
+
+	/** 초기 사다리 사이의 다리가 홀수인부분의 개수를 센다 */
+	public static int betweenOdd() {
+		int odd = 0;
+		// 사다리 개수가 N이면 사다리 사이는 N - 1
+		for (int n = 0; n < N - 1; n++) {
+			int temp = 0;
+			// 사다리를 따라 내려가면서 연결된것의 개수를 센다
+			for (int row = 0; row < H; row++) {
+				if (map[row][n] == 1) temp++;
+			}
+
+			if (temp % 2 == 1) odd++;
+		}
+
+		return odd;
+	}
+
+	/** 다리가 조건을 만족하는지 체크 */
+	public static boolean isBridgeDone() {
+		for (int n = 0; n < N; n++) {
+			// 어떤 한 세로선에 대하여  바닥에 닿을때까지 진행
+			int curN = n;
+			int curH = 0;
+
+			while (curH < H) {
+				// 개선점 5 : 1, -1을 써서 조건이 훨신 간단해진다
+				if (map[curH][curN] == 1) curN++;
+				else if (map[curH][curN] == -1) curN--;
+				curH++; // 아래론 무조건 내려간다
+			}
+
+			// 개선점 6 : 여기에서 map 원상복구를 안하니, 조건이 줄어서 즉시 return이 가능하다
+			// 바닥에 닿았을 때, 사다리가 다르다면 false
+			if (n != curN) return false;
+		}
+
 		return true;
 	}
 
 }
+
+/* 
+
+System.exit 썼을 때 -> 112ms
+
+백트래킹으로 return true, false 이용했을 때
+
+테스트하려고 쓴거임 오해 ㄴㄴ
+
+*/
