@@ -7,24 +7,36 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
+	static char[] bit = new char[10001];
+
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		int n = Integer.parseInt(st.nextToken());
 		int k = Integer.parseInt(st.nextToken());
-		ArrayList<Character> list = new ArrayList<>();
-		int idx = 0;
-		while(list.size() <= 10000) {
-			String bin = Integer.toBinaryString(idx++);
-			for(char ch : bin.toCharArray()) {
-				list.add(ch);
-			}
+
+		getBits();
+
+		for (int i = 0; i < 5; i++) {
+			sb.append(bit[k - 1 + i * n] + " ");
 		}
-		for(int i = 0; i < 5; i++) {
-			sb.append(list.get(k-1 + i * n) + " ");
-		}
+		
 		System.out.println(sb);
 	}
 
+	private static void getBits() {
+		int i = 0, idx = 0;
+		while (true) {
+			String binStr = Integer.toBinaryString(idx++);
+			for (char ch : binStr.toCharArray()) {
+				bit[i++] = ch;
+				if (i >= 10000) {
+					return;
+				}
+			}
+		}
+	}
+
 }
+
