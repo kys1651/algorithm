@@ -32,7 +32,6 @@ public class Main {
 		// 게임 시작
 		gamePlay(0, 0);
 		
-//		getNextPosition(12, 3);
 		System.out.println(result);
 	}
 
@@ -53,27 +52,26 @@ public class Main {
 			if (path[originIdx] == -1)
 				continue;
 
-//			System.out.println("현재 위치 - " + path[originIdx] + " 주사위 - " + dice[depth]);
 
 			// 도착지점이 아니라면 diceCount만큼 움직인 위치를 받아온다.
 			int nextIdx = getNextPosition(i, dice[depth]);
 			// 다음 위치 점수
 			int nextScore = path[nextIdx];
-
-//			System.out.println("옮긴 뒤 " + nextScore);
-
+			
 			// -1이라면 도착지점으로 바로 들어가는 경우
 			if (nextScore == -1) {
 				// 도착지점에 넣어준 뒤 재귀 호출
 				pos[i] = nextIdx;
+				// 점수를 더하지 않고 보낸다.
 				gamePlay(depth + 1, count);
-				pos[i] = originIdx; // 기존 인덱스로 상태를 복구
 			} else if (isCheck(nextIdx)) {
 				// 도착지점 아닌 경우엔 다른 사람이 현재 있는지 확인
 				pos[i] = nextIdx;
+				// 점수를 더 해준 뒤 보낸다.
 				gamePlay(depth + 1, count + nextScore);
-				pos[i] = originIdx;
 			}
+			// 기존 인덱스로 상태를 복구
+			pos[i] = originIdx;
 		}
 	}
 
@@ -81,15 +79,12 @@ public class Main {
 	private static boolean isCheck(int nextIdx) {
 		for (int i = 0; i < 4; i++) {
 			int idx = pos[i];
-			// 도착점인 경우 넘어간다.
-			if (path[idx] == -1) {
-				continue;
-			}
 
 			// 40인 경우는 무조건 안된다.
 			if (path[idx] == 40 && path[nextIdx] == 40) {
 				return false;
 			}
+			// 인덱스가 같다면 같은 위치
 			if (idx == nextIdx) {
 				return false;
 			}
@@ -98,6 +93,7 @@ public class Main {
 		return true;
 	}
 
+	// 다음 위치 반환 받기
 	private static int getNextPosition(int player, int diceCount) {
 		int current = pos[player];
 		int nextPosition = current + diceCount;
@@ -108,22 +104,27 @@ public class Main {
 				return 21;
 			}
 		} else if (current < 26) {
+			// 26보다 작은 위치에서 26을 넘는다면 25의 위치로 변환시킴
 			if (nextPosition >= 26) {
 				return 36 + (nextPosition - 26);
 			}
 		} else if (current < 30) {
+			// 30보다 작은 위치에서 다음 위치가 30이 넘는다면 위치를 변환시킴
 			if (nextPosition >= 30) {
 				return 36 + (nextPosition - 30);
 			}
 		} else if (current < 35) {
+			// 35보다 작은 위치에서 35가 넘는다면 위치를 변환시킨다.
 			if (nextPosition >= 35) {
 				return 36 + (nextPosition - 35);
 			}
 		} else if (current < 40) {
+			// 40보다 적은 위치에서 40이 넘는다면 도착점
 			if (nextPosition >= 40) {
 				return 40;
 			}
 		}
+		
 		// 만약 다음 값이 파란 경로인 [5] = 10,[10] = 20,[15] = 30라면
 		// 각 시작점으로 위치를 아예 옮겨줌
 		if (nextPosition == 5)
