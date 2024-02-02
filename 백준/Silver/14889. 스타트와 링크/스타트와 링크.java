@@ -1,82 +1,68 @@
 import java.io.BufferedReader;
-        import java.io.InputStreamReader;
-        import java.io.IOException;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-    static int[][] map;
-    static boolean[] visited;
-    static int N;
-    static int answer = Integer.MAX_VALUE;//최소값을 찾기 위해서 미리 넣어줌
+	static int[][] map;
+	static boolean[] selected;
+	static int N, result = Integer.MAX_VALUE;
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		N = Integer.parseInt(br.readLine());
+		map = new int[N][N];
+		selected = new boolean[N];
+		for (int i = 0; i < N; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			for (int j = 0; j < N; j++) {
+				map[i][j] = Integer.parseInt(st.nextToken());
+			}
+		}
 
-        N = Integer.parseInt(br.readLine());
-        map = new int[N][N];
-        visited = new boolean[N];
+		// N명 중 N/2만큼 조합을 뽑는 메서드
+		combination(0, 0);
 
-        // 값 입력 받기
-        for (int i = 0; i < N; i++) {
-            st = new StringTokenizer(br.readLine());
+		System.out.println(result);
+	}
 
-            for (int j = 0; j < N; j++) {
-                map[i][j] = Integer.parseInt(st.nextToken());
-            }
-        }
-        solution(0, 0);
-        System.out.println(answer);
-    }
+	private static void combination(int depth, int at) {
+		// N/2만큼 뽑는다면 로직처리
+		if (depth == N / 2) {
+			result = Math.min(calcAbility(), result);
+			if (result == 0) {
+				System.out.println(0);
+				System.exit(0);
+			}
+			return;
+		}
 
-    // 조합을 짜는 알고리즘
-    private static void solution(int idx, int depth) {
-        if(depth == N/2){
-            // 방문팀과 방문하지 않은 팀을 나누어 계산한다.
-            cal();
-            return;
-        }
+		for (int i = at; i < N; i++) {
+			// 이미 선택한 인원이라면 넘어감.
+			if (selected[i])
+				continue;
 
-        for(int i = idx; i < N; i++){
-            // 방문 안했을 때 확인
-            if(!visited[i]){
-                visited[i] = true;
-                solution(i + 1, depth + 1);
-                visited[i] = false;
-            }
-        }
-    }
+			// 선택 안 한 인원이라면 선택해줌
+			selected[i] = true;
+			// 선택 후 재귀 호출
+			combination(depth + 1, i + 1);
+			// 로직을 마친 뒤 원래 상태로 복귀
+			selected[i] = false;
+		}
+	}
 
-    private static void cal() {
-        int team_start = 0;
-        int team_link = 0;
-
-
-        // 전부 더 해주는 식
-        for(int i = 0 ; i < N-1; i++){
-            for (int j = i+1; j < N; j++) {
-                // 둘 다 방문 했을 때(true) 스타트팀이라는 뜻이므로 스타트팀으로 점수 더하기
-                if (visited[i] == true && visited[j] == true) {
-                    team_start += map[i][j];
-                    team_start += map[j][i];
-                }
-
-
-                // 둘 다 방문 안했을 때(false) 링크팀이라는 뜻이므로 링크팀으로 더하기
-                if (visited[i] == false && visited[j] == false) {
-                    team_link += map[i][j];
-                    team_link += map[j][i];
-                }
-            }
-        }
-
-        // 팀의 점수차이를 계산해줌(절대값)
-        int val = Math.abs(team_start - team_link);
-        if(val == 0){
-            System.out.println(val);
-            System.exit(0);
-        }
-
-        answer = Math.min(answer, val);
-    }
+	// 능력치 차이를 계산하는 메서드
+	private static int calcAbility() {
+		int start = 0, link = 0;
+		for (int i = 0; i < N; i++) {
+			for (int j = i; j < N; j++) {
+				if (selected[i] && selected[j]) {
+					start += map[i][j] + map[j][i];
+				} else if (!selected[i] && !selected[j]) {
+					link += map[i][j] + map[j][i];
+				}
+			}
+		}
+		return Math.abs(start - link);
+	}
 }
