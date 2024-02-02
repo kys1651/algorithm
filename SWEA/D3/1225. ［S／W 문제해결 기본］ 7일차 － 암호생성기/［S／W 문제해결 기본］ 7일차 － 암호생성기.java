@@ -11,8 +11,8 @@ public class Solution {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st;
-		int T = 10;
 		
+		int T = 10;
 		for(int tc = 1; tc <= T; tc++) {
 			br.readLine();
 			Queue<Integer> queue = new LinkedList<>();
@@ -22,26 +22,27 @@ public class Solution {
 				queue.add(Integer.parseInt(st.nextToken()));
 			}
 			
-			int minus = 1;
-			while(true) {
-				int top = queue.poll();
-				top -= minus++;
-				if(top <= 0) {
-					queue.add(0);
-					break;
-				}
-				if(minus == 6) {
-					minus = 1;
-				}
-				queue.add(top);
-			}
+			while(cycle(queue)) {}
+			
 			sb.append("#").append(tc).append(" ");
 			for(int i = 0; i <SIZE; i++) {
 				sb.append(queue.poll()).append(" ");
 			}
 			sb.append("\n");
 		}
+		
 		System.out.println(sb);
 	}
-
+	
+	private static boolean cycle(Queue<Integer> q) {
+		for(int i = 1; i <= 5; i++) {
+			int n = q.poll();
+			if(n - i <= 0) {
+				q.offer(0);
+				return false;
+			}
+			q.add(n - i);
+		}
+		return true;
+	}
 }
