@@ -1,34 +1,42 @@
-import java.util.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-    static int n;
-    static int[] num;
-    static boolean[] check = new boolean[100000 * 20];
+    static boolean[] visit;
+    static int N;
+    static int[] arr;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        n = Integer.parseInt(br.readLine());
-        num = new int[n];
+        // 입력값 N
+        N = Integer.parseInt(br.readLine());
+        arr = new int[N];
+
+        int sum = 0;
         StringTokenizer st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < n; i++) {
-            num[i] = Integer.parseInt(st.nextToken());
+        for (int i = 0; i < N; i++) {
+            arr[i] = Integer.parseInt(st.nextToken());
+            sum += arr[i];
         }
 
-        combination(0, 0);
+        visit = new boolean[sum + 2];
+        combination(0, 0, 0);
 
-        int idx = 1;
-        while(check[idx]){
-            idx++;
+        int i = 1;
+        for (; visit[i]; i++) {
         }
-        System.out.println(idx);
+        System.out.println(i);
     }
 
-    private static void combination(int depth,int sum) {
-        if (depth == n) {
-            check[sum] = true;
+    private static void combination(int depth, int at, int sum) {
+        if (depth == N) {
+            visit[sum] = true;
             return;
         }
-        combination(depth + 1, sum + num[depth]);
-        combination(depth + 1, sum);
+
+        combination(depth + 1, at + 1, sum + arr[at]);
+        combination(depth + 1, at + 1, sum);
     }
 }
