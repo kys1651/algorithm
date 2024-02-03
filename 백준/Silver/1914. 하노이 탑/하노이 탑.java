@@ -6,6 +6,8 @@ import java.math.BigInteger;
 public class Main {
     static StringBuilder sb = new StringBuilder();
 
+    static final char[] top = {'1', '2', '3'};
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
@@ -24,7 +26,7 @@ public class Main {
         if (n == 0) return;
 
         hanoi(n - 1, from, 6 - from - to);
-        sb.append(from).append(' ').append(to).append("\n");
+        sb.append(top[from - 1]).append(' ').append(top[to - 1]).append("\n");
         hanoi(n - 1, 6 - from - to, to);
     }
 }
