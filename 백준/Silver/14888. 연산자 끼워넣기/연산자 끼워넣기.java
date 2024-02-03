@@ -1,24 +1,21 @@
 import java.io.BufferedReader;
-        import java.io.InputStreamReader;
-        import java.io.IOException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int number[];
-    static int operator[] = new int[4];
-    static int N;
-    static int max = Integer.MIN_VALUE;
-    static int min = Integer.MAX_VALUE;
+    static int[] num, operator;
+    static int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE, N;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
-
         N = Integer.parseInt(br.readLine());
-        number = new int[N];
+        num = new int[N];
+        operator = new int[4];
 
-        st = new StringTokenizer(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
-            number[i] = Integer.parseInt(st.nextToken());
+            num[i] = Integer.parseInt(st.nextToken());
         }
 
         st = new StringTokenizer(br.readLine());
@@ -26,33 +23,36 @@ public class Main {
             operator[i] = Integer.parseInt(st.nextToken());
         }
 
-        solution(number[0],  1);
+        combination(1, num[0]);
+
         System.out.println(max);
         System.out.println(min);
     }
 
-    private static void solution(int num, int idx) {
-        if (idx == N) {
-            max = Math.max(max, num);
-            min = Math.min(min, num);
-            return ;
+    private static void combination(int depth, int value) {
+        if (depth == N) {
+            min = Math.min(min, value);
+            max = Math.max(max, value);
+            return;
         }
 
         for (int i = 0; i < 4; i++) {
-            if (operator[i] > 0) {
+            if (operator[i] == 0) continue;
 
-                operator[i]--;
-
-                switch (i) {
-
-                    case 0: solution(num + number[idx], idx + 1 ); break;
-                    case 1: solution(num - number[idx], idx + 1 ); break;
-                    case 2: solution(num * number[idx], idx + 1 ); break;
-                    case 3: solution(num / number[idx], idx + 1 ); break;
-                }
-                operator[i]++;
+            int nextValue = value;
+            int curValue = num[depth];
+            if (i == 0) {
+                nextValue += curValue;
+            } else if (i == 1) {
+                nextValue -= curValue;
+            } else if (i == 2) {
+                nextValue *= curValue;
+            } else {
+                nextValue /= curValue;
             }
+            operator[i]--;
+            combination(depth + 1, nextValue);
+            operator[i]++;
         }
-
     }
 }
