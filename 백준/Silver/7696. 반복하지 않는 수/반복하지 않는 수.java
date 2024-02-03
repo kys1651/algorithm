@@ -1,55 +1,58 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 
 public class Main {
     // N번째 수를 받는다.
-    static int[] num = new int[10];
+    static int[] num;
     static boolean[] visit = new boolean[10];
-    static int N;
-    static String result;
+    static int[] answer;
+    static int N,count;
+    static final int SIZE = 1_000_000;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
+        answer = new int[SIZE];
+
+        for (int limit = 1; limit <= 8; limit++) {
+            num = new int[limit];
+            for (int i = 1; i <= 9; i++) {
+                if(count >= SIZE) break;
+
+                visit[i] = true;
+                num[0] = i;
+                combination(1, limit);
+                visit[i] = false;
+            }
+        }
+
 
         while((N = Integer.parseInt(br.readLine())) != 0){
-            sb.append(solution()).append('\n');
+            sb.append(answer[N - 1]).append('\n');
         }
         System.out.println(sb);
     }
 
-    private static String solution() {
-        result = "";
-        int limit = 1;
-        while (result.isEmpty()) {
-            getNoRepeat(0,limit);
-            limit++;
-        }
+    private static void combination(int depth, int limit){
+        if(count >= SIZE) return;
 
-        return result;
-    }
-
-    private static void getNoRepeat(int depth, int limit) {
-        if(depth == limit){
-            N--;
-            if (N == 0) {
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < limit; i++) {
-                    sb.append("" + num[i]);
-                }
-                result = sb.toString();
+        if (depth == limit) {
+            int k = 0;
+            for (int i = 0; i < limit; i++) {
+                k *= 10;
+                k += num[i];
             }
+            answer[count++] = k;
             return;
         }
 
-        int start = depth == 0 ? 1 : 0;
-        for (int i = start; i < 10; i++) {
+
+        for (int i = 0; i < 10; i++) {
             if(visit[i]) continue;
 
             visit[i] = true;
             num[depth] = i;
-            getNoRepeat(depth + 1, limit);
+            combination(depth + 1, limit);
             visit[i] = false;
         }
     }
