@@ -23,36 +23,21 @@ public class Main {
             operator[i] = Integer.parseInt(st.nextToken());
         }
 
-        combination(1, num[0]);
+        combination(1, num[0], 0, 0, 0, 0);
 
-        System.out.println(max);
-        System.out.println(min);
+        System.out.println(max + "\n" + min);
     }
 
-    private static void combination(int depth, int value) {
+    private static void combination(int depth, int value, int plus, int sub, int mul, int div) {
         if (depth == N) {
-            min = Math.min(min, value);
-            max = Math.max(max, value);
+            if(min > value) min = value;
+            if(max < value) max = value;
             return;
         }
 
-        for (int i = 0; i < 4; i++) {
-            if (operator[i] == 0) continue;
-
-            int nextValue = value;
-            int curValue = num[depth];
-            if (i == 0) {
-                nextValue += curValue;
-            } else if (i == 1) {
-                nextValue -= curValue;
-            } else if (i == 2) {
-                nextValue *= curValue;
-            } else {
-                nextValue /= curValue;
-            }
-            operator[i]--;
-            combination(depth + 1, nextValue);
-            operator[i]++;
-        }
+        if(plus < operator[0]) combination(depth + 1, value + num[depth], plus + 1, sub, mul, div);
+        if(sub  < operator[1]) combination(depth + 1, value - num[depth], plus, sub + 1, mul, div);
+        if(mul < operator[2]) combination(depth + 1, value * num[depth], plus, sub, mul + 1, div);
+        if(div < operator[3]) combination(depth + 1, value / num[depth], plus, sub, mul, div + 1);
     }
 }
