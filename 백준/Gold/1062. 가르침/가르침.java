@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int N, K, bit, result;
+    static int N, K, result;
     static int[] words;
 
     public static void main(String[] args) throws IOException {
@@ -15,6 +15,7 @@ public class Main {
 
         // 필수로 배워야하는 단어들의 위치를 켜준다.
         String alphabet = "antic";
+        int bit = 0;
         for (char ch : alphabet.toCharArray()) {
             bit = bit | (1 << ch - 'a');
         }
@@ -26,7 +27,7 @@ public class Main {
             // input값이 필요한 알파벳을 켜준다. bit는 기본으로 가지고 있어야 함.
             int inputBit = bit;
             for (int j = 4; j < input.length() - 4; j++) {
-                inputBit = inputBit | (1 << input.charAt(j) - 'a');
+                inputBit |= (1 << input.charAt(j) - 'a');
             }
             // words에 넣어준다.
             words[i] = inputBit;
@@ -46,12 +47,12 @@ public class Main {
         // 5개를 제외한 나머지만 계산 하면 된다.
         K -= 5;
 
-        combination(0, 0);
+        combination(0, 0, bit);
 
         System.out.println(result);
     }
 
-    private static void combination(int depth, int at) {
+    private static void combination(int depth, int at, int bit) {
         if (depth == K) {
             int count = N;
             for (int word : words) {
@@ -79,12 +80,8 @@ public class Main {
                 continue;
             }
 
-            // 모르고 있었다면 비트를 켜줌
-            bit = bit | (1 << i);
-            combination(depth + 1, i + 1);
-            // 다시 꺼준다.
-            bit = bit & ~(1 << i);
-
+            // 모르고 있었다면 비트를 켜준 뒤 호출
+            combination(depth + 1, i + 1, bit | (1 << i));
         }
     }
 
