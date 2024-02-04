@@ -54,22 +54,14 @@ public class Main {
 
     private static void combination(int depth, int at, int bit) {
         if (depth == K) {
-            int count = N;
+            int count = 0;
             for (int word : words) {
-                if ((bit | word) != bit) {
-                    // 만약 모르는 단어가 있다면 카운트를 감소.
-                    count--;
-                    // 최대 단어 개수보다 적어진다면 더 이상 체크 필요 X
-                    if (result > count) {
-                        return;
-                    }
+                if ((bit | word) == bit) {
+                    // 알고 있는 단어라면 카운트 증가
+                    count++;
                 }
             }
-            result = count;
-            if (result == N) {
-                System.out.println(N);
-                System.exit(0);
-            }
+            if(result < count) result = count;
             return;
         }
 
