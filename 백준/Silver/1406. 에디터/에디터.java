@@ -1,52 +1,51 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Stack;
+import java.util.StringTokenizer;
 
-class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-        String str = br.readLine();
+public class Main {
 
-        Stack<Character> LStack = new Stack<>();
-        Stack<Character> RStack = new Stack<>();
-        for (int i = 0; i < str.length(); i++) {
-            LStack.push(str.charAt(i));
-        }
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		Stack<Character> left = new Stack<>();
+		Stack<Character> right = new Stack<>();
 
-        int N = Integer.parseInt(br.readLine());
-
-        for (int i = 0; i < N; i++) {
-            String command = br.readLine();
-
-            if (command.equals("L")) {
-                if(!LStack.isEmpty()){
-                    RStack.push(LStack.pop());
-                }
-            }
-            else if (command.equals("D")) {
-                if(!RStack.isEmpty()){
-                    LStack.push(RStack.pop());
-                }
-            }
-            else if (command.equals("B")) {
-                // 왼쪽 글자 한개를 지우기
-                if (!LStack.isEmpty()) {
-                    LStack.pop();
-                }
-            }
-            else if (command.contains("P")) {
-                // 왼쪽에 글자를 추가 해주는 함수
-                char ch = command.charAt(2);
-                LStack.push(ch);
-            }
-        }
-
-        while (!LStack.isEmpty()) {
-            RStack.push(LStack.pop());
-        }
-        while (!RStack.isEmpty()) {
-            sb.append(RStack.pop());
-        }
-        System.out.println(sb);
-    }
+		String input = br.readLine();
+		for(char ch : input.toCharArray()) {
+			left.push(ch);
+		}
+		
+		int n = Integer.parseInt(br.readLine());
+		for (int i = 0; i < n; i++) {
+			String[] command = br.readLine().split(" ");
+			switch (command[0]) {
+			case "P":
+				left.push(command[1].charAt(0));
+				break;
+			case "L":
+				if (!left.isEmpty())
+					right.push(left.pop());
+				break;
+			case "D":
+				if (!right.isEmpty())
+					left.push(right.pop());
+				break;
+			case "B":
+				if (!left.isEmpty())
+					left.pop();
+				break;
+			}
+		}
+		StringBuilder answer = new StringBuilder();
+		while(!left.isEmpty()) {
+			answer.append(left.pop());
+		}
+		answer = answer.reverse();
+		while(!right.isEmpty()) {
+			answer.append(right.pop());
+		}
+		System.out.println(answer);
+		
+	}
 }
