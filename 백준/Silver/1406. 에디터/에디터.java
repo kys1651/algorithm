@@ -12,36 +12,34 @@ public class Main {
 		Stack<Character> right = new Stack<>();
 
 		String input = br.readLine();
-		for(char ch : input.toCharArray()) {
-			left.push(ch);
+		for(int i = 0; i < input.length(); i++) {
+			left.push(input.charAt(i));
 		}
 		
 		int n = Integer.parseInt(br.readLine());
+		
 		for (int i = 0; i < n; i++) {
-			String[] command = br.readLine().split(" ");
-			switch (command[0]) {
-			case "P":
-				left.push(command[1].charAt(0));
-				break;
-			case "L":
-				if (!left.isEmpty())
+			String command = br.readLine();
+			if(command.equals("L")) {
+				if(!left.isEmpty()) {
 					right.push(left.pop());
-				break;
-			case "D":
-				if (!right.isEmpty())
+				}
+			}else if(command.equals("D")) {
+				if(!right.isEmpty()) {
 					left.push(right.pop());
-				break;
-			case "B":
-				if (!left.isEmpty())
+				}
+			}else if(command.equals("B")) {
+				if(!left.isEmpty()) {
 					left.pop();
-				break;
+				}
+			}else {
+				left.push(command.charAt(2));
 			}
 		}
 		StringBuilder answer = new StringBuilder();
 		while(!left.isEmpty()) {
-			answer.append(left.pop());
+			right.push(left.pop());
 		}
-		answer = answer.reverse();
 		while(!right.isEmpty()) {
 			answer.append(right.pop());
 		}
