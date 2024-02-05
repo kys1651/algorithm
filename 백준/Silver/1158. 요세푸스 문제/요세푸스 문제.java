@@ -8,22 +8,25 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		int n = Integer.parseInt(st.nextToken());
-		int k = Integer.parseInt(st.nextToken()) - 1;
-		ArrayList<Integer> list = new ArrayList<>();
-		for (int i = 1; i <= n; i++) {
+		String separ = ", ";
+		short n = Short.parseShort(st.nextToken());
+		short k = (short) (Short.parseShort(st.nextToken()) - 1);
+		ArrayList<Short> list = new ArrayList<>();
+		for (short i = 1; i <= n; i++) {
 			list.add(i);
 		}
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append('<');
 		int idx = 0;
-		while(list.size() != 1) {
-			idx = (idx + k) % list.size();
-			sb.append(list.get(idx)).append(',').append(' ');
+		while (n != 0) {
+			idx = (idx + k) % n;
+			sb.append(list.get(idx));
+			if(n != 1) sb.append(separ);
 			list.remove(idx);
+			n--;
 		}
-		sb.append(list.get(0)).append('>');
+		sb.append('>');
 		System.out.println(sb);
 	}
 }
