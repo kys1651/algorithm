@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
-public class Main{
+public class Main {
 	static class Point {
 		int x;
 		int y;
@@ -55,8 +55,8 @@ public class Main{
 	private static void bfs(Point start, Point end) {
 		Queue<Point> queue = new LinkedList<>();
 		queue.offer(start);
-		// 0: 안부심, 1: 부심
-		visit[start.x][start.y][0] = true;
+		// 1: 안부심, 0: 부심
+		visit[start.x][start.y][1] = true;
 
 		while (!queue.isEmpty()) {
 			Point cur = queue.poll();
@@ -70,28 +70,23 @@ public class Main{
 				int nX = cur.x + dirX[i];
 				int nY = cur.y + dirY[i];
 
-				if (nX < 0 || nX >= N || nY < 0 || nY >= M) {
+				// 범위내가 아니라면 continue;
+				// 현재 상태에서 간 적 있는 곳일 때거나 벽인데 부실 수 없다면
+				if (nX < 0 || nX >= N || nY < 0 || nY >= M || visit[nX][nY][cur.crush] || (map[nX][nY] == 1 && cur.crush == 0)) {
 					continue;
 				}
 
-				// 벽일 때
+				// 벽일 때 부시고 간다.
 				if (map[nX][nY] == 1) {
-					// 부셔서 간 적 없고 crush 할 수 있다면 간다.
-					if (!visit[nX][nY][1] && cur.crush != 0) {
-						queue.add(new Point(nX, nY, cur.count + 1, 0));
-						visit[nX][nY][1] = true;
-					}
+					queue.add(new Point(nX, nY, cur.count + 1, 0));
+					visit[nX][nY][0] = true;
 				}
 				// 벽이 아닐 때
 				else {
 					// 방문한 적 없다면 간다.
-					if (cur.crush == 0 && !visit[nX][nY][1]) {
+					if (!visit[nX][nY][cur.crush]) {
 						queue.add(new Point(nX, nY, cur.count + 1, cur.crush));
-						visit[nX][nY][1] = true;
-					}
-					if(cur.crush == 1 && !visit[nX][nY][0]) {
-						queue.add(new Point(nX, nY, cur.count + 1, cur.crush));
-						visit[nX][nY][0] = true;
+						visit[nX][nY][cur.crush] = true;
 					}
 				}
 			}
