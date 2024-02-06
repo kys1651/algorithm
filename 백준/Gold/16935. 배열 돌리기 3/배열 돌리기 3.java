@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-public class Main{
+public class Main {
 	static int N, M, rLen, cLen;
 	static int[][] map;
 	static int[][][] tmp;
@@ -17,7 +17,6 @@ public class Main{
 		cLen = M;
 		st.nextToken();
 		map = new int[N][M];
-
 		for (int i = 0; i < N; i++) {
 			st = new StringTokenizer(br.readLine());
 			for (int j = 0; j < M; j++) {
@@ -41,10 +40,10 @@ public class Main{
 				oper6();
 			}
 		}
-		
+
 		StringBuilder sb = new StringBuilder();
-		for(int i = 0; i < rLen; i++) {
-			for(int j = 0; j < cLen; j++) {
+		for (int i = 0; i < rLen; i++) {
+			for (int j = 0; j < cLen; j++) {
 				sb.append(map[i][j]).append(' ');
 			}
 			sb.append('\n');
@@ -106,62 +105,29 @@ public class Main{
 		swap();
 	}
 
-	// 5. 분면 시계방향 회전 로직 
+	// 5. 분면 시계방향 회전 로직
 	private static void oper5() {
 		load(rLen / 2, cLen / 2);
-		// 1 -> 2로 넣음
-		for (int i = 0; i < tmp[0].length; i++) {
-			for (int j = 0; j < tmp[0][i].length; j++) {
-				map[0 + i][cLen / 2 + j] = tmp[0][i][j];
-			}
-		}
-		// 2 -> 3에 넣음
-		for (int i = 0; i < tmp[1].length; i++) {
-			for (int j = 0; j < tmp[1][i].length; j++) {
-				map[rLen / 2 + i][cLen / 2 + j] = tmp[1][i][j];
-			}
-		}
-		// 3 -> 4에 넣음
-		for (int i = 0; i < tmp[3].length; i++) {
-			for (int j = 0; j < tmp[3][i].length; j++) {
-				map[rLen / 2 + i][j] = tmp[3][i][j];
-			}
-		}
-		// 4 -> 1에 넣음
-		for (int i = 0; i < tmp[2].length; i++) {
-			for (int j = 0; j < tmp[2][i].length; j++) {
-				map[i][j] = tmp[2][i][j];
-			}
-		}
+		int[][] tmpArr = tmp[2];
+		tmp[2] = tmp[3];
+		tmp[3] = tmp[1];
+		tmp[1] = tmp[0];
+		tmp[0] = tmpArr;
+
+		save();
 	}
 
+	
 	// 6. 분면 반시계 방향 회전 로직
 	private static void oper6() {
 		load(rLen / 2, cLen / 2);
-		// 4 -> 1에 넣음
-		for (int i = 0; i < tmp[1].length; i++) {
-			for (int j = 0; j < tmp[1][i].length; j++) {
-				map[i][j] = tmp[1][i][j];
-			}
-		}
-		// 1 -> 2로 넣음
-		for (int i = 0; i < tmp[3].length; i++) {
-			for (int j = 0; j < tmp[3][i].length; j++) {
-				map[0 + i][cLen / 2 + j] = tmp[3][i][j];
-			}
-		}
-		// 2 -> 3에 넣음
-		for (int i = 0; i < tmp[2].length; i++) {
-			for (int j = 0; j < tmp[2][i].length; j++) {
-				map[rLen / 2 + i][cLen / 2 + j] = tmp[2][i][j];
-			}
-		}
-		// 3 -> 4에 넣음
-		for (int i = 0; i < tmp[0].length; i++) {
-			for (int j = 0; j < tmp[0][i].length; j++) {
-				map[rLen / 2 + i][j] = tmp[0][i][j];
-			}
-		}
+		int tmpArr[][] = tmp[0];
+		tmp[0] = tmp[1];
+		tmp[1] = tmp[3];
+		tmp[3] = tmp[2];
+		tmp[2] = tmpArr;
+		
+		save();
 	}
 
 	private static void load(int tmpRLen, int tmpCLen) {
@@ -177,6 +143,18 @@ public class Main{
 		}
 	}
 
+	private static void save() {
+		for (int l = 0; l < 2; l++) {
+			for (int k = 0; k < 2; k++) {
+				for (int i = 0; i < rLen / 2; i++) {
+					for (int j = 0; j < cLen / 2; j++) {
+						map[l * (rLen / 2) + i][k * (cLen / 2) + j] = tmp[l * 2 + k][i][j];
+					}
+				}
+			}
+		}
+	}
+	
 	private static void swap() {
 		int tmp = rLen;
 		rLen = cLen;
