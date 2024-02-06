@@ -19,8 +19,13 @@ public class Solution {
 				st = new StringTokenizer(br.readLine());
 				st.nextToken();
 				tree[i] = st.nextToken().charAt(0);
-				if(Character.isDigit(tree[i])) {
-					if(st.hasMoreTokens()) {
+				boolean isDigit = Character.isDigit(tree[i]);
+				if(st.hasMoreTokens()) {
+					if(isDigit) {
+						result = 0;
+					}
+				}else {
+					if(!isDigit) {
 						result = 0;
 					}
 				}
