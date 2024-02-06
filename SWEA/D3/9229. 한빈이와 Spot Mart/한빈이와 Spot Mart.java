@@ -1,26 +1,46 @@
-import java.util.Scanner;
-class Solution
-{
-	public static void main(String args[]) throws Exception {
-		Scanner sc = new Scanner(System.in);
-		int T = sc.nextInt();
-		for(int tc = 1; tc <= T; tc++)
-		{
-            int n = sc.nextInt();
-            int m = sc.nextInt();
-            int[] a = new int[n];
-            int result = -1;
-            for(int i = 0; i < n; i++){
-                a[i] = sc.nextInt();
-            }
-            for(int i = 0; i < n - 1; i ++){
-                for(int j = i + 1; j < n; j++){
-                    if(m >= a[i] + a[j]){
-                        result = Math.max(result,a[i]+a[j]);
-                    }
-                }
-            }
-            System.out.println("#" + tc + " " + result);
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
+public class Solution {
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		int T = Integer.parseInt(br.readLine());
+
+		for (int tc = 1; tc <= T; tc++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			int n = Integer.parseInt(st.nextToken());
+			int m = Integer.parseInt(st.nextToken());
+			int[] snack = new int[n];
+
+			st = new StringTokenizer(br.readLine());
+			for (int i = 0; i < n; i++) {
+				snack[i] = Integer.parseInt(st.nextToken());
+			}
+
+			Arrays.sort(snack);
+
+			int left = 0, right = n - 1;
+			int sum = -1;
+			while (left < right) {
+				int tmp = snack[left] + snack[right];
+				if (tmp < m) {
+					if (sum < tmp)
+						sum = tmp;
+					left++;
+				} else if (tmp == m) {
+					sum = m;
+					break;
+				} else {
+					right--;
+				}
+			}
+			sb.append(String.format("#%d %d\n", tc, sum));
 		}
+		System.out.println(sb);
 	}
 }
