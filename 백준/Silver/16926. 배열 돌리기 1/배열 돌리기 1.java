@@ -23,18 +23,25 @@ public class Main {
 				map[i][j] = Integer.parseInt(st.nextToken());
 			}
 		}
-		
+
 		int min = 0;
+		int max = 0;
 		if (N > M) {
+			max = N;
 			min = M;
 		} else {
+			max = M;
 			min = N;
 		}
 
-		for (int i = 0; i < min / 2; i++) {
-			for (int j = 0; j < R; j++) {
+		int count = min / 2;
+		for (int i = 0; i < count; i++) {
+			int k = R % ((max + min-2) * 2);
+			for (int j = 0; j < k; j++) {
 				rotate(i);
 			}
+			max -= 2;
+			min -= 2;
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -70,6 +77,6 @@ public class Main {
 			if (x == idx && y == idx)
 				break;
 		}
-		
+
 	}
 }
