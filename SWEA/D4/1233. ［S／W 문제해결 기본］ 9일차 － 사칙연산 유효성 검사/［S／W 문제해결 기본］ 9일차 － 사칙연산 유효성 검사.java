@@ -7,19 +7,17 @@ public class Solution {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
-		int T = 10;
 
-		for (int tc = 1; tc <= T; tc++) {
+		for (int tc = 1; tc <= 10; tc++) {
 			int n = Integer.parseInt(br.readLine());
-			char[] tree = new char[n + 1];
 
 			int result = 1;
-			StringTokenizer st;
 			for (int i = 1; i <= n; i++) {
-				st = new StringTokenizer(br.readLine());
+				StringTokenizer st = new StringTokenizer(br.readLine());
 				st.nextToken();
-				tree[i] = st.nextToken().charAt(0);
-				boolean isDigit = Character.isDigit(tree[i]);
+				
+				char value = st.nextToken().charAt(0);
+				boolean isDigit = Character.isDigit(value);
 				if(st.hasMoreTokens()) {
 					if(isDigit) {
 						result = 0;
@@ -30,10 +28,9 @@ public class Solution {
 					}
 				}
 			}
-
-			
 			sb.append('#').append(tc).append(' ').append(result).append('\n');
 		}
+		
 		System.out.println(sb);
 	}
 }
