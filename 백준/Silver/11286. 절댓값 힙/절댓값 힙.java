@@ -1,23 +1,34 @@
-import java.util.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.PriorityQueue;
 
-class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        int n = Integer.parseInt(br.readLine());
+public class Main {
 
-        PriorityQueue<Integer> pq = new PriorityQueue<>(
-                (o1, o2) -> Math.abs(o1) == Math.abs(o2) ? o1 - o2 : Math.abs(o1) - Math.abs(o2));
-        while (n-- > 0) {
-            int x = Integer.parseInt(br.readLine());
-            if (x == 0) {
-                bw.write((pq.isEmpty() ? 0 : pq.poll()) + "\n");
-            } else {
-                pq.offer(x);
-            }
-        }
-        bw.flush();
-        bw.close();
-    }
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int n = Integer.parseInt(br.readLine());
+		PriorityQueue<Integer> queue = new PriorityQueue<>((o1, o2) -> {
+			int a1 = Math.abs(o1);
+			int a2 = Math.abs(o2);
+			if (a1 == a2) {
+				return Integer.compare(o1, o2);
+			}
+			return a1 - a2;
+		});
+
+		while (n-- > 0) {
+			int tmp = Integer.parseInt(br.readLine());
+			if (tmp == 0) {
+				if (queue.isEmpty()) {
+					System.out.println(0);
+				} else {
+					System.out.println(queue.poll());
+				}
+			} else {
+				queue.add(tmp);
+			}
+		}
+	}
+
 }
