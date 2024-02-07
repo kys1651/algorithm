@@ -1,25 +1,23 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
+
 
 public class Main {
+     static long[] dp;
+    static int n;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
-        BigInteger nFac = new BigInteger("1");
-        for (int i = 2; i <= N; i++) {
-            nFac = nFac.multiply(BigInteger.valueOf(i));
+        n = Integer.parseInt(br.readLine());
+        dp = new long[n + 1];
+        dp[0] = 1;
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = 0; j <= i - 1; j++) {
+                dp[i] += (dp[j] * dp[i - j - 1]) % 1000000007;
+            }
+            dp[i] %= 1000000007;
         }
-
-        BigInteger head = nFac;
-        for (int i = N + 1; i <= N * 2; i++) {
-            head = head.multiply(BigInteger.valueOf(i));
-        }
-
-        BigInteger answer = head.divide(nFac).divide(nFac.multiply(BigInteger.valueOf(N + 1))).mod(new BigInteger("1000000007"));
-        System.out.println(answer);
-
+        System.out.println(dp[n]);
     }
 }
 
