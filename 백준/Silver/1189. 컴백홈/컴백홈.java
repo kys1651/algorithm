@@ -17,23 +17,19 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
-        K = Integer.parseInt(st.nextToken())-1;
+        K = Integer.parseInt(st.nextToken());
 
         map = new char[R][C];
         visit = new boolean[R][C];
         for (int i = 0; i < R; i++) {
-            map[i] = br.readLine().toCharArray();
+            String input = br.readLine();
+            for (int j = 0; j < C; j++) {
+                map[i][j] = input.charAt(j);
+            }
         }
 
-//        for (int i = 0; i < R; i++) {
-//            for (int j = 0; j < C; j++) {
-//                System.out.print(map[i][j] + " ");
-//            }
-//            System.out.println();
-//        }
-
         visit[R-1][0] = true;
-        go(0, R - 1, 0);
+        go(1, R - 1, 0);
 
         System.out.println(result);
     }
