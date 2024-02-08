@@ -13,14 +13,6 @@ public class Main {
         N = Integer.parseInt(br.readLine());
         M = Integer.parseInt(br.readLine());
 
-        if (N == 100) {
-            System.out.println(0);
-            return;
-        } else if (M == 10) {
-            System.out.println(Math.abs(N - 100));
-            return;
-        }
-
         if (M != 0) {
             StringTokenizer st = new StringTokenizer(br.readLine());
             for (int i = 0; i < M; i++) {
@@ -35,12 +27,12 @@ public class Main {
     private static void combination() {
         int min = Math.abs(N - 100);
 
-        for (int i = 0; i < 999999; i++) {
+        for (int i = 0; i < 999_999; i++) {
             String num = String.valueOf(i);
             boolean flag = true;
 
-            for (char ch : num.toCharArray()) {
-                if(button[ch-'0']) {
+            for (int j = 0; j < num.length(); j++) {
+                if (button[num.charAt(j) - '0']) {
                     flag = false;
                     break;
                 }
@@ -50,6 +42,7 @@ public class Main {
                 min = Math.min(num.length() + Math.abs(N - i), min);
             }
         }
+        
         System.out.println(min);
     }
 }
