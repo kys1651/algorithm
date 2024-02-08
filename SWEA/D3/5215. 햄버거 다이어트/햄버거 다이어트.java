@@ -33,15 +33,34 @@ public class Solution {
 				hamburgers[i] = new Hamburger(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
 			}
 
-			for (int i = 1; i < (1 << N); i++) {
-				calculate(i);
-			}
+			// 비트마스킹을 이용해서 완전탐색
+//			for (int i = 1; i < (1 << N); i++) {
+//				calculate(i);
+//			}
+
+			// 백트래킹을 이용한 가지치기
+			combination(0, 0, 0);
 
 			sb.append(String.format("#%d %d\n", tc, result));
 		}
 		System.out.println(sb);
 	}
 
+	private static void combination(int depth, int curTaste, int curCal) {
+		if (curCal > L)
+			return;
+
+		if (depth == N) {
+			if (result < curTaste)
+				result = curTaste;
+			return;
+		}
+
+		combination(depth + 1, curTaste + hamburgers[depth].taste, curCal + hamburgers[depth].cal);
+		combination(depth + 1, curTaste, curCal);
+	}
+
+	// 비트마스킹을 이용해서 조합으로 구현
 	private static void calculate(int flag) {
 		int calSum = 0;
 		int tasteSum = 0;
