@@ -4,8 +4,7 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Solution {
-	static int N, result, map[][];
-	static boolean[] visit;
+	static int N, result, sum, map[][], row[], col[];
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -17,48 +16,42 @@ public class Solution {
 			N = Integer.parseInt(br.readLine());
 			result = Integer.MAX_VALUE;
 			map = new int[N][N];
-			visit = new boolean[N];
+			row = new int[N];
+			col = new int[N];
+			sum = 0;
+
 			// input
 			for (int i = 0; i < N; i++) {
 				st = new StringTokenizer(br.readLine());
 				for (int j = 0; j < N; j++) {
 					map[i][j] = Integer.parseInt(st.nextToken());
+					sum += map[i][j];
 				}
 			}
-
-			combination(0, 0);
+			// 누적합
+			for (int i = 0; i < N; i++) {
+				int r = 0;
+				int c = 0;
+				for (int j = 0; j < N; j++) {
+					r += map[i][j];
+					c += map[j][i];
+				}
+				row[i] = r;
+				col[i] = c;
+			}
+			combination(0, sum);
 			sb.append(String.format("#%d %d\n", tc, result));
 		}
 		System.out.println(sb);
 	}
 
-	private static void combination(int depth, int at) {
-		if (depth == N / 2) {
-			int tmp = calc();
-			if (tmp < result)
-				result = tmp;
+	private static void combination(int depth, int sum) {
+		if (depth == N) {
+			if(result > Math.abs(sum)) result = Math.abs(sum);
 			return;
 		}
-
-		for (int i = at; i < N; i++) {
-			visit[i] = true;
-			combination(depth + 1, i + 1);
-			visit[i] = false;
-		}
+		
+		combination(depth+1, sum - row[depth] - col[depth]);
+		combination(depth+1, sum);
 	}
-
-	private static int calc() {
-		int a = 0, b = 0;
-		for (int i = 0; i < N; i++) {
-			for (int j = i + 1; j < N; j++) {
-				if (visit[i] && visit[j]) {
-					a += map[i][j] + map[j][i];
-				} else if (!visit[i] && !visit[j]) {
-					b += map[i][j] + map[j][i];
-				}
-			}
-		}
-		return Math.abs(a - b);
-	}
-
 }
