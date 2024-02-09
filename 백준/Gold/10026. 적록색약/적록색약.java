@@ -1,8 +1,10 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
     // 배열의 길이
@@ -21,9 +23,12 @@ public class Main {
         for (int i = 0; i < N; i++) {
             String input = br.readLine();
             for (int j = 0; j < N; j++) {
-                char ch = input.charAt(j);
-                noMap[i][j] = ch;
-                yesMap[i][j] = ch == 'G' ? 'R' : ch;
+                noMap[i][j] = input.charAt(j);
+                if (noMap[i][j] == 'G') {
+                    yesMap[i][j] = 'R';
+                } else {
+                    yesMap[i][j] = noMap[i][j];
+                }
             }
         }
 
@@ -31,37 +36,29 @@ public class Main {
             for (int j = 0; j < N; j++) {
                 if (noMap[i][j] != ' ') {
                     no++;
-                    bfs(i, j,noMap);
+                    dfs(i, j, noMap);
                 }
                 if (yesMap[i][j] != ' ') {
                     yes++;
-                    bfs(i, j,yesMap);
+                    dfs(i, j, yesMap);
                 }
             }
         }
         System.out.println(no + " " + yes);
     }
 
-    private static void bfs(int x, int y,char[][] map) {
-        Queue<int[]> queue = new LinkedList<>();
+    private static void dfs(int x, int y, char[][] map) {
         char color = map[x][y];
-        queue.add(new int[]{x, y});
         map[x][y] = ' ';
 
-        while (!queue.isEmpty()) {
-            int[] cur = queue.poll();
 
-            for (int i = 0; i < 4; i++) {
-                int nX = cur[0] + dirX[i];
-                int nY = cur[1] + dirY[i];
-
-                if (nX < 0 || nX >= N || nY < 0 || nY >= N || map[nX][nY] != color) {
-                    continue;
-                }
-
-                map[nX][nY] = ' ';
-                queue.add(new int[]{nX, nY});
+        for (int i = 0; i < 4; i++) {
+            int nX = x + dirX[i];
+            int nY = y + dirY[i];
+            if (nX < 0 || nX >= N || nY < 0 || nY >= N || map[nX][nY] != color) {
+                continue;
             }
+            dfs(nX, nY, map);
         }
     }
 }
