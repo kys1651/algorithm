@@ -1,74 +1,67 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.StringTokenizer;
 
 public class Main {
+    // 배열의 길이
     static int N;
-    static char [][] cmap,map;
-    static boolean[][] cv,v;
+    // 적록색약 아닌 배열, 적록색약 배열
+    static int[] dirX = {-1, 1, 0, 0};
+    static int[] dirY = {0, 0, -1, 1};
 
-    // 상, 하, 좌, 우
-    static int[] dx = {0, 0, -1, 1};
-    static int[] dy = {1, -1, 0, 0};
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
-
-        int ccount = 0;
-        int count = 0;
-        map = new char[N][N];
-        cmap = new char[N][N];
+        N = Integer.parseInt(br.readLine());
+        int no = 0, yes = 0;
+        char[][] noMap = new char[N][N];
+        char[][] yesMap = new char[N][N];
 
         for (int i = 0; i < N; i++) {
-            String line = br.readLine();
+            String input = br.readLine();
             for (int j = 0; j < N; j++) {
-                map[i][j] = line.charAt(j);
-                if(map[i][j] == 'G')
-                    cmap[i][j] = 'R';
-                else
-                    cmap[i][j] = map[i][j];
+                char ch = input.charAt(j);
+                noMap[i][j] = ch;
+                yesMap[i][j] = ch == 'G' ? 'R' : ch;
             }
         }
 
-        cv = new boolean[N][N];
-        v = new boolean[N][N];
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                if(!v[i][j]){
-                    count++;
-                    dfs(i, j, v, map, map[i][j]);
+                if (noMap[i][j] != ' ') {
+                    no++;
+                    bfs(i, j,noMap);
                 }
-                if (!cv[i][j]) {
-                    ccount++;
-                    dfs(i, j, cv, cmap, cmap[i][j]);
+                if (yesMap[i][j] != ' ') {
+                    yes++;
+                    bfs(i, j,yesMap);
                 }
             }
         }
-        System.out.println(count + " " + ccount);
+        System.out.println(no + " " + yes);
     }
 
-    private static void dfs(int x, int y, boolean[][] bool, char[][] area, char color) {
-        bool[x][y] = true;
-        for (int i = 0; i < 4; i++) {
-            int nx = x + dx[i];
-            int ny = y + dy[i];
+    private static void bfs(int x, int y,char[][] map) {
+        Queue<int[]> queue = new LinkedList<>();
+        char color = map[x][y];
+        queue.add(new int[]{x, y});
+        map[x][y] = ' ';
 
-            if(0 > nx || nx >= N || 0 > ny || ny >= N){
-                continue;
+        while (!queue.isEmpty()) {
+            int[] cur = queue.poll();
+
+            for (int i = 0; i < 4; i++) {
+                int nX = cur[0] + dirX[i];
+                int nY = cur[1] + dirY[i];
+
+                if (nX < 0 || nX >= N || nY < 0 || nY >= N || map[nX][nY] != color) {
+                    continue;
+                }
+
+                map[nX][nY] = ' ';
+                queue.add(new int[]{nX, nY});
             }
-            if (bool[nx][ny] || area[nx][ny] != color) {
-                continue;
-            }
-            dfs(nx, ny, bool, area, color);
         }
-    }
-
-    private static boolean isCheck(int nx, int ny) {
-        return 0 <= nx && nx < N && ny >= 0 && ny < N;
     }
 }
