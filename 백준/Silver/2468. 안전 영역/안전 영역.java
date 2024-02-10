@@ -1,66 +1,68 @@
 import java.io.BufferedReader;
-        import java.io.InputStreamReader;
-        import java.io.IOException;
-import java.util.*;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.StringTokenizer;
 
 public class Main {
-    static int[][] map;
-    static boolean[][] visited;
-    static int[] dirx = {0, 0, -1, 1};
-    static int[] diry = {-1, 1, 0, 0};
     static int N;
+    static int[][] map;
+    static boolean[][] visit;
 
+    // 방향 -> 상,하,좌,우
+    static int[] dirX = {-1, 1, 0, 0};
+    static int[] dirY = {0, 0, -1, 1};
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-
-        N = Integer.parseInt(st.nextToken());
-        int max = 0;
-        int answer = 0;
+        N = Integer.parseInt(br.readLine());
+        visit = new boolean[N][N];
+        HashSet<Integer> safeZoneInfo = new HashSet<>();
+//        // 아무 지역도 물에 잠기지 않는 경우
+//        safeZoneInfo.add(0);
+        // Input
         map = new int[N][N];
-
-        for(int i = 0 ; i < N; i++){
-            st = new StringTokenizer(br.readLine(), " ");
-            for(int j = 0; j < N; j++){
+        for (int i = 0; i < N; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < N; j++) {
                 map[i][j] = Integer.parseInt(st.nextToken());
-                if(max < map[i][j])
-                    max = map[i][j];
+                safeZoneInfo.add(map[i][j]);
             }
         }
 
-        for(int height = 0 ; height < max; height++){
-            visited = new boolean[N][N];
-            int count = 0;
-            
+        // checkSafeZone
+        int maxSafe = 1;
+        for (int height : safeZoneInfo) {
+            visit = new boolean[N][N];
+
+            int safeCount = 0;
             for (int i = 0; i < N; i++) {
-                for(int j = 0 ; j < N; j++){
-                    if(!visited[i][j] && map[i][j] > height){
-                        count++;
+                for (int j = 0; j < N; j++) {
+                    if (map[i][j] > height && !visit[i][j]) {
+                        safeCount++;
                         dfs(i, j,height);
                     }
                 }
             }
-            answer = Math.max(answer,count);
+            if (maxSafe < safeCount) maxSafe = safeCount;
         }
 
-        System.out.println(answer);
+        System.out.println(maxSafe);
     }
 
-    private static void dfs(int i, int j, int height) {
-        visited[i][j] = true;
-        for(int pos = 0 ; pos < 4; pos++){
-            int posx = i + dirx[pos];
-            int posy = j + diry[pos];
+    private static void dfs(int x, int y, int height) {
+        visit[x][y] = true;
+        for (int i = 0; i < 4; i++) {
+            int nX = x + dirX[i];
+            int nY = y + dirY[i];
 
-            if(posx < 0 || posy < 0 || posx > N-1 || posy > N-1) continue;
-            if(visited[posx][posy]) continue;
-
-            if(map[posx][posy] > height){
-                dfs(posx, posy, height);
+            // 배열 범위 밖이거나 || 제한 높이보다 낮거나 같거나 || 방문했다면 continue;
+            if (nX < 0 || nX >= N || nY < 0 || nY >= N || map[nX][nY] <= height || visit[nX][nY]) {
+                continue;
             }
+
+            dfs(nX, nY, height);
         }
     }
 }
-
-
