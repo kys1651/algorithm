@@ -28,6 +28,7 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
+        visit = new boolean[N][M];
         map = new int[N][M];
 
         // Input
@@ -46,32 +47,28 @@ public class Main {
         int answer = 0;
         while (!ice.isEmpty()) {
             answer++;
+            visit = new boolean[N][M];
+
 
             // 녹이기
-            for (Pos p : ice) {
-                int iceCount = getIce(p);
-                map[p.x][p.y] -= iceCount;
+            for (int i = 0; i < ice.size(); i++) {
+                Pos p = ice.get(i);
+                removeIce(p);
 
                 // 녹았다면 -1로 갱신(방금 지워졌다고 표시
                 if (map[p.x][p.y] <= 0) {
-                    map[p.x][p.y] = -1;
+                    map[p.x][p.y] = 0;
+                    visit[p.x][p.y] = true;
+                    ice.remove(p);
+                    i--;
                 }
             }
 
-//            print();
-
-            // 덩어리를 확인해야함
+            // 구역 확인
             int section = 0;
-            visit = new boolean[N][M];
+
             for (int i = 0; i < ice.size(); i++) {
                 Pos p = ice.get(i);
-                // 녹은 빙산이라면 제거 해줌
-                if (map[p.x][p.y] == -1) {
-                    map[p.x][p.y] = 0;
-                    i--;
-                    ice.remove(p);
-                    continue;
-                }
 
                 // 녹지 않은 빙산 중 방문하지 않았다면 dfs로 연결된 부분을 방문 처리
                 if (!visit[p.x][p.y]) {
@@ -81,7 +78,7 @@ public class Main {
             }
 
 
-            if (section > 1) {
+            if (section >= 2) {
                 System.out.println(answer);
                 System.exit(0);
             }
@@ -89,15 +86,6 @@ public class Main {
 
         System.out.println(0);
     }
-
-//    private static void print() {
-//        for (int[] ns : map) {
-//            for (int s : ns) {
-//                System.out.print(s + " ");
-//            }
-//            System.out.println();
-//        }
-//    }
 
     private static void dfs(int x, int y) {
         visit[x][y] = true;
@@ -112,14 +100,14 @@ public class Main {
     }
 
     // 상,하,좌,우에 바닷물이 접한지 확인
-    private static int getIce(Pos p) {
+    private static int removeIce(Pos p) {
         int count = 0;
         for (int i = 0; i < 4; i++) {
             int nX = p.x + dirX[i];
             int nY = p.y + dirY[i];
 
-            if (map[nX][nY] == 0) {
-                count++;
+            if (!visit[nX][nY] && map[nX][nY] == 0) {
+                map[p.x][p.y]--;
             }
         }
 
