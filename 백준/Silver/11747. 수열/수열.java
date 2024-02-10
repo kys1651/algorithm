@@ -7,16 +7,19 @@ import java.util.StringTokenizer;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-//        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        Scanner sc = new Scanner(System.in);
-//        int N = Integer.parseInt(br.readLine());
-        int N = sc.nextInt();
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
         StringBuilder number = new StringBuilder();
 
-
-        for (int i = 0; i < N; i++) {
-            number.append(sc.next());
+        int count = 0;
+        while (count != N) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            while (st.hasMoreTokens()) {
+                number.append(st.nextToken());
+                count++;
+            }
         }
+
 
         int i = 0;
         for (; ; i++) {
