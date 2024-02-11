@@ -21,7 +21,7 @@ public class Main {
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
         D = Integer.parseInt(st.nextToken());
-
+        copyMap = new int[N][M];
         map = new int[N][M];
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
@@ -37,13 +37,17 @@ public class Main {
 
     private static void combination(int depth, int at) {
         if (depth == 3) {
-            copyMap = new int[N][M];
             for (int i = 0; i < N; i++) {
                 for (int j = 0; j < M; j++) {
                     copyMap[i][j] = map[i][j];
                 }
             }
             removeEnemy();
+
+            if(result == N * 3){
+                System.out.println(result);
+                System.exit(0);
+            }
             return;
         }
 
@@ -64,7 +68,7 @@ public class Main {
 
             // 맵에 적이 존재하지 않는다면 종료
             boolean exit = true;
-            for (int i = 0; i < N - turn; i++) {
+            for (int i = N - turn - 1; i >= 0; i--) {
                 for (int j = 0; j < M; j++) {
                     // 사라진 적을 제거 해줌
                     if (copyMap[i][j] == -1) {
@@ -76,16 +80,17 @@ public class Main {
                 }
             }
 
-
-            // 방금 적들은 모두 제거 해줌(성으로 간 적들)
-            for (int i = 0; i < M; i++) {
-                copyMap[N - turn - 1][i] = 0;
-            }
-            turn++;
-
+            // 적이 존재하지 않는다면 종료
             if (exit) {
                 break;
             }
+
+            // 방금 적들은 모두 제거 해줌(성으로 간 적들)
+//            for (int i = 0; i < M; i++) {
+//                copyMap[N - turn - 1][i] = 0;
+//            }
+
+            turn++;
         }
 
         if (result < count) result = count;
@@ -102,7 +107,6 @@ public class Main {
         int minX = Integer.MAX_VALUE;
         int minY = Integer.MAX_VALUE;
 
-
         while (!queue.isEmpty()) {
             int cur[] = queue.poll();
 
@@ -113,7 +117,7 @@ public class Main {
                 int nextDist = cur[2] + 1; // 아처와의 거리
 
                 // 배열 범위 밖이거나 || 제한 밖이라면 out
-                if (nX < 0 || nX >= N || nY < 0 || nY >= M || nextDist > D || visit[nX][nY]) {
+                if (nX < 0 || nX >= x || nY < 0 || nY >= M || nextDist > D || visit[nX][nY]) {
                     continue;
                 }
 
