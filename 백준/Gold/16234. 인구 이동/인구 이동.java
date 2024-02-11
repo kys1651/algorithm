@@ -31,9 +31,7 @@ public class Main {
         }
 
         int answer = 0;
-        boolean exit = false;
-        while (!exit) {
-
+        while (true) {
             // 원본 복사
             for (int i = 0; i < N; i++) {
                 copyMap[i] = Arrays.copyOf(map[i], N);
@@ -41,14 +39,12 @@ public class Main {
             visit = new boolean[N][N];
             union = new boolean[N][N];
 
-            exit = true;
+            boolean exit = true;
             for (int i = 0; i < N; i++) {
                 for (int j = 0; j < N; j++) {
                     if (visit[i][j]) continue;
 
-                    sum = 0;
-                    count = 0;
-                    avg = 0;
+                    sum = count = 0;
                     getCountSum(i, j);
                     if (count == 1) {
                         continue;
@@ -56,20 +52,20 @@ public class Main {
 
                     avg = sum / count;
                     exit = false;
-//                    System.out.println("answer - " + answer);
-//                    System.out.println(sum);
-//                    System.out.println(count);
-//                    System.out.println(avg);
 
                     writeAvgUnion(i, j);
-//                    print();
                 }
             }
 
-            answer++;
+            if (exit) {
+                break;
+            } else {
+                answer++;
+            }
         }
 
-        System.out.println(answer - 1);
+
+        System.out.println(answer);
     }
 
     private static void print() {
@@ -90,16 +86,16 @@ public class Main {
             int nX = x + dirX[i];
             int nY = y + dirY[i];
 
-            if (nX < 0 || nX >= N || nY < 0 || nY >= N || union[nX][nY]) {
+            if (!isIn(nX, nY) || union[nX][nY]) {
                 continue;
             }
 
-            int gap = Math.abs(copyMap[x][y] - copyMap[nX][nY]);
-            if (gap >= L && gap <= R) {
+            if (isValid(copyMap[x][y], copyMap[nX][nY])) {
                 writeAvgUnion(nX, nY);
             }
         }
     }
+
 
     private static void getCountSum(int x, int y) {
         visit[x][y] = true;
@@ -109,23 +105,23 @@ public class Main {
             int nX = x + dirX[i];
             int nY = y + dirY[i];
 
-            if (nX < 0 || nX >= N || nY < 0 || nY >= N || visit[nX][nY]) {
+            if (!isIn(nX, nY) || visit[nX][nY]) {
                 continue;
             }
 
-            int gap = Math.abs(copyMap[x][y] - copyMap[nX][nY]);
-            if (gap >= L && gap <= R) {
+            if (isValid(copyMap[x][y], copyMap[nX][nY])) {
                 getCountSum(nX, nY);
             }
         }
     }
 
-    private static boolean getCount() {
 
+    private static boolean isValid(int a, int b) {
+        int gap = Math.abs(a - b);
+        return gap >= L && gap <= R;
+    }
 
-        boolean exit = true;
-
-
-        return exit;
+    private static boolean isIn(int x, int y) {
+        return x >= 0 && x < N && y >= 0 && y < N;
     }
 }
