@@ -5,6 +5,8 @@ import java.io.IOException;
 public class Main {
     static int N; // 배열의 크기 N x N
     static char[][] map; // 원본 맵
+
+    // 시계순으로 설치해야한다.(위에서부터 아래로)
     static int[] dirX = {-1, -1, -1, 0, 0, 1, 1, 1};
     static int[] dirY = {-1, 0, 1, -1, 1, -1, 0, 1};
 
@@ -20,12 +22,10 @@ public class Main {
         }
 
         for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                if (Character.isDigit(map[i][j])) {
-                    int count = map[i][j] - '0';
-                    mineRemove(i, j, count);
-                }
-            }
+            mineRemove(0, i, map[0][i] - '0');
+            mineRemove(N - 1, i, map[N - 1][i] - '0');
+            mineRemove(i, 0, map[i][0] - '0');
+            mineRemove(i, N - 1, map[i][N - 1] - '0');
         }
 
         int answer = 0;
