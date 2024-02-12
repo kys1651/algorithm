@@ -19,7 +19,7 @@ public class Main {
     }
 
     static int N, M, K, result, maxRemove;
-    static int[][] map,copyMap;
+    static int[][] map, copyMap;
     static int[] permutation;
 
     static int[] dirX = {0, 1, 0, -1};
@@ -56,12 +56,7 @@ public class Main {
         // 5번 먼저 처리해줌
         for (CCTV cctv : num5CCTV) {
             for (int i = 0; i < 4; i++) {
-                int nX = cctv.x + dirX[i];
-                int nY = cctv.y + dirY[i];
-
-                if (isIn(nX, nY)) {
-                    result -= removeSpace(nX, nY, i);
-                }
+                result -= removeSpace(cctv.x, cctv.y, i);
             }
         }
 
@@ -78,19 +73,11 @@ public class Main {
             // 원본 복사
             getCopyMap();
 
-//            System.out.println("복사한 값");
-//            print(copyMap);
-
+            // 시뮬레이션 실행
             goSimulation();
-//            System.out.println("처리 후");
-//            print(map);
 
             // 복구
-            writeCopyMap();
-
-//            System.out.println("복구");
-//            print(map);
-
+            map = copyMap;
             return;
         }
 
@@ -100,19 +87,11 @@ public class Main {
         }
     }
 
-    private static void writeCopyMap() {
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
-                map[i][j] = copyMap[i][j];
-            }
-        }
-    }
 
     private static void getCopyMap() {
+        copyMap = new int[N][M];
         for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
-                copyMap[i][j] = map[i][j];
-            }
+            copyMap[i] = Arrays.copyOf(map[i], M);
         }
     }
 
@@ -123,23 +102,18 @@ public class Main {
             int d = permutation[i];
             CCTV cctv = cctvList.get(i);
 
-            // 1번이면 바라보는 방향 지우기
-            if (cctv.num == 1) {
-                count += removeSpace(cctv.x, cctv.y, d);
-            }
+            // 현재 바라보는 방향은 무조건 지워주면 된다.(1번 처리)
+            count += removeSpace(cctv.x, cctv.y, d);
             // 2번이면 바라보는 방향 대칭 지우기
-            else if (cctv.num == 2) {
-                count += removeSpace(cctv.x, cctv.y, d);
+            if (cctv.num == 2) {
                 count += removeSpace(cctv.x, cctv.y, (d + 2) % 4);
             }
             // 3번이면 바라보는 방향과 그 다음 시계 방향 지우기
             else if (cctv.num == 3) {
-                count += removeSpace(cctv.x, cctv.y, d);
                 count += removeSpace(cctv.x, cctv.y, (d + 1) % 4);
             }
             // 4번이면 현재 바라보는 방향포함하여 4군데 지우기
             else if (cctv.num == 4) {
-                count += removeSpace(cctv.x, cctv.y, d);
                 count += removeSpace(cctv.x, cctv.y, (d + 1) % 4);
                 count += removeSpace(cctv.x, cctv.y, (d + 2) % 4);
             }
@@ -149,16 +123,7 @@ public class Main {
         if (maxRemove < count) maxRemove = count;
     }
 
-    private static void print(int[][] map) {
-        for (int[] ns : map) {
-            for (int n : ns) {
-                System.out.print(n + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
-
+    // 현재 바라보는 방향을 지워줌
     private static int removeSpace(int x, int y, int d) {
         int count = 0;
         while (isIn(x, y) && map[x][y] != 6) {
@@ -173,6 +138,7 @@ public class Main {
         return count;
     }
 
+    // 현재 범위가 배열내에 있는지 확인
     private static boolean isIn(int x, int y) {
         return x >= 0 && x < N && y >= 0 && y < M;
     }
