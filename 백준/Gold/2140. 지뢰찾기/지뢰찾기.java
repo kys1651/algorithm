@@ -3,7 +3,7 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 
 public class Main {
-    static int N; // 배열의 크기 N x N
+    static int N,result; // 배열의 크기 N x N
     static char[][] map; // 원본 맵
 
     // 시계순으로 설치해야한다.(위에서부터 아래로)
@@ -13,6 +13,13 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine());
+
+        if(N < 3){
+            System.out.println(0);
+            return;
+        }
+
+        // Input
         map = new char[N][N];
         for (int i = 0; i < N; i++) {
             String input = br.readLine();
@@ -21,6 +28,8 @@ public class Main {
             }
         }
 
+        result = (N - 2) * (N - 2);
+        // 테두리에만 숫자가 있음
         for (int i = 0; i < N; i++) {
             mineRemove(0, i, map[0][i] - '0');
             mineRemove(N - 1, i, map[N - 1][i] - '0');
@@ -28,16 +37,17 @@ public class Main {
             mineRemove(i, N - 1, map[i][N - 1] - '0');
         }
 
-        int answer = 0;
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                if (map[i][j] == '*' || map[i][j] == '#') {
-                    answer++;
-                }
-            }
-        }
+        // # 위치에도 설치가 될 수 있다.
+//        int answer = 0;
+//        for (int i = 0; i < N; i++) {
+//            for (int j = 0; j < N; j++) {
+//                if (map[i][j] == '*' || map[i][j] == '#') {
+//                    answer++;
+//                }
+//            }
+//        }
 
-        System.out.println(answer);
+        System.out.println(result);
     }
 
     private static void mineRemove(int x, int y, int count) {
@@ -62,6 +72,7 @@ public class Main {
             // 지뢰를 설치 할 수 없는 곳이라면 삭제
             else if (map[nX][nY] == '#' && count == 0) {
                 map[nX][nY] = '-';
+                result--;
             }
         }
     }
