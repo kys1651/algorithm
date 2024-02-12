@@ -21,22 +21,19 @@ public class Main {
             int hp = Integer.parseInt(br.readLine());
 
             if(killZombie.size() == L){
-//                System.out.println("감소" + killZombie.peek());
                 damage -= killZombie.poll();
             }
 
-            damage += K;
-//            System.out.println(hp + " " + damage);
             // 현재 데미지로 죽일 수 있는 경우
-            if (hp <= damage) {
+            if (hp <= damage + K) {
                 killZombie.add(K);
+                damage += K;
             }
             // 못죽이는 경우
             else{
                 if(C > 0){
                     killZombie.add(0);
                     C--;
-                    damage -= K;
                 }else{
                     result = "NO";
                     break;
