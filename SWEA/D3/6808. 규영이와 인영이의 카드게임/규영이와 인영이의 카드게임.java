@@ -39,19 +39,22 @@ public class Solution {
 					continue;
 				b[idx++] = i;
 			}
-			permutation(0, 0);
+			permutation(0, 0, 0);
 
 			sb.append(String.format("#%d %d %d\n", tc, Win, Lose));
 		}
 		System.out.println(sb);
 	}
 
-	private static void permutation(int depth, int sum) {
-		if (depth == K) {
-			if (sum > 0)
-				Win++;
-			else if(sum < 0)
-				Lose++;
+	private static void permutation(int depth, int sum1, int sum2) {
+		// 1~18까지 총합인 171/2를 넘긴다면 해당 승자는 무조건 나머지 순열도 이김
+		if (sum1 > (171 / 2) || sum2 > (171/2)) {
+			int round = 1;
+			for(int i = 9-depth; i >= 1; i--) {
+				round *= i;
+			}
+			if(sum1 > sum2) Win += round;
+			else Lose += round;
 			return;
 		}
 
@@ -61,9 +64,9 @@ public class Solution {
 
 			visit[b[i]] = true;
 			if (a[depth] > b[i]) {
-				permutation(depth + 1, sum + a[depth] + b[i]);
+				permutation(depth + 1, sum1 + a[depth] + b[i], sum2);
 			} else {
-				permutation(depth + 1, sum - (a[depth] + b[i]));
+				permutation(depth + 1, sum1, sum2 + a[depth] + b[i]);
 			}
 			visit[b[i]] = false;
 		}
