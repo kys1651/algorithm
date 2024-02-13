@@ -20,10 +20,7 @@ public class Main {
     static int N;
     static ArrayList<Point> emptyList = new ArrayList<>();
     static ArrayList<Point> teacher = new ArrayList<>();
-    static ArrayList<Point> student = new ArrayList<>();
-    static Point[] obstacle = new Point[3];
     static char[][] map, copyMap;
-    static boolean[][] visit;
 
     static int[] dirX = {-1, 1, 0, 0};
     static int[] dirY = {0, 0, -1, 1};
@@ -44,8 +41,6 @@ public class Main {
                     emptyList.add(point);
                 } else if (map[i][j] == 'T') {
                     teacher.add(point);
-                } else {
-                    student.add(point);
                 }
             }
         }
@@ -55,43 +50,35 @@ public class Main {
         System.out.println("NO");
     }
 
+    // 장애물 3가지 조합을 만드는 메서드
     private static void combination(int depth, int at) {
+        // 3개 설치 했다면 확인 해줌
         if (depth == 3) {
+            // 학생이 안걸리는 경우 true
             if (isValid()) {
                 System.out.print("YES");
                 System.exit(0);
-            }
-
-            for (int i = 0; i < N; i++) {
-                map[i] = Arrays.copyOf(copyMap[i], N);
             }
 
             return;
         }
 
         for (int i = at; i < emptyList.size(); i++) {
-            obstacle[depth] = emptyList.get(i);
+            Point o = emptyList.get(i);
+            map[o.x][o.y] = 'O';
             combination(depth + 1, i + 1);
+            map[o.x][o.y] = 'X';
         }
     }
 
     private static boolean isValid() {
-        installObstacle();
-        visit = new boolean[N][N];
-
         // 선생님 사방 체크
         for (Point t : teacher) {
-            if(!checkForward(t)){
+            // 학생 발견시 false
+            if (!checkForward(t)) {
                 return false;
             }
         }
-
-//        // 학생 걸림
-//        for (Point s : student) {
-//            if (visit[s.x][s.y]) {
-//                return false;
-//            }
-//        }
 
         return true;
     }
@@ -103,10 +90,9 @@ public class Main {
             // 배열 범위 내에 장애물이면
             while (isIn(nX, nY) && map[nX][nY] != 'O') {
                 // 학생 발견시 유효하지 않음
-                if(map[nX][nY] == 'S'){
+                if (map[nX][nY] == 'S') {
                     return false;
                 }
-                visit[nX][nY] = true;
                 nX += dirX[i];
                 nY += dirY[i];
             }
@@ -117,13 +103,5 @@ public class Main {
 
     private static boolean isIn(int x, int y) {
         return x >= 0 && x < N && y >= 0 && y < N;
-    }
-
-    private static void installObstacle() {
-        // 장애물 설치
-        for (int i = 0; i < 3; i++) {
-            Point o = obstacle[i];
-            map[o.x][o.y] = 'O';
-        }
     }
 }
