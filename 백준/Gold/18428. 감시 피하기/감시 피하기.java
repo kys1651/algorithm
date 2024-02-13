@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
+    // 위치를 뜻하는 클래스
     static class Point {
         int x;
         int y;
@@ -74,49 +75,44 @@ public class Main {
         }
     }
 
-    private static void print(){
-        for (char[] cs : map) {
-            for (char c : cs) {
-                System.out.print(c + " ");
-            }
-            System.out.println();
-        }
-    }
-
     private static boolean isValid() {
         installObstacle();
         visit = new boolean[N][N];
+
         // 선생님 사방 체크
         for (Point t : teacher) {
-            checkForward(t);
-        }
-
-//        System.out.println("설치");
-//        print();
-//        System.out.println();
-
-        // 학생 걸림
-        for (Point s : student) {
-            if (visit[s.x][s.y]) {
+            if(!checkForward(t)){
                 return false;
             }
         }
 
+//        // 학생 걸림
+//        for (Point s : student) {
+//            if (visit[s.x][s.y]) {
+//                return false;
+//            }
+//        }
 
         return true;
     }
 
-    private static void checkForward(Point t) {
+    private static boolean checkForward(Point t) {
         for (int i = 0; i < 4; i++) {
             int nX = t.x;
             int nY = t.y;
             // 배열 범위 내에 장애물이면
-            while(isIn(nX,nY) && map[nX][nY] != 'O'){
+            while (isIn(nX, nY) && map[nX][nY] != 'O') {
+                // 학생 발견시 유효하지 않음
+                if(map[nX][nY] == 'S'){
+                    return false;
+                }
                 visit[nX][nY] = true;
                 nX += dirX[i];
                 nY += dirY[i];
             }
         }
+
+        return true;
     }
 
     private static boolean isIn(int x, int y) {
