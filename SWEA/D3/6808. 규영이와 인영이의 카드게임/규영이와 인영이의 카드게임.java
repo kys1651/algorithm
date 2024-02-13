@@ -8,13 +8,12 @@ import java.util.StringTokenizer;
  * 
  * @author 김용수
  * 
- * 접근 방법 
- * 1. 규영이가 내지않은 카드를 찾아서 순열을 구한다. 2. 게임 결과를 출력하면 된다.
+ *         접근 방법 1. 규영이가 내지않은 카드를 찾아서 순열을 구한다. 2. 게임 결과를 출력하면 된다.
  *
  */
 public class Solution {
 	static int Lose, Win;
-	static int[] a, b, c;
+	static int[] a, b;
 	static boolean[] visit;
 	static final int K = 9;
 
@@ -24,7 +23,7 @@ public class Solution {
 		int T = Integer.parseInt(br.readLine());
 		a = new int[K];
 		b = new int[K];
-		c = new int[K];
+
 		for (int tc = 1; tc <= T; tc++) {
 			Lose = Win = 0;
 			visit = new boolean[19];
@@ -40,17 +39,19 @@ public class Solution {
 					continue;
 				b[idx++] = i;
 			}
-			c = new int[K];
-			permutation(0);
+			permutation(0, 0);
 
 			sb.append(String.format("#%d %d %d\n", tc, Win, Lose));
 		}
 		System.out.println(sb);
 	}
 
-	private static void permutation(int depth) {
+	private static void permutation(int depth, int sum) {
 		if (depth == K) {
-			getResult();
+			if (sum > 0)
+				Win++;
+			else if(sum < 0)
+				Lose++;
 			return;
 		}
 
@@ -59,26 +60,12 @@ public class Solution {
 				continue;
 
 			visit[b[i]] = true;
-			c[depth] = b[i];
-			permutation(depth + 1);
-			visit[b[i]] = false;
-		}
-	}
-
-	private static void getResult() {
-		int sum = 0;
-		for (int i = 0; i < K; i++) {
-			int tmp = a[i] + c[i];
-			if (a[i] > c[i]) {
-				sum += tmp;
+			if (a[depth] > b[i]) {
+				permutation(depth + 1, sum + a[depth] + b[i]);
 			} else {
-				sum -= tmp;
+				permutation(depth + 1, sum - (a[depth] + b[i]));
 			}
-		}
-		if(sum < 0) {
-			Lose++;
-		}else {
-			Win++;
+			visit[b[i]] = false;
 		}
 	}
 }
