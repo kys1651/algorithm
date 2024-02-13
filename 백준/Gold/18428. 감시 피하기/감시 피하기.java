@@ -17,10 +17,14 @@ public class Main {
         }
     }
 
+    // 배열의 크기
     static int N;
+    // 빈공간
     static ArrayList<Point> emptyList = new ArrayList<>();
+    // 선생님 위치
     static ArrayList<Point> teacher = new ArrayList<>();
-    static char[][] map, copyMap;
+    //
+    static char[][] map;
 
     static int[] dirX = {-1, 1, 0, 0};
     static int[] dirY = {0, 0, -1, 1};
@@ -29,12 +33,10 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine());
         map = new char[N][N];
-        copyMap = new char[N][N];
         for (int i = 0; i < N; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
             for (int j = 0; j < N; j++) {
                 map[i][j] = st.nextToken().charAt(0);
-                copyMap[i][j] = map[i][j];
 
                 Point point = new Point(i, j);
                 if (map[i][j] == 'X') {
@@ -59,7 +61,6 @@ public class Main {
                 System.out.print("YES");
                 System.exit(0);
             }
-
             return;
         }
 
