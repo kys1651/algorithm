@@ -16,10 +16,7 @@ public class Main {
         // Input
         map = new char[R][C];
         for (int i = 0; i < R; i++) {
-            String input = br.readLine();
-            for (int j = 0; j < C; j++) {
-                map[i][j] = input.charAt(j);
-            }
+            map[i] = br.readLine().toCharArray();
         }
 
         int answer = 0;
