@@ -1,49 +1,50 @@
-import java.util.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
+
 
 public class Main {
-    static int result,n;
-    static int[] map;
+    static int N, result;
+    static int[] arr;
     static boolean[] visit;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        n = Integer.parseInt(br.readLine());
-        map = new int[n];
-        visit = new boolean[n];
+        N = Integer.parseInt(br.readLine());
+        arr = new int[N];
+        visit = new boolean[N];
 
-        searchCanQueen(0);
+        combination(0);
 
         System.out.println(result);
     }
 
-    private static void searchCanQueen(int depth) {
-        if (depth == n) {
+    private static void combination(int depth) {
+        if (depth == N) {
             result++;
             return;
         }
 
-        for (int i = 0; i < n; i++) {
-            // 방문한 곳이라면 -> 해당 숫자는 삽입이 불가능함.(이미 해당 열에는 퀸이 존재하기 때문에)
-            if(visit[i]) continue;
+        for (int i = 0; i < N; i++) {
+            if (visit[i]) continue; // 놓은적 있다면 같은 행 X
 
-            // 대각선이 유효하지 않다면 넘어감.
-            if(!possible(depth,i)) continue;
-
-            visit[i] = true;
-            map[depth] = i;
-            searchCanQueen(depth + 1);
-            visit[i] = false;
+            if (isCrossValid(i, depth)) {
+                arr[depth] = i;
+                visit[i] = true;
+                combination(depth + 1);
+                visit[i] = false;
+            }
         }
     }
 
-    private static boolean possible(int depth, int idx) {
-        for (int i = 0; i < depth; i++) {
-            // 대각선에 존재하는지 확인
-            if (Math.abs(i - depth) == Math.abs(map[i] - idx)) {
+    private static boolean isCrossValid(int x, int y) {
+        // 대각선 확인
+        for (int i = 0; i < y; i++) {
+            if (Math.abs(i - y) == Math.abs(arr[i] - x)) {
                 return false;
             }
         }
-       // 가능한 경우
         return true;
     }
+
 }
