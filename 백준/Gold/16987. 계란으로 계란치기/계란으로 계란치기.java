@@ -1,67 +1,71 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.util.StringTokenizer;
 
-class Main
-{
-    static class Egg{
-        int durability;
-        int weight;
 
-        public Egg(int durability, int weight) {
-            this.durability = durability;
-            this.weight = weight;
+public class Main {
+    // 계란 클래스
+    static class Egg {
+        int hp;
+        int attack;
+
+        public Egg(int hp, int attack) {
+            this.hp = hp;
+            this.attack = attack;
         }
     }
+
     static Egg[] eggs;
-    static int n,result;
-	public static void main(String args[]) throws Exception
-	{
-		Scanner sc = new Scanner(System.in);
-        n = sc.nextInt();
-        eggs = new Egg[n];
-        for(int i = 0; i < n; i++){
-            eggs[i] = new Egg(sc.nextInt(), sc.nextInt());
+    static int N, result;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        N = Integer.parseInt(br.readLine());
+        eggs = new Egg[N];
+        for (int i = 0; i < N; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            eggs[i] = new Egg(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
         }
-        result = 0;
-        go(0,0);
+
+        combination(0, 0);
+
         System.out.println(result);
     }
-    private static void go(int depth, int count) {
-        if(depth == n){
-            result = Math.max(result, count);
+
+    private static void combination(int depth, int count) {
+        if (depth == N) {
+            if (result < count) {
+                result = count;
+            }
             return;
         }
 
-        Egg e = eggs[depth];
-        // 손에 쥔 계란이 깨져있을 때 or 다른 모든 계란이 깨졌을 때
-        if(e.durability <= 0 || count == n - 1){
-            go(depth + 1,count);
+        if (eggs[depth].hp <= 0 || count == N - 1) {
+            combination(depth + 1, count);
             return;
         }
 
-        int originCount = count;
-        for(int i = 0; i < n; i++){
-            // 자기 자신의 계란이거나 보고 있는 계란이 깨져있을 때 skip
-            if( i == depth || eggs[i].durability <= 0){
-                continue;
-            }
-            // 깰 수 있는 계란일 때
-            e.durability -= eggs[i].weight;
-            eggs[i].durability -= e.weight;
-            // 손에 들고 있는 계란이 깨졌을 때
-            if(e.durability <= 0){
-                count++;
-            }
-            // 때린 계란이 깨졌을 때
-            if(eggs[i].durability <= 0){
-                count++;
-            }
+        int originHp = eggs[depth].hp;
+        for (int i = 0; i < N; i++) {
+            if (eggs[i].hp <= 0 || i == depth) continue;
+            int vsEggHp = eggs[i].hp;
+            eggs[depth].hp -= eggs[i].attack;
+            eggs[i].hp -= eggs[depth].attack;
 
-            // 다음 계란으로 넘어가기
-            go(depth + 1, count);
+            int tmpCount = 0;
+            if (eggs[depth].hp <= 0) {
+                tmpCount++;
+            }
+            if (eggs[i].hp <= 0) {
+                tmpCount++;
+            }
+            combination(depth + 1, count + tmpCount);
 
-            e.durability += eggs[i].weight;
-            eggs[i].durability += e.weight;
-            count = originCount;
+            // 원본 복구
+            eggs[i].hp = vsEggHp;
+            eggs[depth].hp = originHp;
         }
+
     }
 }
