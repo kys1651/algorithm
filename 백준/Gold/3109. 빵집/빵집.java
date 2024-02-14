@@ -6,9 +6,6 @@ import java.util.StringTokenizer;
 public class Main {
     static int R, C;
     static char[][] map;
-    static boolean exit;
-
-    static int[] dirX = {-1, 0, 1};
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -16,6 +13,7 @@ public class Main {
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
 
+        // Input
         map = new char[R][C];
         for (int i = 0; i < R; i++) {
             String input = br.readLine();
@@ -24,36 +22,32 @@ public class Main {
             }
         }
 
-        for (int i = 0; i < R; i++) {
-            exit = false;
-            dfs(i, 0);
-        }
-
         int answer = 0;
         for (int i = 0; i < R; i++) {
-            if (map[i][C - 1] == 'x') {
+            if (dfs(i, 0)) {
                 answer++;
             }
         }
+
         System.out.println(answer);
     }
 
-    private static void dfs(int x, int y) {
+    private static boolean dfs(int x, int y) {
         map[x][y] = 'x';
 
         if (y == C - 1) {
-            exit = true;
-            return;
+            return true;
         }
 
-        if (!exit && x > 0 && map[x - 1][y + 1] == '.') {
-            dfs(x - 1, y + 1);
+        if (x > 0 && map[x - 1][y + 1] == '.') {
+            if (dfs(x - 1, y + 1)) return true;
         }
-        if (!exit && map[x][y + 1] == '.') {
-            dfs(x, y + 1);
+        if (map[x][y + 1] == '.') {
+            if (dfs(x, y + 1)) return true;
         }
-        if (!exit && x < R - 1 && map[x + 1][y + 1] == '.') {
-            dfs(x + 1, y + 1);
+        if (x < R - 1 && map[x + 1][y + 1] == '.') {
+            if (dfs(x + 1, y + 1)) return true;
         }
+        return false;
     }
 }
