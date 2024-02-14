@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int R, C, result;
+    static int R, C;
     static char[][] map;
     static boolean exit;
 
@@ -29,37 +29,31 @@ public class Main {
             dfs(i, 0);
         }
 
-        System.out.println(result);
-    }
-
-    private static void print() {
-        for (char[] cs : map) {
-            for (char c : cs) {
-                System.out.print(c + " ");
+        int answer = 0;
+        for (int i = 0; i < R; i++) {
+            if (map[i][C - 1] == 'x') {
+                answer++;
             }
-            System.out.println();
         }
+        System.out.println(answer);
     }
 
     private static void dfs(int x, int y) {
-        if(exit) return;
-
         map[x][y] = 'x';
 
         if (y == C - 1) {
             exit = true;
-            result++;
             return;
         }
 
-        for (int i = 0; i < 3; i++) {
-            int nX = x + dirX[i];
-            int nY = y + 1;
-
-            if (nX < 0 || nX >= R || map[nX][nY] == 'x' || exit) {
-                continue;
-            }
-            dfs(nX, nY);
+        if (!exit && x > 0 && map[x - 1][y + 1] == '.') {
+            dfs(x - 1, y + 1);
+        }
+        if (!exit && map[x][y + 1] == '.') {
+            dfs(x, y + 1);
+        }
+        if (!exit && x < R - 1 && map[x + 1][y + 1] == '.') {
+            dfs(x + 1, y + 1);
         }
     }
 }
