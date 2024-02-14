@@ -64,36 +64,28 @@ public class Main {
 		// a가 이김
 		win[a]--;
 		lose[b]--;
-		combination(depth + 1);
+		if(win[a] >= 0 && lose[b] >= 0) {
+			combination(depth + 1);
+		}
 		win[a]++;
 		lose[b]++;
 
 		// 무승부
 		draw[a]--;
 		draw[b]--;
-		combination(depth + 1);
+		if(draw[a] >= 0 && draw[b] >= 0) {
+			combination(depth + 1);
+		}
 		draw[a]++;
 		draw[b]++;
 
 		// b가 이긴 경우
 		win[b]--;
 		lose[a]--;
-		combination(depth + 1);
+		if(win[b] >= 0 && lose[a] >= 0) {
+			combination(depth + 1);
+		}
 		win[b]++;
 		lose[a]++;
-	}
-
-	private static boolean drawCheck() {
-		int score = 0;
-		for (int i = 0; i < SIZE; i++) {
-			if (draw[i] != 0) {
-				if (score < 0) {
-					score += draw[i];
-				} else {
-					score -= draw[i];
-				}
-			}
-		}
-		return score == 0;
 	}
 }
