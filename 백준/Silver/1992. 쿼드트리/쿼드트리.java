@@ -22,13 +22,13 @@ public class Main {
     }
 
     private static void isQuadTree(int x, int y, int n) {
-        if (isEqual(x, y, n)) {
+        if (n == 1 || isEqual(x, y, n)) {
             sb.append(map[x][y]);
             return;
         }
 
         sb.append('(');
-        int nextLen = n / 2;
+        int nextLen = n >> 1;
         isQuadTree(x, y, nextLen);
         isQuadTree(x, y + nextLen, nextLen);
         isQuadTree(x + nextLen, y, nextLen);
