@@ -22,7 +22,7 @@ public class Main {
     }
 
     private static void isQuadTree(int x, int y, int n) {
-        if (n == 1 || isEqual(x, y, n)) {
+        if (isEqual(x, y, n)) {
             sb.append(map[x][y]);
             return;
         }
