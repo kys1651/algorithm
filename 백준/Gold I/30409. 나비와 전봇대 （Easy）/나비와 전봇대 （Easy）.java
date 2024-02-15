@@ -20,6 +20,7 @@ public class Main {
         StringBuilder sb = new StringBuilder();
 
         int N = Integer.parseInt(br.readLine());
+        
         Top[] tops = new Top[N + 1];
         long[] left = new long[N + 1];
         long[] right = new long[N + 1];
@@ -42,19 +43,19 @@ public class Main {
 
         Stack<Top> rightTop = new Stack<>();
         for (int i = N; i >= 1; i--) {
-            while(!rightTop.isEmpty() && rightTop.peek().height < tops[i].height){
+            while (!rightTop.isEmpty() && rightTop.peek().height < tops[i].height) {
                 rightTop.pop();
             }
-            if(!rightTop.isEmpty()){
+            if (!rightTop.isEmpty()) {
                 right[i] = right[rightTop.peek().idx] + getDistance(tops[i], rightTop.peek());
             }
             rightTop.push(tops[i]);
+            left[i] += right[i];
         }
 
         int Q = Integer.parseInt(br.readLine());
         for (int i = 0; i < Q; i++) {
-            int p = Integer.parseInt(br.readLine());
-            sb.append(left[p] + right[p]).append('\n');
+            sb.append(left[Integer.parseInt(br.readLine())]).append('\n');
         }
         System.out.println(sb);
     }
