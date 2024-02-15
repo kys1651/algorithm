@@ -48,7 +48,7 @@ public class Solution {
 	static int[] dirX = { 0, 0, 1, 0, -1 };
 	static int[] dirY = { 0, -1, 0, 1, 0 };
 
-	static Person A, B;
+	static Person A = new Person(1,1), B = new Person(10,10);
 	static Bc[] bcs;
 	static int M, K, result;
 	static int[] moveA, moveB;
@@ -59,8 +59,10 @@ public class Solution {
 		int T = Integer.parseInt(br.readLine());
 		for (int tc = 1; tc <= T; tc++) {
 			result = 0;
-			A = new Person(1, 1);
-			B = new Person(10, 10);
+			A.x = 1;
+			A.y = 1;
+			B.x = 10;
+			B.y = 10;
 
 			StringTokenizer st = new StringTokenizer(br.readLine());
 			M = Integer.parseInt(st.nextToken());
