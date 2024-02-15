@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
@@ -18,22 +17,6 @@ public class Solution {
 			this.c = c;
 			this.p = p;
 		}
-
-		@Override
-		public String toString() {
-			StringBuilder builder = new StringBuilder();
-			builder.append("Bc [x=");
-			builder.append(x);
-			builder.append(", y=");
-			builder.append(y);
-			builder.append(", c=");
-			builder.append(c);
-			builder.append(", p=");
-			builder.append(p);
-			builder.append("]");
-			return builder.toString();
-		}
-
 	}
 
 	static class Person {
@@ -113,7 +96,6 @@ public class Solution {
 			start();
 
 			sb.append(String.format("#%d %d\n", tc, result));
-//			System.out.println(result);
 		}
 
 		System.out.println(sb);
@@ -125,47 +107,52 @@ public class Solution {
 			A.move(moveA[i]);
 			B.move(moveB[i]);
 
-			// 주변 조회
 			A.getBc();
 			B.getBc();
-//			System.out.println("A -> " + A.x + " " + A.y);
-//			System.out.println("B -> " + B.x + " " + B.y);
-//			System.out.println(A.queue);
-//			System.out.println(B.queue);
 
-			Bc bcA = null;
-			Bc bcB = null;
-			int cA = 0;
-			int cB = 0;
-			if (!A.queue.isEmpty()) {
-				bcA = A.queue.poll();
-				cA = bcA.p;
-			}
-			if (!B.queue.isEmpty()) {
-				bcB = B.queue.poll();
-				cB = bcB.p;
+			if (A.queue.isEmpty() && B.queue.isEmpty()) {
+				continue;
 			}
 
-			if (bcA != null && bcB != null && bcA == bcB) {
-				if (A.queue.isEmpty() && B.queue.isEmpty()) {
-					cA = cB = cA / 2;
-				} else if (A.queue.isEmpty()) {
-					cB = B.queue.poll().p;
-				} else if (B.queue.isEmpty()) {
-					cA = A.queue.poll().p;
-				} else {
-					if (A.queue.peek().p > B.queue.peek().p) {
-						cA = A.queue.poll().p;
-					} else {
-						cB = B.queue.poll().p;
-					}
-				}
-			}
-
-//			System.out.println(cA + " " + cB);
-//			System.out.println();
-			result += cA + cB;
+			getCharge();
 		}
+	}
+
+	private static void getCharge() {
+		if (A.queue.isEmpty()) {
+			result += B.queue.poll().p;
+			return;
+		}
+
+		if (B.queue.isEmpty()) {
+			result += A.queue.poll().p;
+			return;
+		}
+
+		Bc bcA = A.queue.poll();
+		Bc bcB = B.queue.poll();
+
+		if (bcA != bcB) {
+			result += bcA.p + bcB.p;
+			return;
+		}
+
+		int tmp = 0;
+		if (A.queue.isEmpty() && B.queue.isEmpty()) {
+			tmp += (bcA.p / 2) * 2;
+		} else if (A.queue.isEmpty()) {
+			tmp += B.queue.poll().p + bcA.p;
+		} else if (B.queue.isEmpty()) {
+			tmp = A.queue.poll().p + bcB.p;
+		} else {
+			if (A.queue.peek().p > B.queue.peek().p) {
+				tmp = A.queue.poll().p + bcB.p;
+			} else {
+				tmp = B.queue.poll().p + bcA.p;
+			}
+		}
+
+		result += tmp;
 	}
 
 	private static boolean isIn(int x, int y, Bc bc) {
