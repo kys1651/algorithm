@@ -10,7 +10,7 @@ public class Main {
 	static final int SIZE = 100000;
 	static int[] pos = new int[SIZE + 1];
 
-	static int N, K, result;
+	static int N, K;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -19,9 +19,16 @@ public class Main {
 		N = Integer.parseInt(st.nextToken());
 		K = Integer.parseInt(st.nextToken());
 
+		if(N > K) {
+			sb.append(N-K).append('\n');
+			for(int i = N; i >= K; i--) {
+				sb.append(i).append(' ');
+			}
+			System.out.println(sb);
+			return;
+		}
+		
 		bfs();
-
-		sb.append(pos[K] - 1).append('\n');
 
 		int cur = K;
 		Stack<Integer> stack = new Stack<>();
@@ -37,12 +44,14 @@ public class Main {
 			} 
 		}
 		
+		sb.append(pos[K] - 1).append('\n');
+		
 		stack.push(N);
 		while(!stack.isEmpty()) {
 			sb.append(stack.pop()).append(' ');
 		}
-		System.out.println(sb);
 		
+		System.out.println(sb);
 	}
 
 	private static void bfs() {
@@ -62,18 +71,15 @@ public class Main {
 				pos[cur + 1] = nextCount;
 				queue.add(cur + 1);
 			}
-			if (cur - 1 >= 0 && pos[cur - 1] == 0) {
-				pos[cur - 1] = nextCount;
-				queue.add(cur - 1);
-			}
 			if (cur * 2 <= SIZE && pos[cur * 2] == 0) {
 				pos[cur * 2] = nextCount;
 				queue.add(cur * 2);
 			}
+			
+			if (cur - 1 >= 0 && pos[cur - 1] == 0) {
+				pos[cur - 1] = nextCount;
+				queue.add(cur - 1);
+			}
 		}
-	}
-
-	private static void answerPrint() {
-
 	}
 }
