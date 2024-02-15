@@ -1,68 +1,79 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
-class Solution {
-    static class Point{
-        int x;
-        int y;
-        int distance;
+public class Solution {
+	static class Node {
+		int x;
+		int y;
 
-        public Point(int x, int y, int distance){
-            this.x = x;
-            this.y= y;
-            this.distance = distance;
-        }
-    }
+		public Node(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+	}
 
-    static int n;
-    static boolean[] visit;
-    static Point[] customers;
-    static Point company, house;
-    static int result;
-    public static void main(String args[]) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-        StringTokenizer st;
-        int T = Integer.parseInt(br.readLine());
-        for(int tc = 1; tc <= T; tc++) {
-            n = Integer.parseInt(br.readLine());
-            st = new StringTokenizer(br.readLine());
-            company = new Point(Integer.parseInt(st.nextToken()),Integer.parseInt(st.nextToken()),0);
-            house = new Point(Integer.parseInt(st.nextToken()),Integer.parseInt(st.nextToken()),0);
+	static int N, result;
+	static Node[] nodes;
+	static Node Home, Company;
+	static boolean[] visit;
 
-            visit = new boolean[n];
-            customers = new Point[n];
-            for(int i = 0; i < n; i++){
-                customers[i] = new Point(Integer.parseInt(st.nextToken()),Integer.parseInt(st.nextToken()),0);
-            }
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
 
-            result = Integer.MAX_VALUE;
-            bruteforce(new Point(company.x, company.y, 0),0);
-            sb.append("#" + tc + " " + result).append("\n");
-        }
-        System.out.println(sb);
-    }
+		int T = Integer.parseInt(br.readLine());
+		for (int tc = 1; tc <= T; tc++) {
+			result = Integer.MAX_VALUE;
+			N = Integer.parseInt(br.readLine());
+			nodes = new Node[N];
+			visit = new boolean[N];
 
-    private static void bruteforce(Point pos, int depth){
-        if(depth == n){
-            int answer = calc(pos,house);
-            result = Math.min(answer,result);
-            return;
-        }
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			Company = new Node(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+			Home = new Node(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+			for (int i = 0; i < N; i++) {
+				nodes[i] = new Node(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+			}
 
-        for(int i = 0; i < n; i++){
-            if(visit[i]) continue;
+			for (int i = 0; i < N; i++) {
+				visit[i] = true;
+				dfs(1, getDistance(nodes[i], Company), nodes[i]);
+				visit[i] = false;
+			}
 
-            visit[i] = true;
-            int nextValue = calc(pos,customers[i]);
-            bruteforce(new Point(customers[i].x, customers[i].y, nextValue),depth+1);
-            visit[i] = false;
-        }
-    }
+			sb.append(String.format("#%d %d\n", tc, result));
+		}
+		
+		System.out.println(sb);
+	}
 
-    private static int calc(Point current, Point next){
-        int dist = current.distance;
-        return dist + Math.abs(current.x - next.x) + Math.abs(current.y - next.y);
-    }
+	private static void dfs(int depth, int distanceSum, Node cur) {
+		if (depth == N) {
+			int goHome = getDistance(cur, Home);
+			if (goHome + distanceSum < result) {
+				result = goHome + distanceSum;
+			}
+			return;
+		}
+
+		if (distanceSum > result)
+			return;
+
+		for (int i = 0; i < N; i++) {
+			if (visit[i])
+				continue;
+
+			visit[i] = true;
+			dfs(depth + 1, distanceSum + getDistance(cur, nodes[i]), nodes[i]);
+			visit[i] = false;
+		}
+
+	}
+
+	private static int getDistance(Node a, Node b) {
+		return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+	}
 }
