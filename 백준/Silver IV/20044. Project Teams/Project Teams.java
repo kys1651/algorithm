@@ -17,9 +17,9 @@ public class Main {
 
         Arrays.sort(nums);
 
-        long answer = Long.MAX_VALUE;
+        int answer = Integer.MAX_VALUE;
         for (int i = 0; i < N; i++) {
-            long nextValue = nums[i] + nums[2 * N - i - 1];
+            int nextValue = nums[i] + nums[2 * N - i - 1];
             if (nextValue < answer) {
                 answer = nextValue;
             }
