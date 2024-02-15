@@ -7,17 +7,18 @@ import java.util.StringTokenizer;
 public class Main {
     static class Top {
         int idx;
-        long height;
+        int height;
 
-        public Top(int idx, long height) {
+        public Top(int idx, int height) {
             this.idx = idx;
             this.height = height;
         }
     }
 
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
+
         int N = Integer.parseInt(br.readLine());
         Top[] tops = new Top[N + 1];
         long[] left = new long[N + 1];
@@ -25,12 +26,11 @@ public class Main {
 
         StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i = 1; i <= N; i++) {
-            tops[i] = new Top(i, Long.parseLong(st.nextToken()));
+            tops[i] = new Top(i, Integer.parseInt(st.nextToken()));
         }
 
         Stack<Top> leftTop = new Stack<>();
-        leftTop.push(tops[1]);
-        for (int i = 2; i <= N; i++) {
+        for (int i = 1; i <= N; i++) {
             while (!leftTop.isEmpty() && leftTop.peek().height < tops[i].height) {
                 leftTop.pop();
             }
@@ -38,13 +38,10 @@ public class Main {
                 left[i] = left[leftTop.peek().idx] + getDistance(leftTop.peek(), tops[i]);
             }
             leftTop.add(tops[i]);
-//            System.out.println(i + " : " + left[i]);
         }
 
-//        System.out.println("----");
         Stack<Top> rightTop = new Stack<>();
-        rightTop.push(tops[N]);
-        for (int i = N - 1; i >= 1; i--) {
+        for (int i = N; i >= 1; i--) {
             while(!rightTop.isEmpty() && rightTop.peek().height < tops[i].height){
                 rightTop.pop();
             }
@@ -53,18 +50,18 @@ public class Main {
             }
             rightTop.push(tops[i]);
         }
+
         int Q = Integer.parseInt(br.readLine());
         for (int i = 0; i < Q; i++) {
             int p = Integer.parseInt(br.readLine());
-            System.out.println(left[p] + right[p]);
+            sb.append(left[p] + right[p]).append('\n');
         }
+        System.out.println(sb);
     }
 
     private static long getDistance(Top a, Top b) {
-//        System.out.println(a.idx + ", " + a.height + " cal  " + b.idx + " " + b.height);
         long x = a.idx - b.idx;
         long y = a.height - b.height;
-//        System.out.println(x * x + y * y);
         return x * x + y * y;
     }
 }
