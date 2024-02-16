@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
-public class Main {
+public class Main{
 	static int H, W;
 	static int[][] map;
 
@@ -43,7 +43,10 @@ public class Main {
 					}
 				}
 			}
-
+			if(list.size() == 0) {
+				sb.append("0\n");
+				continue;
+			}
 			int count = 0;
 			for (int[] cur : list) {
 				if (visit[cur[0]][cur[1]])
