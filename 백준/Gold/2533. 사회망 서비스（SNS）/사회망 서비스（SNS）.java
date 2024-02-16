@@ -5,8 +5,18 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class Main {
+    static class Node {
+        int idx;
+        Node next;
+
+        public Node(int idx, Node next) {
+            this.idx = idx;
+            this.next = next;
+        }
+    }
+
     static int N;
-    static ArrayList<Integer>[] tree;
+    static Node[] nodes;
     static int[][] dp;
     static boolean[] visit;
 
@@ -18,17 +28,14 @@ public class Main {
         // 현재 얼리어답터가 아닌 경우 : 0
         // 현재 얼리어답터인 경우 : 1
         dp = new int[N + 1][2];
-        tree = new ArrayList[N + 1];
-        for (int i = 1; i <= N; i++) {
-            tree[i] = new ArrayList<>();
-        }
+        nodes = new Node[N + 1];
 
         for (int i = 0; i < N - 1; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
             int from = Integer.parseInt(st.nextToken());
             int to = Integer.parseInt(st.nextToken());
-            tree[from].add(to);
-            tree[to].add(from);
+            nodes[from] = new Node(to, nodes[from]);
+            nodes[to] = new Node(from, nodes[to]);
         }
 
         dfs(1);
@@ -40,11 +47,16 @@ public class Main {
         visit[cur] = true;
         dp[cur][1] = 1;
 
-        for (int next : tree[cur]) {
-            if (visit[next]) continue;
-            dfs(next);
-            dp[cur][0] += dp[next][1];
-            dp[cur][1] += Math.min(dp[next][0], dp[next][1]);
+        for (Node next = nodes[cur]; next != null; next = next.next) {
+            if (visit[next.idx]) continue;
+            dfs(next.idx);
+            dp[cur][0] += dp[next.idx][1];
+
+            if (dp[next.idx][0] > dp[next.idx][1]) {
+                dp[cur][1] += dp[next.idx][1];
+            } else {
+                dp[cur][1] += dp[next.idx][0];
+            }
         }
     }
 }
