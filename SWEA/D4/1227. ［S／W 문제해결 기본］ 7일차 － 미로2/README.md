@@ -3,12 +3,12 @@
 [문제 링크](https://swexpertacademy.com/main/code/problem/problemDetail.do?contestProbId=AV14wL9KAGkCFAYD) 
 
 ### 성능 요약
-  
-메모리: 24,708 KB, 시간: 148 ms, 코드길이: 2,406 Bytes
+
+메모리: 21,428 KB, 시간: 123 ms, 코드길이: 1,135 Bytes
 
 ### 제출 일자
 
-2024-01-02 23:22
+2024-02-16 16:35
 
 
 
