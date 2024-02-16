@@ -15,7 +15,17 @@ public class Main {
             num[i] = Integer.parseInt(st.nextToken());
         }
 
+        if (N == 2) {
+            System.out.println(1);
+            return;
+        }
+
         Arrays.sort(num);
+        
+        if (num[0] >= N - 2) {
+            System.out.println(N - 2);
+            return;
+        }
 
         int chain = 0;
         int i = N - 1;
