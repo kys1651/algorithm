@@ -1,83 +1,85 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
-class Solution {
+public class Solution {
+    static int N, result;
     static char[][] map;
-    static int result = 0;
-    // 상하좌우,왼쪽(위,아래),오른쪽(위,아래)
-    static int[] dirX = {-1, 1, 0, 0, -1, 1, -1, 1};
-    static int[] dirY = {0, 0, -1, 1, -1, -1, 1, 1};
 
-    public static void main(String args[]) throws Exception {
+    // 현재 좌표 평면 8 방향 체크
+    static int[] dirX = {-1, -1, -1, 0, 0, 1, 1, 1};
+    static int[] dirY = {-1, 0, 1, -1, 1, -1, 0, 1};
+
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
-
         int T = Integer.parseInt(br.readLine());
         for (int tc = 1; tc <= T; tc++) {
-            int n = Integer.parseInt(br.readLine());
-            map = new char[n][n];
-            for (int i = 0; i < n; i++) {
+            N = Integer.parseInt(br.readLine());
+            result = 0;
+
+            map = new char[N][N];
+            for (int i = 0; i < N; i++) {
                 map[i] = br.readLine().toCharArray();
             }
 
-            result = 0;
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < N; j++) {
                     if (map[i][j] == '.') {
-                        countMine(i, j, false);
+                        removeMine(i, j);
                     }
                 }
             }
 
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                    if (map[i][j] == '.')
-                        result++;
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < N; j++) {
+                    if(map[i][j] == '.') result++;
                 }
             }
-
-            sb.append("#" + tc + " " + result).append("\n");
+            sb.append(String.format("#%d %d\n", tc, result));
         }
         System.out.println(sb);
     }
 
-    private static void countMine(int x, int y, boolean mem) {
+    private static void removeMine(int x, int y) {
         int count = 0;
-        for (int i = 0; i < dirX.length; i++) {
+
+        boolean write = false;
+        for (int i = 0; i < 8; i++) {
             int nX = x + dirX[i];
             int nY = y + dirY[i];
 
-            if (check(nX, nY)) {
+            if (!isIn(nX, nY)) {
                 continue;
             }
-
             if (map[nX][nY] == '*') {
                 count++;
             }
+            if (map[nX][nY] == '0') {
+                write = true;
+            }
         }
 
+        if (write) {
+            map[x][y] = (char) ('0' + count);
+        }
         if (count == 0) {
             map[x][y] = '0';
-            for (int i = 0; i < dirX.length; i++) {
+            for (int i = 0; i < 8; i++) {
                 int nX = x + dirX[i];
                 int nY = y + dirY[i];
-                if (check(nX, nY)) {
-                    continue;
-                }
-                if (map[nX][nY] == '.') {
-                    countMine(nX, nY, true);
+                if (isIn(nX, nY)&&map[nX][nY] == '.') {
+                    removeMine(x + dirX[i], y + dirY[i]);
                 }
             }
-            if(!mem){
+            if (!write) {
                 result++;
             }
         }
-        else if (mem) {
-            map[x][y] = (char) ('0' + count);
-        }
     }
 
-    private static boolean check(int x, int y) {
-        return x < 0 || x >= map.length || y < 0 || y >= map[x].length;
+    private static boolean isIn(int x, int y) {
+        return x >= 0 && x < N && y >= 0 && y < N;
     }
 }
+
