@@ -6,8 +6,6 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -20,8 +18,6 @@ public class Main {
             map[i] = br.readLine().toCharArray();
         }
 
-
-
         int[] dirX = {-1, 0, 1, 0};
         int[] dirY = {0, 1, 0, -1};
 
@@ -29,13 +25,12 @@ public class Main {
         queue.add(new int[]{0, 0,1});
         map[0][0] = '0';
 
-        int result = 10000;
         while(!queue.isEmpty()){
             int[] cur = queue.poll();
 
             if (cur[0] == N - 1 && cur[1] == M - 1) {
-                result = Math.min(cur[2], result);
-                continue;
+                System.out.println(cur[2]);
+                return;
             }
 
             for (int i = 0; i < 4; i++) {
@@ -50,8 +45,6 @@ public class Main {
                 queue.offer(new int[]{nX, nY, cur[2] + 1});
             }
         }
-
-        System.out.println(result);
     }
 }
 
