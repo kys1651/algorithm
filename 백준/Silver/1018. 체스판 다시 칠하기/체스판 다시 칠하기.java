@@ -32,28 +32,28 @@ public class Main {
     }
 
     private static void checkValid(int x, int y) {
-        int wStart = 0;
-        int bStart = 0;
+        int count = 0;
+
         boolean flag = true;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (flag != map[x + i][y + j]) {
-                    wStart++;
+                    count++;
                 }
-                if (!flag != map[x + i][y + j]) {
-                    bStart++;
-                }
+
                 flag = !flag;
             }
             flag = !flag;
         }
-        if (wStart < answer) {
-            answer = wStart;
-        }
-        if (bStart < answer) {
-            answer = bStart;
+
+        if (count > 64 - count) {
+            count = 64 - count;
         }
 
+        if (count < answer) {
+            answer = count;
+        }
+        
         if (answer == 0) {
             System.out.println(0);
             System.exit(0);
