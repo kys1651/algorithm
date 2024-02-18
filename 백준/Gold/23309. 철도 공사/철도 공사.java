@@ -4,48 +4,25 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    static class Node {
-        int next;
-        int prev;
-
-        public Node() {
-        }
-
-        @Override
-        public String toString() {
-            final StringBuilder sb = new StringBuilder("Node{");
-            sb.append("next=").append(next);
-            sb.append(", prev=").append(prev);
-            sb.append('}');
-            return sb.toString();
-        }
-    }
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
         StringTokenizer st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
-        Node[] nodes = new Node[1000001];
+        int[] next = new int[1000001];
+        int[] prev = new int[1000001];
+        int[] num = new int[N];
 
         st = new StringTokenizer(br.readLine());
-        int first = Integer.parseInt(st.nextToken());
-        nodes[first] = new Node();
-        int prev = first;
-        for (int i = 1; i < N - 1; i++) {
-            int tmp = Integer.parseInt(st.nextToken());
-            nodes[tmp] = new Node();
-            nodes[tmp].prev = prev;
-            nodes[prev].next = tmp;
-            prev = tmp;
+        num[0] = Integer.parseInt(st.nextToken());
+        for (int i = 1; i < N; i++) {
+            num[i] = Integer.parseInt(st.nextToken());
+            next[num[i - 1]] = num[i];
+            prev[num[i]] = num[i - 1];
         }
-        int next = Integer.parseInt(st.nextToken());
-        nodes[prev].next = next;
-        nodes[next] = new Node();
-        nodes[next].prev = prev;
-        nodes[next].next = first;
-        nodes[first].prev = next;
+        prev[num[0]] = num[N - 1];
+        next[num[N - 1]] = num[0];
 
         for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
@@ -54,56 +31,54 @@ public class Main {
 
             if (Command.equals("BN")) {
                 int tmp = Integer.parseInt(st.nextToken());
-                nodes[tmp] = new Node();
 
                 // 다음 인덱스 값 찾아오기
-                next = nodes[idx].next;
+                int nextIdx = next[idx];
 
                 // 새로운 지하철 생성
-                nodes[tmp].next = next;
-                nodes[tmp].prev = idx;
+                next[tmp] = nextIdx;
+                prev[tmp] = idx;
 
                 // 새로운 지하철 연결
-                nodes[idx].next = tmp;
-                nodes[next].prev = tmp;
+                next[idx] = tmp;
+                prev[nextIdx] = tmp;
 
-                sb.append(next);
+                sb.append(nextIdx);
             } else if (Command.equals("BP")) {
                 int tmp = Integer.parseInt(st.nextToken());
-                nodes[tmp] = new Node();
 
                 // 이전 인덱스 값 찾아오기
-                prev = nodes[idx].prev;
+                int prevIdx = prev[idx];
 
                 // 새로운 지하철 생성
-                nodes[tmp].next = idx;
-                nodes[tmp].prev = prev;
+                next[tmp] = idx;
+                prev[tmp] = prevIdx;
 
                 // 새로운 지하철 연결
-                nodes[idx].prev = tmp;
-                nodes[prev].next = tmp;
+                prev[idx] = tmp;
+                next[prevIdx] = tmp;
 
-                sb.append(prev);
+                sb.append(prevIdx);
             } else if (Command.equals("CN")) {
                 // 다음 노드의 인덱스
-                next = nodes[idx].next;
-                nodes[idx].next = nodes[next].next;
-                nodes[nodes[next].next].prev = idx;
+                int nextIdx = next[idx];
+                next[idx] = next[nextIdx];
+                prev[next[nextIdx]] = idx;
 
-                // 지하철 지워줌
-                nodes[next] = null;
+                // 연결 끊기
+                next[nextIdx] = prev[nextIdx] = 0;
 
-                sb.append(next);
-            }else{
+                sb.append(nextIdx);
+            } else {
                 // 이전 노드의 인덱스
-                prev = nodes[idx].prev;
-                nodes[idx].prev = nodes[prev].prev;
-                nodes[nodes[prev].prev].next = idx;
+                int prevIdx = prev[idx];
+                prev[idx] = prev[prevIdx];
+                next[prev[prevIdx]] = idx;
 
-                // 지하철 제거
-                nodes[prev] = null;
+                // 연결 제거
+                next[prevIdx] = prev[prevIdx] = 0;
 
-                sb.append(prev);
+                sb.append(prevIdx);
             }
             sb.append('\n');
         }
