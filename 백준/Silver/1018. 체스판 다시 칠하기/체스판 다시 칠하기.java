@@ -1,60 +1,63 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
-class Main {
-    public static boolean arr[][];
-    public static int answer = 64;
+public class Main {
+    static boolean[][] map;
+    static int N, M, answer = 64;
 
     public static void main(String[] args) throws IOException {
-
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine()," ");
-
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
-
-        arr = new boolean[N][M];
-
-
-        for(int i = 0 ; i  < N; i++) {
-            String tmp = br.readLine();
-
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        map = new boolean[N][M];
+        for (int i = 0; i < N; i++) {
+            String input = br.readLine();
             for (int j = 0; j < M; j++) {
-                arr[i][j] = tmp.charAt(j) == 'W' ? true : false;
+                if (input.charAt(j) == 'W') {
+                    map[i][j] = true;
+                }
             }
         }
 
-        for(int i = 0 ; i < N - 7; i++) {
-            for (int j = 0; j < M - 7; j++) {
-                find(i, j);
+        for (int i = 0; i <= N - 8; i++) {
+            for (int j = 0; j <= M - 8; j++) {
+                checkValid(i, j);
             }
         }
 
         System.out.println(answer);
     }
 
-    public static void find(int x, int y){
-        int end_x = x + 8;
-        int end_y = y + 8;
-        int count = 0;
-
-        boolean TF = arr[x][y];
-
-        for(int i = x; i < end_x; i++){
-            for(int j = y; j < end_y; j++){
-                if(arr[i][j] != TF) {
-                    count++;
+    private static void checkValid(int x, int y) {
+        int wStart = 0;
+        int bStart = 0;
+        boolean flag = true;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (flag != map[x + i][y + j]) {
+                    wStart++;
                 }
-
-                TF = !TF;
+                if (!flag != map[x + i][y + j]) {
+                    bStart++;
+                }
+                flag = !flag;
             }
-            TF = !TF;
+            flag = !flag;
+        }
+        if (wStart < answer) {
+            answer = wStart;
+        }
+        if (bStart < answer) {
+            answer = bStart;
         }
 
-        count = Math.min(count, 64 - count);
-        answer = Math.min(count, answer);
+        if (answer == 0) {
+            System.out.println(0);
+            System.exit(0);
+        }
     }
 }
+
