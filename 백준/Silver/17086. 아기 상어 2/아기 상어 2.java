@@ -7,7 +7,7 @@ import java.util.StringTokenizer;
 
 public class Main {
 	static int N, M;
-	static int[][] map;
+	static boolean[][] visit;
 	static Queue<int[]> queue = new LinkedList<>();
 
 	static int[] dirX = { -1, -1, -1, 0, 0, 1, 1, 1 };
@@ -18,12 +18,13 @@ public class Main {
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
-		map = new int[N][M];
+		visit = new boolean[N][M];
 		for (int i = 0; i < N; i++) {
 			st = new StringTokenizer(br.readLine());
 			for (int j = 0; j < M; j++) {
-				map[i][j] = Integer.parseInt(st.nextToken());
-				if (map[i][j] == 1) {
+				String tmp  = st.nextToken();
+				if (tmp.equals("1")) {
+					visit[i][j] = true;
 					queue.add(new int[] { i, j });
 				}
 			}
@@ -33,10 +34,12 @@ public class Main {
 	}
 
 	private static int bfs() {
-		int count = 0;
+		int count = -1;
 
 		while (!queue.isEmpty()) {
+			count++;
 			int size = queue.size();
+			
 			for (int s = 0; s < size; s++) {
 				int[] cur = queue.poll();
 
@@ -44,17 +47,17 @@ public class Main {
 					int nX = cur[0] + dirX[i];
 					int nY = cur[1] + dirY[i];
 
-					if (!isIn(nX, nY) || map[nX][nY] == 1) {
+					if (!isIn(nX, nY) || visit[nX][nY]) {
 						continue;
 					}
-					map[nX][nY] = 1;
+					visit[nX][nY] = true;
 					queue.add(new int[] { nX, nY });
 				}
 			}
-			count++;
+			
 		}
 
-		return count - 1;
+		return count;
 	}
 
 	private static boolean isIn(int x, int y) {
