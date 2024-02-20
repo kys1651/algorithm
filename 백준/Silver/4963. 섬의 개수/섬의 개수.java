@@ -3,10 +3,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
+
 public class Main {
-	static int W, H;
-	static int[][] map;
-	static boolean[][] visit;
+	static int W, H; // 높이와 너비
+	static boolean[][] visit; // 방문처리
 
 	static int dirX[] = { -1, -1, -1, 0, 0, 1, 1, 1 };
 	static int dirY[] = { -1, 0, 1, -1, 1, -1, 0, 1 };
@@ -23,19 +23,18 @@ public class Main {
 				break;
 			}
 
-			map = new int[H][W];
 			visit = new boolean[H][W];
 			for (int i = 0; i < H; i++) {
 				st = new StringTokenizer(br.readLine());
 				for (int j = 0; j < W; j++) {
-					map[i][j] = Integer.parseInt(st.nextToken());
+					visit[i][j] = st.nextToken().equals("1") ? true : false;
 				}
 			}
 
 			int count = 0;
 			for (int i = 0; i < H; i++) {
 				for (int j = 0; j < W; j++) {
-					if (map[i][j] == 1 && !visit[i][j]) {
+					if (visit[i][j]) {
 						count++;
 						dfs(i, j);
 					}
@@ -47,12 +46,12 @@ public class Main {
 	}
 
 	private static void dfs(int x, int y) {
-		visit[x][y] = true;
+		visit[x][y] = false;
 
 		for (int i = 0; i < 8; i++) {
 			int nX = x + dirX[i];
 			int nY = y + dirY[i];
-			if (!isIn(nX, nY) || map[nX][nY] != 1 || visit[nX][nY]) {
+			if (!isIn(nX, nY) || !visit[nX][nY]) {
 				continue;
 			}
 			dfs(nX, nY);
