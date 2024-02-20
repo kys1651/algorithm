@@ -1,83 +1,68 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int[][] map;
-    static boolean[][] visit;
-    static int[] dirX = {-1, 1, 0, 0};
-    static int[] dirY = {0, 0, -1, 1};
-    static int n,m,time,cheeseCount;
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
-        map = new int[n][m];
-        visit = new boolean[n][m];
+	static int N, M, count, prev;
+	static int[][] map;
+	static boolean[][] visit;
 
-        for (int i = 0; i < n; i++) {
-            st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < m; j++) {
-                map[i][j] = Integer.parseInt(st.nextToken());
-            }
-        }
-        
-        while (cheesesCheck()){
-            time++;
-            visit = new boolean[n][m];
-            dfs(0, 0);
-            cheeseCount = 0;
-        }
+	static int[] dirX = { -1, 1, 0, 0 };
+	static int[] dirY = { 0, 0, -1, 1 };
 
-        System.out.println(time);
-        System.out.println(cheeseCount);
-    }
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
 
-    private static boolean cheesesCheck() {
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if(map[i][j] == 2){
-                    map[i][j] = 0;
-                    cheeseCount++;
-                }
-            }
-        }
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (map[i][j] == 1) {
-                    return true;
-                }
-            }
-        }
+		// Input
+		map = new int[N][M];
+		for (int i = 0; i < N; i++) {
+			st = new StringTokenizer(br.readLine());
+			for (int j = 0; j < M; j++) {
+				map[i][j] = Integer.parseInt(st.nextToken());
+				if (map[i][j] == 1) {
+					count++;
+				}
+			}
+		}
 
-        return false;
-    }
+		int time = 0;
+		while (count != 0) {
+			visit = new boolean[N][M];
+			prev = 0;
+			time++;
+			dfs(0, 0);
+			count -= prev;
+		}
+		System.out.println(time);
+		System.out.println(prev);
+	}
 
-    private static void dfs(int x, int y) {
-        for (int d = 0; d < 4; d++) {
-            int nX = x + dirX[d];
-            int nY = y + dirY[d];
+	private static void dfs(int x, int y) {
+		visit[x][y] = true;
 
-            if (check(nX, nY) || visit[nX][nY]) {
-                continue;
-            }
+		if (map[x][y] == 1) {
+			map[x][y] = 0;
+			prev++;
+			return;
+		}
 
-            visit[nX][nY] = true;
-            if (map[nX][nY] == 1) {
-                map[nX][nY] = 2;
-            }else{
-                dfs(nX, nY);
-            }
-        }
-    }
+		for (int i = 0; i < 4; i++) {
+			int nX = x + dirX[i];
+			int nY = y + dirY[i];
+			if (!isIn(nX, nY) || visit[nX][nY]) {
+				continue;
+			}
+			dfs(nX, nY);
+		}
 
-    private static boolean check(int x, int y) {
-        return x < 0 || x >= n || y < 0 || y >= m;
-    }
+	}
 
+	private static boolean isIn(int x, int y) {
+		return x >= 0 && x < N && y >= 0 && y < M;
+	}
 
 }
