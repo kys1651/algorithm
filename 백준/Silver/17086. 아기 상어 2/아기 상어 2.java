@@ -8,6 +8,7 @@ import java.util.StringTokenizer;
 public class Main {
 	static int N, M;
 	static int[][] map;
+	static Queue<int[]> queue = new LinkedList<>();
 
 	static int[] dirX = { -1, -1, -1, 0, 0, 1, 1, 1 };
 	static int[] dirY = { -1, 0, 1, -1, 1, -1, 0, 1 };
@@ -22,55 +23,38 @@ public class Main {
 			st = new StringTokenizer(br.readLine());
 			for (int j = 0; j < M; j++) {
 				map[i][j] = Integer.parseInt(st.nextToken());
+				if (map[i][j] == 1) {
+					queue.add(new int[] { i, j });
+				}
 			}
 		}
 
-		int result = 0;
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < M; j++) {
-				if (map[i][j] == 1)
-					continue;
-				int tmp = bfs(i, j);
-				if (tmp > result)
-					result = tmp;
-			}
-		}
-		System.out.println(result);
+		System.out.println(bfs());
 	}
 
-	private static int bfs(int x, int y) {
-		Queue<int[]> queue = new LinkedList<>();
-		queue.add(new int[] { x, y });
-		boolean[][] visit = new boolean[N][M];
-		visit[x][y] = true;
+	private static int bfs() {
 		int count = 0;
 
 		while (!queue.isEmpty()) {
 			int size = queue.size();
-
 			for (int s = 0; s < size; s++) {
 				int[] cur = queue.poll();
-
-				if (map[cur[0]][cur[1]] == 1) {
-					return count;
-				}
 
 				for (int i = 0; i < 8; i++) {
 					int nX = cur[0] + dirX[i];
 					int nY = cur[1] + dirY[i];
 
-					if (!isIn(nX, nY) || visit[nX][nY]) {
+					if (!isIn(nX, nY) || map[nX][nY] == 1) {
 						continue;
 					}
-					visit[nX][nY] = true;
+					map[nX][nY] = 1;
 					queue.add(new int[] { nX, nY });
 				}
 			}
-			
 			count++;
 		}
 
-		return count;
+		return count - 1;
 	}
 
 	private static boolean isIn(int x, int y) {
