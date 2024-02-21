@@ -4,7 +4,8 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-	static int[] set;
+	static int[] parent;
+	static int[] depth;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -17,13 +18,13 @@ public class Main {
 
 		for (int i = 0; i < M; i++) {
 			st = new StringTokenizer(br.readLine());
-			String command = st.nextToken();
+			int c = Integer.parseInt(st.nextToken());
 			int a = Integer.parseInt(st.nextToken());
 			int b = Integer.parseInt(st.nextToken());
-			if (command.equals("0")) {
-				union(a,b);
+			if (c == 0) {
+				union(a, b);
 			} else {
-				if (equalSet(a, b)) {
+				if (find(a) == find(b)) {
 					sb.append("YES");
 				} else {
 					sb.append("NO");
@@ -36,31 +37,33 @@ public class Main {
 	}
 
 	private static void union(int a, int b) {
-		a = findParent(a);
-		b = findParent(b);
-		if (a == b) {
+		a = find(a);
+		b = find(b);
+		if (a == b)
 			return;
+		
+		if(depth[a] < depth[b]) {
+			parent[a] = b;
+			depth[b] += depth[a];
+		}else {
+			parent[b] = a;
+			depth[a] += depth[b];
 		}
-		set[b] = a;
 	}
 
-	private static boolean equalSet(int a, int b) {
-		a = findParent(a);
-		b = findParent(b);
-		return a == b;
-	}
-
-	private static int findParent(int n) {
-		if (set[n] == n) {
+	private static int find(int n) {
+		if (parent[n] == n) {
 			return n;
 		}
-		return set[n] = findParent(set[n]);
+		return parent[n] = find(parent[n]);
 	}
 
 	private static void makeSet(int n) {
-		set = new int[n + 1];
+		parent = new int[n + 1];
+		depth = new int[n + 1];
 		for (int i = 1; i <= n; i++) {
-			set[i] = i;
+			parent[i] = i;
+			depth[i] = 1;
 		}
 	}
 
