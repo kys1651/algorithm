@@ -1,53 +1,60 @@
-import java.util.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-	static int n,m;
-	static ArrayList<Integer>[] graph;
+	static class Node {
+		int idx;
+		Node next;
+
+		public Node(int idx, Node next) {
+			this.idx = idx;
+			this.next = next;
+		}
+	}
+
+	static Node[] friends;
 	static boolean[] visit;
-	public static void main(String[] args) throws IOException{
+
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		n = Integer.parseInt(st.nextToken());
-		m = Integer.parseInt(st.nextToken());
-		visit = new boolean[n];
-		graph = new ArrayList[n];
-		for(int i = 0; i < n; i++) {
-			graph[i] = new ArrayList<>();
-		}
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+		visit = new boolean[N];
+		friends = new Node[N + 1];
 		
-		for(int i = 0; i < m; i++) {
+		for (int i = 0; i < M; i++) {
 			st = new StringTokenizer(br.readLine());
-			int a = Integer.parseInt(st.nextToken());
-			int b = Integer.parseInt(st.nextToken());
-			graph[a].add(b);
-			graph[b].add(a);
+			int from = Integer.parseInt(st.nextToken());
+			int to = Integer.parseInt(st.nextToken());
+			
+			friends[from] = new Node(to, friends[from]);
+			friends[to] = new Node(from, friends[to]);
 		}
-		
-		if(n < 5) {
-			System.out.println(0);
-			return;
-		}
-		
-		for(int i = 0; i < n; i++) {
+
+		for (int i = 1; i < N; i++) {
 			visit[i] = true;
-			searchABCDE(i,1);
+			permutation(0, i, 0);
 			visit[i] = false;
 		}
+		
 		System.out.println(0);
 	}
-	
-	private static void searchABCDE(int pos, int count) {
-		if(count == 5) {
-			System.out.println("1");
+
+	private static void permutation(int depth, int at, int count) {
+		if (count == 4) {
+			System.out.println(1);
 			System.exit(0);
 		}
-		
-		for(int next : graph[pos]) {
-			if(visit[next]) continue;
-			visit[next] = true;
-			searchABCDE(next,count+1);
-			visit[next] = false;
+
+		for (Node tmp = friends[at]; tmp != null; tmp = tmp.next) {
+			if (visit[tmp.idx])
+				continue;
+			visit[tmp.idx] = true;
+			permutation(depth + 1, tmp.idx, count + 1);
+			visit[tmp.idx] = false;
 		}
 	}
 }
