@@ -1,54 +1,63 @@
-import java.util.StringTokenizer;
-import java.util.ArrayList;
-import java.util.Queue;
-import java.util.LinkedList;
-import java.io.InputStreamReader;
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
-class Solution{
-	static boolean[][] map;
-    static boolean[] visit;
-	public static void main(String args[]) throws Exception {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-        StringTokenizer st;	
-		for(int tc = 1; tc <= 10; tc++) {
-            st = new StringTokenizer(br.readLine());
-            int n = Integer.parseInt(st.nextToken());
-            int start = Integer.parseInt(st.nextToken());
-            visit = new boolean[101];
-            map = new boolean[101][101];
-            st = new StringTokenizer(br.readLine());
-            for(int i = 0; i < n/2; i++){
-                int from = Integer.parseInt(st.nextToken());
-                int to = Integer.parseInt(st.nextToken());
-                map[from][to] = true;
-            }
-           
-            int result = bfs(start);
-            sb.append("#" + tc + " " + result).append("\n");
+public class Solution {
+	static class Node {
+		int idx;
+		Node next;
+
+		public Node(int idx, Node next) {
+			this.idx = idx;
+			this.next = next;
 		}
-        System.out.println(sb);
 	}
-    private static int bfs(int start){
-        Queue<Integer> queue = new LinkedList<>();
-        queue.offer(start);
-        visit[start] = true;
-        int result = 0;
-        while(!queue.isEmpty()){
-            int len = queue.size();
-            result = 0;
-            for(int l= 0; l < len; l++){
-                int current = queue.poll();
-                result = Math.max(result,current);
-                for(int i = 1; i <= 100; i++){
-                	if(!map[current][i] || visit[i]) continue;
-                
-                	visit[i] = true;
-                	queue.offer(i);
-                }
-            }
-        }
-        return result;
-    }
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+
+		for (int tc = 1; tc <= 10; tc++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			int N = Integer.parseInt(st.nextToken());
+			boolean[] visit = new boolean[101];
+			Node[] nodes = new Node[101];
+
+			int start = Integer.parseInt(st.nextToken());
+			st = new StringTokenizer(br.readLine());
+			for (int i = 0; i < N / 2; i++) {
+				int from = Integer.parseInt(st.nextToken());
+				int to = Integer.parseInt(st.nextToken());
+				nodes[from] = new Node(to, nodes[from]);
+			}
+
+			Queue<Integer> queue = new LinkedList<>();
+			queue.add(start);
+			visit[start] = true;
+			int max = 0,prev = 0;
+			while (!queue.isEmpty()) {
+				int size = queue.size();
+				max = 0;
+				for (int i = 0; i < size; i++) {
+					int cur = queue.poll();
+					for (Node tmp = nodes[cur]; tmp != null; tmp = tmp.next) {
+						if (visit[tmp.idx])
+							continue;
+						visit[tmp.idx] = true;
+						queue.add(tmp.idx);
+						max = Math.max(max, tmp.idx);
+					}
+				}
+				if(max != 0) {
+					prev = max;
+				}
+			}
+			sb.append("#" + tc + " " + prev + "\n");
+		}
+		System.out.println(sb);
+	}
+
 }
