@@ -37,25 +37,22 @@ public class Solution {
 			Queue<Integer> queue = new LinkedList<>();
 			queue.add(start);
 			visit[start] = true;
-			int max = 0,prev = 0;
+			int max = 0;
 			while (!queue.isEmpty()) {
 				int size = queue.size();
 				max = 0;
 				for (int i = 0; i < size; i++) {
 					int cur = queue.poll();
+					max = Math.max(max, cur);
 					for (Node tmp = nodes[cur]; tmp != null; tmp = tmp.next) {
 						if (visit[tmp.idx])
 							continue;
 						visit[tmp.idx] = true;
 						queue.add(tmp.idx);
-						max = Math.max(max, tmp.idx);
 					}
 				}
-				if(max != 0) {
-					prev = max;
-				}
 			}
-			sb.append("#" + tc + " " + prev + "\n");
+			sb.append("#" + tc + " " + max + "\n");
 		}
 		System.out.println(sb);
 	}
