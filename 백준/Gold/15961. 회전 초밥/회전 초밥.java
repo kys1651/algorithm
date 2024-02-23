@@ -28,7 +28,6 @@ public class Main {
             if (dish[food[right]] == 1) {
                 quantity++;
             }
-//            System.out.println(left + " " + right + " :" + count + ", " + quantity);
             answer = Math.max(answer, quantity);
 
             if (count == K) {
@@ -43,6 +42,10 @@ public class Main {
                 left++;
             }
 
+            if (answer == K + 1) {
+                System.out.println(K + 1);
+                return;
+            }
         }
         System.out.println(answer);
     }
