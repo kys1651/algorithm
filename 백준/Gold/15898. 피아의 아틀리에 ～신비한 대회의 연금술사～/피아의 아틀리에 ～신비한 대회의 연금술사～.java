@@ -1,16 +1,17 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
     static int N, result;
     static char[][][] color;
     static int[][][] effect;
-    static int[] combinations = new int[3];
     static int[] permutations = new int[3];
-    static int[][] start = new int[3][2];
-    static boolean[] visit = new boolean[3];
+    static int[][] effectBoard = new int[5][5];
+    static char[][] colorBoard = new char[5][5];
+    static boolean[] visit;
 
     static int[] startX = {0, 0, 1, 1};
     static int[] startY = {0, 1, 0, 1};
@@ -19,6 +20,7 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
+        visit = new boolean[N];
         color = new char[N][4][4];
         effect = new int[N][4][4];
 
@@ -41,149 +43,107 @@ public class Main {
             }// color Input End.
         }// 재료 입력 종료
 
-//        print(color[1]);
-//        rotateColor(color[1], 1);
-//        print(color[1]);
-//        rotateColor(color[1], 1);
-//        print(color[1]);
-
-        // N개중 3개 뽑아내기
-        combination(0, 0);
+        permutation(0);
 
         System.out.println(result);
     }
 
-    private static void print(char[][] arr) {
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                System.out.print(arr[i][j] + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
-
-    private static void print(int[][] arr) {
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                System.out.print(arr[i][j] + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
-
-    // N개중 3개를 뽑아낸다.
-    private static void combination(int depth, int at) {
-        if (depth == 3) {
-            permutation(0);
-            return;
-        }
-
-        for (int i = at; i < N; i++) {
-            combinations[depth] = i;
-            combination(depth + 1, i + 1);
-        }
-    }
 
     private static void permutation(int depth) {
         if (depth == 3) {
-            calc();
+            result = Math.max(calc(), result);
             return;
         }
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < N; i++) {
             if (visit[i]) continue;
             visit[i] = true;
-            int idx = combinations[i];
-            permutations[depth] = idx;
+
+            int[][] saveEffect = new int[5][5];
+            char[][] saveColor = new char[5][5];
+            saveEffect(effectBoard, saveEffect);
+            saveColor(colorBoard, saveColor);
+
             for (int j = 0; j < 4; j++) {
-                rotateColor(color[idx], idx);
-                rotateEffect(effect[idx], idx);
+                rotate(i);
                 for (int k = 0; k < 4; k++) {
-                    start[depth][0] = startX[k];
-                    start[depth][1] = startY[k];
+                    apply(startX[k], startY[k], i);
                     permutation(depth + 1);
+
+                    saveEffect(saveEffect, effectBoard);
+                    saveColor(saveColor, colorBoard);
                 }
             }
             visit[i] = false;
         }
     }
 
-    private static void calc() {
-        int[][] effectMap = new int[5][5];
-        char[][] colorMap = new char[5][5];
-
-        for (int i = 0; i < 3; i++) {
-            int idx = permutations[i];
-            int startX = start[i][0];
-            int startY = start[i][1];
-
-            for (int x = 0; x < 4; x++) {
-                for (int y = 0; y < 4; y++) {
-                    int nX = startX + x;
-                    int nY = startY + y;
-                    effectMap[nX][nY] += effect[idx][x][y];
-                    if (effectMap[nX][nY] < 0) {
-                        effectMap[nX][nY] = 0;
-                    } else if (effectMap[nX][nY] > 9) {
-                        effectMap[nX][nY] = 9;
-                    }
-                    if (color[idx][x][y] != 'W') {
-                        colorMap[nX][nY] = color[idx][x][y];
-                    }
-                }
-            }
-        }
-
-        int tmp = getResult(effectMap, colorMap);
-        if (result < tmp) {
-            result = tmp;
-        }
-
-    }
-
-    private static int getResult(int[][] effectMap, char[][] colorMap) {
+    private static int calc() {
         int R = 0, B = 0, G = 0, Y = 0;
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                switch (colorMap[i][j]) {
+                switch (colorBoard[i][j]) {
                     case 'R':
-                        R += effectMap[i][j];
+                        R += effectBoard[i][j];
                         break;
                     case 'B':
-                        B += effectMap[i][j];
+                        B += effectBoard[i][j];
                         break;
                     case 'G':
-                        G += effectMap[i][j];
+                        G += effectBoard[i][j];
                         break;
                     case 'Y':
-                        Y += effectMap[i][j];
+                        Y += effectBoard[i][j];
                         break;
                 }
             }
         }
-        int tmp = 7 * R + 5 * B + 3 * G + 2 * Y;
-        return tmp;
+        return 7 * R + 5 * B + 3 * G + 2 * Y;
     }
 
-    private static void rotateEffect(int[][] arr, int idx) {
-        int[][] tmp = new int[4][4];
+    private static void apply(int x, int y, int idx) {
+        int[][] e = effect[idx];
+        char[][] c = color[idx];
+
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                tmp[i][j] = arr[4 - j - 1][i];
+                if (c[i][j] != 'W') {
+                    colorBoard[x + i][y + j] = c[i][j];
+                }
+
+                effectBoard[x + i][y + j] += e[i][j];
+                if (effectBoard[x + i][y + j] > 9) {
+                    effectBoard[x + i][y + j] = 9;
+                }
+                if (effectBoard[x + i][y + j] < 0) {
+                    effectBoard[x + i][y + j] = 0;
+                }
             }
         }
-        effect[idx] = tmp;
     }
 
-    private static void rotateColor(char[][] arr, int idx) {
-        char[][] tmp = new char[4][4];
+    private static void rotate(int idx) {
+        char[][] tmpColor = new char[4][4];
+        int[][] tmpEffect = new int[4][4];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                tmp[i][j] = arr[4 - j - 1][i];
+                tmpColor[i][j] = color[idx][4 - j - 1][i];
+                tmpEffect[i][j] = effect[idx][4 - j - 1][i];
             }
         }
-        color[idx] = tmp;
+        color[idx] = tmpColor;
+        effect[idx] = tmpEffect;
+    }
+
+    private static void saveColor(char[][] from, char[][] to) {
+        for (int i = 0; i < 5; i++) {
+            to[i] = Arrays.copyOf(from[i], 5);
+        }
+    }
+
+    private static void saveEffect(int[][] from, int[][] to) {
+        for (int i = 0; i < 5; i++) {
+            to[i] = Arrays.copyOf(from[i], 5);
+        }
     }
 }
