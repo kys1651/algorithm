@@ -35,7 +35,7 @@ public class Main {
 
 		// Input
 		int startX = 0, startY = 0;
-		visit = new boolean[(1 << 6)][N][M];
+		visit = new boolean[1 << 6][N][M];
 		map = new char[N][M];
 		for (int i = 0; i < N; i++) {
 			String input = br.readLine();
@@ -60,6 +60,7 @@ public class Main {
 		Queue<Player> queue = new LinkedList<>();
 		queue.add(new Player(startX, startY, 0, 0));
 		visit[0][startX][startY] = true;
+
 		while (!queue.isEmpty()) {
 			Player cur = queue.poll();
 
@@ -72,24 +73,21 @@ public class Main {
 					continue;
 				}
 
+				visit[cur.key][nX][nY] = true;
 				char nextPos = map[nX][nY];
 				if (nextPos == '.') {
-					visit[cur.key][nX][nY] = true;
 					queue.add(new Player(nX, nY, cur.key, cur.count + 1));
-				} else if (Character.isUpperCase(nextPos)) {
+				} else if ('A' <= nextPos && nextPos <= 'F') {
 					int keyIdx = nextPos - 'A';
 					// 열쇠가 있는 경우
 					if ((cur.key & (1 << keyIdx)) != 0) {
-						visit[cur.key][nX][nY] = true;
 						queue.add(new Player(nX, nY, cur.key, cur.count + 1));
 					}
 				}
 				// 열쇠를 만난 경우
-				else if (Character.isLowerCase(nextPos)) {
-					int keyIdx = nextPos - 'a';
-					int nextKey = cur.key | (1 << keyIdx);
+				else if ('a' <= nextPos && nextPos <= 'f') {
+					int nextKey = cur.key | (1 << nextPos - 'a');
 					queue.add(new Player(nX, nY, nextKey, cur.count + 1));
-					visit[cur.key][nX][nY] = true;
 				} else if (nextPos == '1') {
 					System.out.println(cur.count + 1);
 					System.exit(0);
