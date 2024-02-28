@@ -16,7 +16,7 @@ public class Solution {
 
     static ArrayList<Core> coreList;
     static int[][] map;
-    static int N, K, minDist, maxCount;
+    static int N, K, coreCount, wireDist;
 
     static int[] dirX = {-1, 0, 1, 0};
     static int[] dirY = {0, 1, 0, -1};
@@ -46,75 +46,67 @@ public class Solution {
                 }
             } // Input End
 
-            maxCount = Integer.MIN_VALUE;
-            minDist = Integer.MAX_VALUE;
+            coreCount = 0;
+            wireDist = 144;
             K = coreList.size();
 
             permutation(0, 0, 0);
 
-            sb.append(String.format("#%d %d\n", tc, minDist));
+            sb.append(String.format("#%d %d\n", tc, wireDist));
         }
 
         System.out.println(sb);
     }
 
-    private static void permutation(int depth, int count, int sum) {
+    private static void permutation(int depth, int count, int dist) {
         if (depth == K) {
-            if (count > maxCount) {
-                maxCount = count;
-                minDist = sum;
-            } else if (count == maxCount) {
-                minDist = Math.min(minDist, sum);
+            if (count > coreCount) {
+                coreCount = count;
+                wireDist = dist;
+            } else if (count == coreCount) {
+                if (wireDist > dist) {
+                    wireDist = dist;
+                }
             }
             return;
         }
 
         Core c = coreList.get(depth);
         for (int d = 0; d < 4; d++) {
-            int nX = c.x;
-            int nY = c.y;
-            int dist = 0;
-
-            while (true) {
-                nX += dirX[d];
-                nY += dirY[d];
-
-                if (!isIn(nX, nY)) {
-                    break;
-                }
-
-                // 전선을 만나면 안됨
-                if (map[nX][nY] == 1) {
-                    dist = 0;
-                    break;
-                }
-                dist++;
+            if (isLink(c, d)) {
+                int tmpDist = fill(c, d, 1);
+                permutation(depth + 1, count + 1, dist + tmpDist);
+                fill(c, d, 0);
             }
-
-            if (dist == 0) {
-                permutation(depth + 1, count, sum);
-                continue;
-            } else {
-
-                nX = c.x;
-                nY = c.y;
-                for (int j = 0; j < dist; j++) {
-                    nX += dirX[d];
-                    nY += dirY[d];
-                    map[nX][nY] = 1;
-                }
-                permutation(depth + 1, count + 1, sum + dist);
-                nX = c.x;
-                nY = c.y;
-                for (int j = 0; j < dist; j++) {
-                    nX += dirX[d];
-                    nY += dirY[d];
-                    map[nX][nY] = 0;
-                }
-            }
-
-
         }
+        permutation(depth + 1, count, dist);
+    }
+
+    private static int fill(Core c, int d, int value) {
+        int tmp = 0;
+        int x = c.x + dirX[d];
+        int y = c.y + dirY[d];
+        while (isIn(x, y)) {
+            map[x][y] = value;
+            tmp++;
+            x += dirX[d];
+            y += dirY[d];
+        }
+        return tmp;
+    }
+
+    private static boolean isLink(Core c, int d) {
+        int x = c.x + dirX[d];
+        int y = c.y + dirY[d];
+
+        while (isIn(x, y)) {
+            if (map[x][y] != 0) {
+                return false;
+            }
+            x += dirX[d];
+            y += dirY[d];
+        }
+        return true;
     }
 
     private static boolean isIn(int x, int y) {
