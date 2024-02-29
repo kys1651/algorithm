@@ -51,7 +51,6 @@ public class Solution {
 
             match = new int[K];
             solve(0);
-//            System.out.println(result);
             sb.append(String.format("#%d %d\n", tc, result));
         }
         System.out.println(sb);
@@ -85,6 +84,9 @@ public class Solution {
         int time = 0;
         int people = K;
         while (true) {
+            if(time > result){
+                return;
+            }
             if (people == 0) {
                 boolean exit = true;
                 for (int i = 0; i < 3; i++) {
