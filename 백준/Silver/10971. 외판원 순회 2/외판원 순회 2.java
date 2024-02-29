@@ -1,54 +1,47 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
-class Main
-{
-    static int map[][]; // n x n값이 저장된 배열
-    static int n;
+public class Main {
+    static int N, result = Integer.MAX_VALUE;
+    static int[][] graph;
     static boolean[] visit;
-    static int minCost = Integer.MAX_VALUE;
 
-	public static void main(String args[]) throws Exception
-	{
-		Scanner sc = new Scanner(System.in);
-        
-        n = sc.nextInt();
-        visit = new boolean[n];
-        map = new int[n][n];
-        for(int i = 0 ; i < n; i++){
-            for(int j = 0 ; j < n; j++){
-                map[i][j] = sc.nextInt();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        N = Integer.parseInt(br.readLine());
+
+        // Input
+        visit = new boolean[N + 1];
+        graph = new int[N + 1][N + 1];
+        for (int i = 1; i <= N; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            for (int j = 1; j <= N; j++) {
+                int weight = Integer.parseInt(st.nextToken());
+                graph[i][j] = weight;
             }
-        }
-        
-        for(int i = 0; i < n; i++){
-            visit[i] = true;
-            go(i,i,0,0);
-        }
+        }// Input End
 
-        System.out.println(minCost);
+        visit[1] = true;
+        dfs(1, 1, 0);
+        System.out.println(result);
     }
 
-    private static void go(int start, int now, int depth, int sum) {
-        if(depth == n - 1){
-            // 마지막 위치에서 출발 지점까지 0이 아니라면(갈 수 있음)
-            if(map[now][start] != 0){
-                sum += map[now][start];
-                minCost = Math.min(sum, minCost);
+    private static void dfs(int depth, int at, int cost) {
+        if (depth == N) {
+            if (graph[at][1] != 0) {
+                result = Math.min(result, cost + graph[at][1]);
             }
             return;
         }
-
-        for(int i = 0; i < n; i++){
-            // i 도시로 간 적 있거나 가는 비용이 0이라면 갈 이유가 없음
-            if(visit[i] || map[now][i] == 0){
+        for (int i = 1; i <= N; i++) {
+            if (graph[at][i] == 0 || visit[i]) {
                 continue;
             }
-
             visit[i] = true;
-            // start는 계속 유지, now는 i로 초기화
-            go(start, i, depth + 1, sum + map[now][i]);
+            dfs(depth + 1, i, cost + graph[at][i]);
             visit[i] = false;
         }
-        
     }
 }
