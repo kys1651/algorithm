@@ -1,25 +1,24 @@
-import java.util.Scanner;
-class Main {
-	public static void main(String args[]) throws Exception {
-		Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int k = sc.nextInt();
-        int[][] dp = new int[n+1][k+1];
-        int[] ws = new int[n+1];
-        int[] vs = new int[n+1];
-        for(int i = 1; i <= n; i++){
-            ws[i] = sc.nextInt();
-            vs[i] = sc.nextInt();
-        }
-        for(int i = 1; i <= n; i++){
-            for(int j = 1; j <= k; j++){
-                if(ws[i] > j){
-                    dp[i][j] = dp[i-1][j];
-                }else{
-                    dp[i][j] = Math.max(dp[i-1][j], vs[i] + dp[i-1][j-ws[i]]);
-                }
-            }
-        }
-        System.out.println(dp[n][k]);
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+public class Main {
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(st.nextToken());
+		int K = Integer.parseInt(st.nextToken());
+		int[] dp = new int[K + 1];
+		for (int i = 1; i <= N; i++) {
+			st = new StringTokenizer(br.readLine());
+			int w = Integer.parseInt(st.nextToken());
+			int v = Integer.parseInt(st.nextToken());
+
+			for (int j = K; j >= w; j--) {
+				if(dp[j] < dp[j-w] + v) dp[j] = dp[j-w] + v;
+			}
+		}
+		System.out.println(dp[K]);
 	}
 }
