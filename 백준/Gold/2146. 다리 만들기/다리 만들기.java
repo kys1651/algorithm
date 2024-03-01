@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
+
 public class Main {
     static int N, result;
     static int[][] map;
 
+    // 섬 경계에 있는 위치
     static ArrayList<int[]> boundaryList = new ArrayList<>();
 
     static int[] dirX = {-1, 1, 0, 0};
@@ -31,9 +33,10 @@ public class Main {
         int idx = 2;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
+                // 1이라면 아직 인덱스가 부여되지 않은 경우
                 if (map[i][j] == 1) {
                     map[i][j] = idx++;
-                    bfs(i, j);
+                    dfs(i, j);
                 }
 
                 // 경계인지 확인
@@ -97,19 +100,13 @@ public class Main {
     }
 
     // 현재 섬의 숫자를 전부 퍼뜨려준다.
-    private static void bfs(int x, int y) {
-        Queue<int[]> queue = new LinkedList<>();
-        queue.add(new int[]{x, y});
-        while (!queue.isEmpty()) {
-            int[] cur = queue.poll();
-            for (int i = 0; i < 4; i++) {
-                int nX = cur[0] + dirX[i];
-                int nY = cur[1] + dirY[i];
-                if (!isIn(nX, nY) || map[nX][nY] != 1) {
-                    continue;
-                }
-                map[nX][nY] = map[cur[0]][cur[1]];
-                queue.add(new int[]{nX, nY});
+    private static void dfs(int x, int y) {
+        for (int i = 0; i < 4; i++) {
+            int nX = x + dirX[i];
+            int nY = y + dirY[i];
+            if(isIn(nX,nY) && map[nX][nY] == 1){
+                map[nX][nY] = map[x][y];
+                dfs(nX, nY);
             }
         }
     }
