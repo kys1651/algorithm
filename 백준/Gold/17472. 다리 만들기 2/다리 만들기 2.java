@@ -5,6 +5,7 @@ import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
+    // 간선 클래스
     static class Edge implements Comparable<Edge> {
         int from;
         int to;
@@ -49,18 +50,16 @@ public class Main {
         }// Input End
 
         // 고유 번호 부여
-        int idx = 0;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
                 if (map[i][j] == -1) {
-                    map[i][j] = ++idx;
+                    edgeCount++;
                     dfs(i, j);
                 }
             }
         }// 고유 번호 부여 끝
 
         // 그래프 생성
-        edgeCount = idx;
         graph = new int[edgeCount + 1][edgeCount + 1];
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
@@ -77,26 +76,28 @@ public class Main {
         } // 그래프 생성 끝
 
 
-        PriorityQueue<Edge> queue = new PriorityQueue<>();
+        // 우선 순위 큐에 0이 아닌 모든 간선을 넣어준다.
+        PriorityQueue<Edge> edgeList = new PriorityQueue<>();
         for (int i = 1; i <= edgeCount; i++) {
             for (int j = 1; j <= edgeCount; j++) {
-                if (graph[i][j] > 1) {
-                    queue.add(new Edge(i, j, graph[i][j]));
+                if (graph[i][j] != 0) {
+                    edgeList.add(new Edge(i, j, graph[i][j]));
                 }
             }
         }
 
+        // 자기 자신을 가르키는 원소를 만든다.
         makeSet();
 
         int answer = 0;
         int count = 0;
         while (count < edgeCount - 1) {
-            if (queue.isEmpty()) {
+            if (edgeList.isEmpty()) {
                 answer = -1;
                 break;
             }
 
-            Edge e = queue.poll();
+            Edge e = edgeList.poll();
             if (!union(e.from, e.to)) {
                 continue;
             }
@@ -138,7 +139,6 @@ public class Main {
             parent[i] = i;
             rank[i] = 1;
         }
-
     }
 
     private static void getDist(int x, int y, int d, int from, int dist) {
@@ -163,11 +163,11 @@ public class Main {
 
     // 섬에 고유 번호를 부여한다.
     private static void dfs(int x, int y) {
+        map[x][y] = edgeCount;
         for (int i = 0; i < 4; i++) {
             int nX = x + dirX[i];
             int nY = y + dirY[i];
             if (isIn(nX, nY) && map[nX][nY] == -1) {
-                map[nX][nY] = map[x][y];
                 dfs(nX, nY);
             }
         }
