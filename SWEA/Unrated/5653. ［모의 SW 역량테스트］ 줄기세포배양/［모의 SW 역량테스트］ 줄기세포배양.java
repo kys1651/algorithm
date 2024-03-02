@@ -1,7 +1,9 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
 import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Solution {
@@ -67,7 +69,11 @@ public class Solution {
             }// Input End
 
             for (int i = 1; i <= K; i++) {
+//                System.out.println(i);
+//                print();
                 bfs(i);
+//                print();
+//                System.out.println(unActivatePoint.size() + " " + activatePoint.size() + " " + spreadPoint.size());
             }
 
             sb.append(String.format("#%d %d\n", tc, unActivatePoint.size() + spreadPoint.size() + activatePoint.size()));
@@ -76,8 +82,8 @@ public class Solution {
     }
 
     private static void print() {
-        for (int i = 1; i <= 70; i++) {
-            for (int j = 1; j <= 70; j++) {
+        for (int i = 280; i < 330; i++) {
+            for (int j = 280; j < 330; j++) {
                 System.out.print(map[i][j] + " ");
             }
             System.out.println();
@@ -93,43 +99,49 @@ public class Solution {
             p.time = time;
             p.endTime = time + 1;
             timeStamp[p.x][p.y] = -1;
-            spreadPoint.add(p);
-        }
-
-        PriorityQueue<Point> tmp = new PriorityQueue<>();
-        while (!spreadPoint.isEmpty() && spreadPoint.peek().endTime == time) {
-            Point p = spreadPoint.poll();
-            for (int i = 0; i < 4; i++) {
-                int nX = p.x + dirX[i];
-                int nY = p.y + dirY[i];
-                // -1이면 뒤진 세포
-                if (map[nX][nY] == -1) {
-                    continue;
-                }
-                // 처음 퍼지는 경우
-                if (timeStamp[nX][nY] == 0 && map[nX][nY] == 0) {
-                    timeStamp[nX][nY] = time;
-                    map[nX][nY] = p.life;
-                    tmp.add(new Point(nX, nY, time, p.life));
-                } else if (timeStamp[nX][nY] == time && map[nX][nY] < p.life) {
-                    map[nX][nY] = p.life;
-                    tmp.add(new Point(nX, nY, time, p.life));
-                }
-            }
-            p.endTime = p.time + p.life;
             activatePoint.add(p);
         }
 
+        Queue<Point> tmp = new LinkedList<>();
+        while (!activatePoint.isEmpty() && activatePoint.peek().endTime == time) {
+            Point p = activatePoint.poll();
+            if (p.endTime == p.time + 1) {
+                // 소멸 시점이 아니라면 갱신
+                for (int i = 0; i < 4; i++) {
+                    int nX = p.x + dirX[i];
+                    int nY = p.y + dirY[i];
+
+                    if (map[nX][nY] == -1) {
+                        continue;
+                    }
+
+                    if (timeStamp[nX][nY] == 0 && map[nX][nY] == 0) {
+                        timeStamp[nX][nY] = time;
+                        map[nX][nY] = p.life;
+                        tmp.add(new Point(nX, nY, time, p.life));
+                    } else if (timeStamp[nX][nY] == time && map[nX][nY] < p.life) {
+                        map[nX][nY] = p.life;
+                        tmp.add(new Point(nX, nY, time, p.life));
+                    }
+                }
+            }
+
+            // 소멸 시점이 아니라면 다시 활성화 큐에 넣어줌
+            if (p.endTime == p.time + p.life) {
+                // 소멸 시점이면 지운다.
+                map[p.x][p.y] = -1;
+            } else {
+                p.endTime = p.time + p.life;
+                activatePoint.add(p);
+            }
+        }
+
+        // 비활성화큐에 넣어준다.
         while (!tmp.isEmpty()) {
             Point p = tmp.poll();
             if (map[p.x][p.y] == p.life) {
                 unActivatePoint.add(p);
             }
-        }
-
-        while (!activatePoint.isEmpty() && activatePoint.peek().endTime == time) {
-            Point p = activatePoint.poll();
-            map[p.x][p.y] = -1;
         }
     }
 }
