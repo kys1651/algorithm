@@ -6,7 +6,7 @@ import java.util.StringTokenizer;
 
 public class Solution {
     static int D, W, K, result;
-    static int[][] map;
+    static int[][] map,copyMap;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -20,10 +20,12 @@ public class Solution {
             result = D;
             // Input
             map = new int[D][W];
+            copyMap = new int[D][W];
             for (int i = 0; i < D; i++) {
                 String input = br.readLine();
                 for (int j = 0; j < W; j++) {
                     map[i][j] = input.charAt(j * 2) - '0';
+                    copyMap[i][j] = map[i][j];
                 }
             }// Input End
 
@@ -51,7 +53,6 @@ public class Solution {
         }
 
         permutation(depth + 1, count);
-        int[] tmp = Arrays.copyOf(map[depth], W);
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < W; j++) {
                 map[depth][j] = i;
@@ -59,7 +60,7 @@ public class Solution {
             permutation(depth + 1, count + 1);
         }
         // 기본 상태로 복구
-        map[depth] = Arrays.copyOf(tmp, W);
+        map[depth] = Arrays.copyOf(copyMap[depth], W);
     }
 
     private static boolean isValid() {
