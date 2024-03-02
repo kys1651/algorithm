@@ -60,7 +60,9 @@ public class Solution {
             permutation(depth + 1, count + 1);
         }
         // 기본 상태로 복구
-        map[depth] = Arrays.copyOf(copyMap[depth], W);
+        for (int i = 0; i < W; i++) {
+            map[depth][i] = copyMap[depth][i];
+        }
     }
 
     private static boolean isValid() {
