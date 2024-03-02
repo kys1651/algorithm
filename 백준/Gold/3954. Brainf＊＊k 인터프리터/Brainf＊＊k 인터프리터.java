@@ -1,15 +1,14 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class Main {
     static int Sm, Sc, Si;
+    static int[] pair;
     static byte[] memory;
     static char[] code, input;
-    static HashMap<Integer, Integer> map;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -21,10 +20,9 @@ public class Main {
             Sc = Integer.parseInt(st.nextToken());
             Si = Integer.parseInt(st.nextToken());
             memory = new byte[Sm];
-
             code = new char[Sc];
+            pair = new int[Sc];
             input = new char[Si];
-            map = new HashMap<>();
             Stack<Integer> stack = new Stack<>();
 
             // Input
@@ -35,8 +33,8 @@ public class Main {
                     stack.push(i);
                 } else if (s.charAt(i) == ']') {
                     int idx = stack.pop();
-                    map.put(idx, i);
-                    map.put(i, idx);
+                    pair[idx] = i;
+                    pair[i] = idx;
                 }
             }// Input End
             input = br.readLine().toCharArray();
@@ -64,12 +62,15 @@ public class Main {
                         break;
                     case '[':
                         if (memory[pointer] == 0) {
-                            codeIdx = map.get(codeIdx);
+                            codeIdx = pair[codeIdx];
                         }
                         break;
                     case ']':
                         if (memory[pointer] != 0) {
-                            codeIdx = map.get(codeIdx);
+                            if (count > 50_000_000) {
+                                curIdx = Math.max(curIdx, codeIdx);
+                            }
+                            codeIdx = pair[codeIdx];
                         }
                         break;
                     case '.':
@@ -90,11 +91,8 @@ public class Main {
                 }
 
                 count++;
-                if (count > 50_000_000) {
-                    curIdx = Math.max(curIdx, codeIdx);
-                }
                 if (count > 50_000_000 * 2) {
-                    sb.append("Loops ").append(map.get(curIdx)).append(' ').append(curIdx).append('\n');
+                    sb.append("Loops ").append(pair[curIdx]).append(' ').append(curIdx).append('\n');
                     break;
                 }
             }
