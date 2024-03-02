@@ -6,9 +6,9 @@ import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int M, C, I;
-    static int[] memory;
-    static String command, input;
+    static int Sm, Sc, Si;
+    static byte[] memory;
+    static char[] code, input;
     static HashMap<Integer, Integer> map;
 
     public static void main(String[] args) throws IOException {
@@ -17,80 +17,81 @@ public class Main {
         int T = Integer.parseInt(br.readLine());
         for (int tc = 1; tc <= T; tc++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
-            M = Integer.parseInt(st.nextToken());
-            C = Integer.parseInt(st.nextToken());
-            I = Integer.parseInt(st.nextToken());
-            command = br.readLine();
+            Sm = Integer.parseInt(st.nextToken());
+            Sc = Integer.parseInt(st.nextToken());
+            Si = Integer.parseInt(st.nextToken());
+            memory = new byte[Sm];
+
+            code = new char[Sc];
+            input = new char[Si];
             map = new HashMap<>();
             Stack<Integer> stack = new Stack<>();
-            for (int i = 0; i < command.length(); i++) {
-                if (command.charAt(i) == '[') {
+
+            // Input
+            String s = br.readLine();
+            for (int i = 0; i < Sc; i++) {
+                code[i] = s.charAt(i);
+                if (s.charAt(i) == '[') {
                     stack.push(i);
-                } else if (command.charAt(i) == ']') {
+                } else if (s.charAt(i) == ']') {
                     int idx = stack.pop();
                     map.put(idx, i);
                     map.put(i, idx);
                 }
-            }
-            input = br.readLine();
+            }// Input End
+            input = br.readLine().toCharArray();
 
-            memory = new int[C];
             int pointer = 0;
-            int commandPointer = 0;
-            int inputPointer = 0;
+            int codeIdx = 0;
+            int inputIdx = 0;
             int count = 0;
-            int prevIdx = 0;
             int curIdx = 0;
-            boolean loop = false;
             while (true) {
-                char commandChar = command.charAt(commandPointer);
+                char commandChar = code[codeIdx];
                 switch (commandChar) {
                     case '-':
                         memory[pointer]--;
-                        if (memory[pointer] < 0) {
-                            memory[pointer] = 255;
-                        }
                         break;
                     case '+':
-                        memory[pointer] = (memory[pointer] + 1) % (256);
+                        memory[pointer]++;
                         break;
                     case '<':
                         pointer--;
-                        if (pointer < 0) pointer = C - 1;
+                        if (pointer < 0) pointer = Sm - 1;
                         break;
                     case '>':
-                        pointer = (pointer + 1) % C;
+                        pointer = (pointer + 1) % Sm;
                         break;
                     case '[':
                         if (memory[pointer] == 0) {
-                            commandPointer = map.get(commandPointer);
+                            codeIdx = map.get(codeIdx);
                         }
                         break;
                     case ']':
                         if (memory[pointer] != 0) {
-                            commandPointer = map.get(commandPointer);
+                            codeIdx = map.get(codeIdx);
                         }
                         break;
                     case '.':
                         break;
                     case ',':
-                        if (inputPointer == I) {
-                            memory[pointer] = 255;
+                        if (inputIdx == Si) {
+                            memory[pointer] = (byte) 255;
                         } else {
-                            memory[pointer] = input.charAt(inputPointer++);
+                            memory[pointer] = (byte) input[inputIdx++];
                         }
                         break;
                 }
 
-                commandPointer++;
-                if (commandPointer == C) {
+                codeIdx++;
+                if (codeIdx == Sc) {
                     sb.append("Terminates").append('\n');
                     break;
                 }
 
                 count++;
                 if (count > 50_000_000) {
-                    curIdx = Math.max(curIdx, commandPointer);
+                    curIdx = Math.max(curIdx, codeIdx);
                 }
                 if (count > 50_000_000 * 2) {
                     sb.append("Loops ").append(map.get(curIdx)).append(' ').append(curIdx).append('\n');
