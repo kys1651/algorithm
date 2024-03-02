@@ -105,6 +105,7 @@ public class Main {
             } else {
                 speed = speed % (2 * (C - 1));
             }
+
             // 기존 위치 저장
             int x = s.x;
             int y = s.y;
