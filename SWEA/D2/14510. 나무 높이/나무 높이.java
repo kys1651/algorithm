@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Solution {
@@ -18,7 +17,10 @@ public class Solution {
             int maxHeight = 0;
             for (int i = 0; i < N; i++) {
                 height[i] = Integer.parseInt(st.nextToken());
-                maxHeight = Math.max(maxHeight, height[i]);
+
+                if (maxHeight < height[i]) {
+                    maxHeight = height[i];
+                }
             }// Input End
 
             int odd = 0, even = 0;
@@ -28,46 +30,43 @@ public class Solution {
                 odd += grow % 2;
             }
             int answer = 0;
-
-            int min = Math.min(odd, even);
+            int min = odd;
+            if (odd > even) {
+                min = even;
+            }
             answer += min * 2;
             odd -= min;
-            even -= min;
-            int day = 0; // 총 남은 일 수
+            even = (even - min) * 2;
+            answer += (even / 3) * 2;
+            even %= 3;
+
             // 홀수가 남는 경우
             if (odd > 0) {
-                // 오늘 짝수면
-                if ((answer + 1) % 2 == 0) {
-                    answer += (odd * 2);
-                } else {
-                    answer += (odd * 2) - 1;
+                answer += (odd * 2);
+                // 홀수라면
+                if ((answer + 1) % 2 != 0) {
+                    answer--;
                 }
             }
             // 짝수가 남는 경우
             else if (even > 0) {
-                day = even * 2;
-                answer += (day / 3) * 2;
-                day %= 3;
                 // 오늘 짝수라면
-                if (day != 0) {
-                    if ((answer + 1) % 2 == 0) {
-                        if (day % 2 == 0) {
-                            answer++;
-                        } else {
-                            answer += 2;
-                        }
+                if ((answer + 1) % 2 == 0) {
+                    if (even % 2 == 0) {
+                        answer++;
+                    } else {
+                        answer += 2;
                     }
-                    // 오늘 홀수면
-                    else {
-                        if (day % 2 == 0) {
-                            answer += 2;
-                        } else {
-                            answer++;
-                        }
+                }
+                // 오늘 홀수면
+                else {
+                    if (even % 2 == 0) {
+                        answer += 2;
+                    } else {
+                        answer++;
                     }
                 }
             }
-
             sb.append(String.format("#%d %d\n", tc, answer));
         }
         System.out.println(sb);
