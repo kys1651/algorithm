@@ -32,13 +32,13 @@ public class Solution {
             }
 
             subset(0);
-            sb.append(String.format("#%d %d\n",tc,result));
+            sb.append(String.format("#%d %d\n", tc, result));
         }
         System.out.println(sb);
     }
 
     private static void subset(int depth) {
-        if(result == 0) return;
+        if (result == 0) return;
         if (depth == N) {
             result = Math.min(result, countStone());
             return;
@@ -57,7 +57,7 @@ public class Solution {
         }
 
         // 만약 벽돌을 던질 곳이 아무곳도 없다면 전부 깨진 상태
-        if(exit){
+        if (exit) {
             result = 0;
         }
     }
@@ -119,11 +119,14 @@ public class Solution {
                     if (!isIn(nX, nY)) {
                         break;
                     }
+                    count++;
+                    if(map[nX][nY] == 0){
+                        continue;
+                    }
                     if (map[nX][nY] > 1) {
                         queue.add(new int[]{nX, nY, map[nX][nY] - 1});
                     }
                     map[nX][nY] = 0;
-                    count++;
                 }
             }
         }
