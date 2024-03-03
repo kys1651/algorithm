@@ -15,14 +15,14 @@ public class Solution {
 
             // Input
             StringTokenizer st = new StringTokenizer(br.readLine());
+            int maxHeight = 0;
             for (int i = 0; i < N; i++) {
                 height[i] = Integer.parseInt(st.nextToken());
+                maxHeight = Math.max(maxHeight, height[i]);
             }// Input End
 
-            Arrays.sort(height);
-            int odd = 0, even = 0, maxHeight = height[N - 1];
+            int odd = 0, even = 0;
             for (int i = 0; i < N; i++) {
-                if (height[i] == maxHeight) break;
                 int grow = maxHeight - height[i];
                 even += grow / 2;
                 odd += grow % 2;
@@ -33,7 +33,6 @@ public class Solution {
             answer += min * 2;
             odd -= min;
             even -= min;
-
             int day = 0; // 총 남은 일 수
             // 홀수가 남는 경우
             if (odd > 0) {
