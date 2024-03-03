@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Solution {
@@ -24,10 +23,10 @@ public class Solution {
                 weight[i] = Integer.parseInt(st.nextToken());
                 sum += weight[i];
             }
-            
+
             permutation(0);
 
-            sb.append(String.format("#%d %d\n",tc,result));
+            sb.append(String.format("#%d %d\n", tc, result));
         }
         System.out.println(sb);
     }
@@ -48,6 +47,8 @@ public class Solution {
     }
 
     private static void combination(int depth, int left, int right, int sum) {
+        if (right > left) return;
+
         if (depth == N) {
             result++;
             return;
@@ -60,9 +61,7 @@ public class Solution {
             return;
         }
 
-        if (right + arr[depth] <= left) {
-            combination(depth + 1, left, right + arr[depth], sum - arr[depth]);
-        }
+        combination(depth + 1, left, right + arr[depth], sum - arr[depth]);
         combination(depth + 1, left + arr[depth], right, sum - arr[depth]);
     }
 }
