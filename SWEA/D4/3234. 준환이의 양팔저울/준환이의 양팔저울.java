@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Solution {
+    static final int[] pow = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512};
     static int N, sum, result;
     static int[] arr, weight;
     static boolean[] visit;
@@ -55,9 +56,7 @@ public class Solution {
         }
 
         if (left >= right + sum) {
-            int i = N - depth;
-            int count = 1 << i;
-            result += count;
+            result += pow[N - depth];
             return;
         }
 
