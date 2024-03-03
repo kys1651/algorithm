@@ -29,8 +29,7 @@ public class Solution {
             }
             // Input End
 
-            int count = N / 4;
-            while (count-- > 0) {
+            for(int i = 0; i < len; i++) {
                 parse();
             }
             Collections.sort(list, Collections.reverseOrder());
