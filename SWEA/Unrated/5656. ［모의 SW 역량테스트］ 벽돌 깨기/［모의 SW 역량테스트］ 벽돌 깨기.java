@@ -15,13 +15,14 @@ public class Solution {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
+
         int T = Integer.parseInt(br.readLine());
         for (int tc = 1; tc <= T; tc++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
             N = Integer.parseInt(st.nextToken());
             W = Integer.parseInt(st.nextToken());
             H = Integer.parseInt(st.nextToken());
-            result = W * H;
+            result = W * H; // 최대값은 모든 벽돌이 차있는 경우
             map = new int[H][W];
             for (int i = 0; i < H; i++) {
                 String input = br.readLine();
@@ -36,17 +37,8 @@ public class Solution {
         System.out.println(sb);
     }
 
-    private static void print() {
-        for (int i = 0; i < H; i++) {
-            for (int j = 0; j < W; j++) {
-                System.out.print(map[i][j] + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
-
     private static void subset(int depth) {
+        if(result == 0) return;
         if (depth == N) {
             result = Math.min(result, countStone());
             return;
@@ -64,6 +56,7 @@ public class Solution {
             }
         }
 
+        // 만약 벽돌을 던질 곳이 아무곳도 없다면 전부 깨진 상태
         if(exit){
             result = 0;
         }
