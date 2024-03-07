@@ -17,16 +17,13 @@ public class Main {
 		}
 
 		int sum = 0;
-		int start = 0, end = K;
-		for (int i = 0; i < K; i++) {
-			sum += arr[i];
-		}
+		for (int i = 0; i < K; i++) { sum += arr[i]; }
 
+		int start = 0, end = K;
 		int maxSum = sum;
 		while (start <= N - K - 1) {
-			sum -= arr[start++];
-			sum += arr[end++];
-			maxSum = Math.max(maxSum, sum);
+			sum += arr[end++] - arr[start++];
+			if(maxSum < sum) maxSum= sum;
 		}
 
 		System.out.println(maxSum);
