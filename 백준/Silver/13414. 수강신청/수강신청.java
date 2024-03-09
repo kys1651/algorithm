@@ -10,22 +10,24 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
         int K = Integer.parseInt(st.nextToken());
         int N = Integer.parseInt(st.nextToken());
-        String[] id = new String[N];
 
         HashMap<String, Integer> map = new HashMap<>();
         for (int i = 0; i < N; i++) {
-            id[i] = br.readLine();
-            map.put(id[i], i);
+            map.put(br.readLine(), i);
         }
 
+        String[] id = new String[N];
+        for (String tmp : map.keySet()) {
+            id[map.get(tmp)] = tmp;
+        }
+        
         StringBuilder sb = new StringBuilder();
         int count = 0;
         for (int i = 0; i < N; i++) {
-            if (map.get(id[i]) == i) {
-                sb.append(id[i]).append('\n');
-                if (++count == K) {
-                    break;
-                }
+            if(id[i] == null) continue;
+            sb.append(id[i]).append('\n');
+            if (++count == K) {
+                break;
             }
         }
         System.out.println(sb);
