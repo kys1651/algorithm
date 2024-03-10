@@ -16,16 +16,14 @@ public class Main {
         }
     }
 
-    static boolean[] visit = new boolean[1_000_001];
-    static Queue<Password> queue = new LinkedList<>();
-    static int N, maxSafe;
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        N = Integer.parseInt(br.readLine());
+        int N = Integer.parseInt(br.readLine());
+        boolean[] visit = new boolean[N + 1];
         int M = Integer.parseInt(br.readLine());
 
         // Input
+        Queue<Password> queue = new LinkedList<>();
         StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i = 0; i < M; i++) {
             int value = Integer.parseInt(st.nextToken());
@@ -33,25 +31,20 @@ public class Main {
             queue.add(new Password(value, 0));
         }// Input End
 
-        bfs();
-        System.out.println(maxSafe);
-    }
-
-    private static void bfs() {
+        int max = 0;
         while (!queue.isEmpty()) {
-            Password curPassword = queue.poll();
-            if (curPassword.count > maxSafe) {
-                maxSafe = curPassword.count;
-            }
+            Password cur = queue.poll();
+            max = cur.count;
 
             for (int i = 0; i < 20; i++) {
-                int nextValue = curPassword.value ^ (1 << i);
+                int nextValue = cur.value ^ (1 << i);
                 if (nextValue > N || visit[nextValue]) {
                     continue;
                 }
                 visit[nextValue] = true;
-                queue.add(new Password(nextValue, curPassword.count + 1));
+                queue.add(new Password(nextValue, max + 1));
             }
         }
+        System.out.println(max);
     }
 }
