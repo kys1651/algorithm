@@ -80,10 +80,10 @@ public class Main {
         int time = 0, empty = 0;
         while (!queue.isEmpty()) {
             if(empty == emptyCount) break;
-            if(time >= result) break;
+            if(time >= result) return;
             time++;
-            int size = queue.size();
 
+            int size = queue.size();
             for (int s = 0; s < size; s++) {
                 int[] cur = queue.poll();
 
