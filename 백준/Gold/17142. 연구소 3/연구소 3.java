@@ -38,9 +38,13 @@ public class Main {
             }
         }// Input End
 
+        if (emptyCount == 0) {
+            System.out.println(0);
+            return;
+        }
+
         visit = new boolean[limit];
         solve(0, 0);
-
         System.out.println(result == Integer.MAX_VALUE ? -1 : result);
     }
 
