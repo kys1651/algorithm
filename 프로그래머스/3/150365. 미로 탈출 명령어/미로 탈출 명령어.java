@@ -10,35 +10,27 @@ class Solution {
         N = n; M = m;
         R = r; C = c;
         K = k;
-        
         int d = getDistance(x,y,r,c);
-        if((k - d) % 2 == 1 || d > k){
-            return "impossible";
+        if(d > k || (k - d) % 2 != 0){
+            return result;
         }
-        
         solve(x,y,0,"");
-        
         return exit ? result : "impossible";
     }
    
-    private static void solve(int x, int y, int count, String command){
+    private static void solve(int x, int y, int count,String command){
         if(exit) return;
-        
         int d = getDistance(x,y,R,C);
-        if(K < d + count){
-            return;
-        }
+        if(K - count < d) return;
         
-        if(count == K){
-//             if(x == R && y == C){
-                
-//             }
+        if(count == K && x == R && y == C){
             result = command;
-            exit = true;    
+            exit = true;
             return;
         }
         
         for(int i = 0; i < 4; i++){
+            if(exit) return;
             int nX = x + dirX[i];
             int nY = y + dirY[i];
             if(isIn(nX,nY)){
@@ -52,6 +44,6 @@ class Solution {
     }
     
     static private int getDistance(int x1,int y1, int x2, int y2){
-        return (int)Math.abs(x1-x2) + (int)Math.abs(y1-y2);
+        return Math.abs(x1-x2) + Math.abs(y1-y2);
     }
 }  
