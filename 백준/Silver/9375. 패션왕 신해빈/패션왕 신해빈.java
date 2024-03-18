@@ -16,7 +16,10 @@ public class Main {
 				StringTokenizer st = new StringTokenizer(br.readLine());
 				st.nextToken();
 				String input = st.nextToken();
-				map.put(input, map.getOrDefault(input, 0) + 1);
+				if(!map.containsKey(input)) {
+					map.put(input, 0);
+				}
+				map.put(input, map.get(input) + 1);
 			}
 			int answer = 1;
 			for (String key : map.keySet()) {
