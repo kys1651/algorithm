@@ -48,10 +48,6 @@ class Main {
         // 짝수일 경우 마피아가 죽임(밤)
         if (peopleCount % 2 == 0) {
             // 원본 저장
-            int[] origin = new int[N];
-            for (int i = 0; i < N; i++) {
-                origin[i] = people[i];
-            }
             for (int i = 0; i < N; i++) {
                 // 이미 죽었거나 마피아 본인인 경우는 죽이지 않는다.
                 if (isDead[i] || i == mafia) {
@@ -67,7 +63,7 @@ class Main {
                 // 상태 원본으로 복구
                 for (int j = 0; j < N; j++) {
                     if(isDead[j]) continue;
-                    people[j] = origin[j];
+                    people[j] -= value[i][j];
                 }
                 isDead[i] = false;
             }
