@@ -1,0 +1,1 @@
+class Main{public static void main(String[] a){System.out.println(".  .   .\n|  | _ | _. _ ._ _  _\n|/\\|(/.|(_.(_)[ | )(/.");}}
