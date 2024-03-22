@@ -1,6 +1,6 @@
 # [Bronze V] A/B - 1008 
 
-[문제 링크](https://www.acmicpc.net/problem/1008) 
+[문제 링크](https://www.acmicpc.net/problem/1008)
  
 ### 성능 요약
 
