@@ -1,25 +1,10 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.StringTokenizer;
+
 
 public class Main {
-    static class Fish {
-        int num;
-        int dir;
-        int x;
-        int y;
-        boolean dead;
-
-        public Fish(int num, int dir, int x, int y, boolean dead) {
-            this.num = num;
-            this.dir = dir;
-            this.x = x;
-            this.y = y;
-            this.dead = dead;
-        }
-    }
-
     static int[] dirX = {-1, -1, 0, 1, 1, 1, 0, -1};
     static int[] dirY = {0, -1, -1, -1, 0, 1, 1, 1};
     static int result;
@@ -27,114 +12,125 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
-
         int[][] map = new int[4][4];
-        List<Fish> fishes = new ArrayList<>();
+        Pair[] fishes = new Pair[17];
+
         for (int i = 0; i < 4; i++) {
             st = new StringTokenizer(br.readLine());
+
             for (int j = 0; j < 4; j++) {
                 int a = Integer.parseInt(st.nextToken());
                 int b = Integer.parseInt(st.nextToken()) - 1;
-                fishes.add(new Fish(a, b, i, j, false));
+                fishes[a] = new Pair(i, j, b);
                 map[i][j] = a;
             }
         }
 
-        Collections.sort(fishes, (o1, o2) -> o1.num - o2.num);
-        Fish f = fishes.get(map[0][0] - 1);
-        int startNum = f.num;
-        int startDir = f.dir;
-        f.dead = true;
-        map[0][0] = 0;
+        int eat = map[0][0];
+        Pair shark = new Pair(0, 0, fishes[eat].d);
+        fishes[0] = new Pair(0, 0, -1); // 방금 먹은 물고기는 제거
+        fishes[eat] = new Pair(0, 0, -1);
+        map[0][0] = -1; // 상어 위치는 -1로 표현
 
-        solve(0, 0, startNum, startDir, map, fishes);
-
+        solve(map, fishes, eat, shark);
         System.out.println(result);
     }
 
-    private static void solve(int x, int y, int num, int dir, int[][] map, List<Fish> fishes) {
-        if (result < num) {
-            result = num;
+    private static void solve(int[][] map, Pair[] fishes, int eat, Pair shark) {
+        int[][] nextMap = new int[4][4];
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                nextMap[i][j] = map[i][j];
+            }
         }
 
-        moveFish(fishes, map, x, y);
+        Pair[] nextFishes = new Pair[17];
+        for (int i = 1; i <= 16; i++) {
+            nextFishes[i] = new Pair(fishes[i].x, fishes[i].y, fishes[i].d);
+        }
 
-        while (true) {
-            int nX = x + dirX[dir];
-            int nY = y + dirY[dir];
+        for (int i = 1; i <= 16; i++) {
+            if (nextFishes[i].d == -1) continue;
+
+            Pair f = new Pair(nextFishes[i].x, nextFishes[i].y, nextFishes[i].d);
+            int nd = f.d;
+
+
+            for (int d = 0; d < 8; d++) {
+                nd = (f.d + d) % 8;
+
+                int nX = f.x + dirX[nd];
+                int nY = f.y + dirY[nd];
+
+                // 상어거나 배열 범위 밖이면 넘어간다.
+                if (!isIn(nX, nY) || map[nX][nY] == -1) {
+                    continue;
+                }
+
+                if(nextMap[nX][nY]==0) {
+                    nextMap[f.x][f.y] = 0;
+                    nextMap[nX][nY] = i;
+                    nextFishes[i] = new Pair(nX, nY, nd);
+                    break;
+                }
+
+                else if(nextMap[nX][nY]>0){
+                    nextMap[f.x][f.y] = nextMap[nX][nY];
+                    nextFishes[nextMap[nX][nY]] = new Pair(f.x, f.y, nextFishes[nextMap[nX][nY]].d);
+                    nextMap[nX][nY] = i;
+                    nextFishes[i] = new Pair(nX, nY, nd);
+                    break;
+                }
+
+            }
+        }
+
+        boolean flag = false;
+        for (int i = 1; i <= 4; i++) {
+            int nX = shark.x + i * dirX[shark.d];
+            int nY = shark.y + i * dirY[shark.d];
 
             if (!isIn(nX, nY)) {
                 break;
             }
-            x = nX;
-            y = nY;
-            if (map[nX][nY] == 0) {
+
+            int idx = nextMap[nX][nY];
+            if (idx <= 0) {
                 continue;
             }
-            int[][] nextMap = copyMap(map);
-            List<Fish> nextFishes = copyList(fishes);
 
-            int idx = nextMap[x][y];
-            Fish f = nextFishes.get(idx - 1);
-            f.dead = true;
-            nextMap[f.x][f.y] = 0;
+            flag = true;
 
-            solve(x, y, num + f.num, f.dir, nextMap, nextFishes);
+            nextMap[shark.x][shark.y] = 0;
+            Pair s = new Pair(nX, nY, nextFishes[idx].d);
+            nextFishes[idx] = new Pair(0, 0, -1);
+            nextMap[nX][nY] = -1;
+
+            solve(nextMap, nextFishes, eat+idx, s);
+
+            nextMap[nX][nY] = idx;
+            nextFishes[idx] = new Pair(nX, nY, s.d);
+            nextMap[shark.x][shark.y] = -1;
         }
-    }
 
-    private static List<Fish> copyList(List<Fish> fishes) {
-        List<Fish> nextFishes = new ArrayList<>();
-        for (Fish f : fishes) {
-            nextFishes.add(new Fish(f.num, f.dir, f.x, f.y, f.dead));
-        }
-        return nextFishes;
-    }
-
-    private static int[][] copyMap(int[][] map) {
-        int[][] next = new int[4][4];
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                next[i][j] = map[i][j];
-            }
-        }
-        return next;
-    }
-
-    private static void moveFish(List<Fish> fishes, int[][] map, int x, int y) {
-        for (Fish fish : fishes) {
-            if (fish.dead) continue;
-            for (int d = 0; d < 8; d++) {
-                int nextDir = (fish.dir + d) % 8;
-                int nX = fish.x + dirX[nextDir];
-                int nY = fish.y + dirY[nextDir];
-
-                // 배열 밖이여서 갈 수 없거나 상어가 있다면 넘어감
-                if (!isIn(nX, nY) || (nX == x && nY == y)) {
-                    continue;
-                }
-
-                // 현재 위치 미리 제거
-                map[fish.x][fish.y] = 0;
-                // 다음 인덱스
-                int idx = map[nX][nY];
-                if (idx != 0) {
-                    // 다른 물고기가 존재한다면 위치 변경
-                    Fish nextFish = fishes.get(idx - 1);
-                    nextFish.x = fish.x;
-                    nextFish.y = fish.y;
-                    map[fish.x][fish.y] = nextFish.num;
-                }
-                fish.x = nX;
-                fish.y = nY;
-                map[nX][nY] = fish.num;
-                fish.dir = nextDir;
-                break;
-            }
+        if(!flag){
+            result = Math.max(result, eat);
         }
     }
 
     private static boolean isIn(int x, int y) {
         return x >= 0 && x < 4 && y >= 0 && y < 4;
+    }
+
+    static class Pair {
+        int x;
+        int y;
+        int d;
+
+        public Pair(int x, int y, int d) {
+            this.x = x;
+            this.y = y;
+            this.d = d;
+        }
     }
 }
