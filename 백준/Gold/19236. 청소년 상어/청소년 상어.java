@@ -37,6 +37,10 @@ public class Main {
     }
 
     private static void solve(int[][] map, Pair[] fishes, int eat, Pair shark) {
+        if(result < eat){
+            result = eat;
+        }
+
         int[][] nextMap = new int[4][4];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -53,11 +57,9 @@ public class Main {
             if (nextFishes[i].d == -1) continue;
 
             Pair f = new Pair(nextFishes[i].x, nextFishes[i].y, nextFishes[i].d);
-            int nd = f.d;
-
 
             for (int d = 0; d < 8; d++) {
-                nd = (f.d + d) % 8;
+                int nd = (f.d + d) % 8;
 
                 int nX = f.x + dirX[nd];
                 int nY = f.y + dirY[nd];
@@ -69,23 +71,17 @@ public class Main {
 
                 if(nextMap[nX][nY]==0) {
                     nextMap[f.x][f.y] = 0;
-                    nextMap[nX][nY] = i;
-                    nextFishes[i] = new Pair(nX, nY, nd);
-                    break;
                 }
-
                 else if(nextMap[nX][nY]>0){
                     nextMap[f.x][f.y] = nextMap[nX][nY];
                     nextFishes[nextMap[nX][nY]] = new Pair(f.x, f.y, nextFishes[nextMap[nX][nY]].d);
-                    nextMap[nX][nY] = i;
-                    nextFishes[i] = new Pair(nX, nY, nd);
-                    break;
                 }
-
+                nextMap[nX][nY] = i;
+                nextFishes[i] = new Pair(nX, nY, nd);
+                break;
             }
         }
 
-        boolean flag = false;
         for (int i = 1; i <= 4; i++) {
             int nX = shark.x + i * dirX[shark.d];
             int nY = shark.y + i * dirY[shark.d];
@@ -99,8 +95,6 @@ public class Main {
                 continue;
             }
 
-            flag = true;
-
             nextMap[shark.x][shark.y] = 0;
             Pair s = new Pair(nX, nY, nextFishes[idx].d);
             nextFishes[idx] = new Pair(0, 0, -1);
@@ -113,9 +107,6 @@ public class Main {
             nextMap[shark.x][shark.y] = -1;
         }
 
-        if(!flag){
-            result = Math.max(result, eat);
-        }
     }
 
     private static boolean isIn(int x, int y) {
