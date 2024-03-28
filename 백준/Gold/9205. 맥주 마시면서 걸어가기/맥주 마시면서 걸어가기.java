@@ -1,81 +1,82 @@
-import java.awt.*;
-import java.io.BufferedReader;
-        import java.io.InputStreamReader;
-        import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class Main {
-    static StringBuilder sb = new StringBuilder();
+	static class Point implements Comparable<Point> {
+		int x;
+		int y;
 
-    static int N,startx,starty,endx,endy;
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
+		public Point(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
 
-        int T = Integer.parseInt(br.readLine());
+		@Override
+		public int compareTo(Point o) {
+			return getDist(cur, this) - getDist(cur, o);
+		}
 
+		@Override
+		public String toString() {
+			return "Point [x=" + x + ", y=" + y + "]";
+		}
 
-        while (T-- > 0) {
-            N = Integer.parseInt(br.readLine());
-            LinkedList<int[]> list = new LinkedList<>();
-            for (int i = 0; i < N + 2; i++) {
-                st = new StringTokenizer(br.readLine());
-                int x = Integer.parseInt(st.nextToken());
-                int y = Integer.parseInt(st.nextToken());
-                if(i == 0){
-                    startx = x;
-                    starty = y;
-                }else if(i == N+1){
-                    endx = x;
-                    endy= y;
-                }else{
-                    list.add(new int[]{x, y});
-                }
-            }
+	}
 
-            if(bfs(list)){
-                sb.append("happy").append("\n");
-            }else{
-                sb.append("sad").append("\n");
-            }
-        }
+	static int N;
+	static Point cur, end;
+	static Point[] marts;
 
-        System.out.println(sb.toString());
-    }
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		int T = Integer.parseInt(br.readLine());
+		while (T-- > 0) {
+			N = Integer.parseInt(br.readLine());
+			marts = new Point[N];
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			cur = new Point(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+			for (int i = 0; i < N; i++) {
+				st = new StringTokenizer(br.readLine());
+				marts[i] = new Point(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+			}
+			st = new StringTokenizer(br.readLine());
+			end = new Point(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
 
-    private static boolean bfs(LinkedList<int[]> list) {
-        Queue<int[]> q = new LinkedList<>();
-        boolean[] visited = new boolean[N];
-        q.add(new int[]{startx, starty});
+			if (bfs()) {
+				sb.append("happy");
+			} else {
+				sb.append("sad");
+			}
+			sb.append('\n');
+		}
+		System.out.println(sb);
+	}
 
-        while (!q.isEmpty()) {
-            int[] pos = q.poll();
-            int px = pos[0];
-            int py = pos[1];
+	private static boolean bfs() {
+		Queue<Point> queue = new LinkedList<>();
+		boolean[] visit = new boolean[N];
+		queue.add(cur);
+		while (!queue.isEmpty()) {
+			Point c = queue.poll();
 
-            // 1000미터 이하면 그대로 편의점 안들리고 가면 됨
-            if (Math.abs(px - endx) + Math.abs(py - endy) <= 1000) {
-                return true;
-            }
+			if (getDist(c, end) <= 1000) {
+				return true;
+			}
 
+			for (int i = 0; i < N; i++) {
+				if (visit[i])
+					continue;
+				if (getDist(c, marts[i]) <= 1000) {
+					visit[i] = true;
+					queue.add(marts[i]);
+				}
+			}
+		}
+		return false;
+	}
 
-            for (int i = 0; i < N; i++) {
-                if(visited[i])
-                    continue;
-
-                // 편의점 거리
-                int nx = list.get(i)[0];
-                int ny = list.get(i)[1];
-
-
-                int distance = Math.abs(px - nx) + Math.abs(py - ny);
-                if(distance <= 1000){
-                    visited[i] = true;
-                    q.add(new int[]{nx, ny});
-                }
-            }
-        }
-
-        return false;
-    }
+	private static int getDist(Point a, Point b) {
+		return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+	}
 }
