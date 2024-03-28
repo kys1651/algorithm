@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	static class Point implements Comparable<Point> {
+	static class Point {
 		int x;
 		int y;
 
@@ -10,22 +10,10 @@ public class Main {
 			this.x = x;
 			this.y = y;
 		}
-
-		@Override
-		public int compareTo(Point o) {
-			return getDist(cur, this) - getDist(cur, o);
-		}
-
-		@Override
-		public String toString() {
-			return "Point [x=" + x + ", y=" + y + "]";
-		}
-
 	}
 
 	static int N;
-	static Point cur, end;
-	static Point[] marts;
+	static Point[] spot;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -33,15 +21,13 @@ public class Main {
 		int T = Integer.parseInt(br.readLine());
 		while (T-- > 0) {
 			N = Integer.parseInt(br.readLine());
-			marts = new Point[N];
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			cur = new Point(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
-			for (int i = 0; i < N; i++) {
-				st = new StringTokenizer(br.readLine());
-				marts[i] = new Point(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+			spot = new Point[N + 2];
+
+			// Input
+			for (int i = 0; i <= N + 1; i++) {
+				StringTokenizer st = new StringTokenizer(br.readLine());
+				spot[i] = new Point(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
 			}
-			st = new StringTokenizer(br.readLine());
-			end = new Point(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
 
 			if (bfs()) {
 				sb.append("happy");
@@ -55,21 +41,21 @@ public class Main {
 
 	private static boolean bfs() {
 		Queue<Point> queue = new LinkedList<>();
-		boolean[] visit = new boolean[N];
-		queue.add(cur);
+		boolean[] visit = new boolean[N + 1];
+		queue.add(spot[0]);
 		while (!queue.isEmpty()) {
 			Point c = queue.poll();
 
-			if (getDist(c, end) <= 1000) {
+			if (getDist(c, spot[N + 1]) <= 1000) {
 				return true;
 			}
 
-			for (int i = 0; i < N; i++) {
+			for (int i = 1; i <= N; i++) {
 				if (visit[i])
 					continue;
-				if (getDist(c, marts[i]) <= 1000) {
+				if (getDist(c, spot[i]) <= 1000) {
 					visit[i] = true;
-					queue.add(marts[i]);
+					queue.add(spot[i]);
 				}
 			}
 		}
