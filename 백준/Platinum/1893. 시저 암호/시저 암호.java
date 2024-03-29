@@ -3,7 +3,7 @@ import java.util.*;
 
 public class Main {
 	static char[] A, W, S;
-	static HashMap<Character, Character> map;
+	static HashMap<Character, Character> map = new HashMap<>();
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -15,7 +15,6 @@ public class Main {
 			W = br.readLine().toCharArray();
 			S = br.readLine().toCharArray();
 
-			map = new HashMap<>();
 			for (int i = 0; i < A.length; i++) {
 				map.put(A[i], A[(i + 1) % A.length]);
 			}
