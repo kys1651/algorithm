@@ -2,7 +2,8 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-	static ArrayList<Integer> list = new ArrayList<>();
+	static StringBuilder sb = new StringBuilder();
+	static int count = 0;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -11,11 +12,7 @@ public class Main {
 		
 		KMP(text, pattern);
 		
-		StringBuilder sb = new StringBuilder();
-		sb.append(list.size()).append('\n');
-		for(int pos : list) {
-			sb.append(pos).append('\n');
-		}
+		System.out.println(count);
 		System.out.println(sb);
 	}
 
@@ -30,7 +27,8 @@ public class Main {
 			}
 			if (text.charAt(i) == pattern.charAt(j)) {
 				if (j == patternSize - 1) {
-					list.add(i - patternSize + 2);
+					sb.append(i - patternSize + 2).append('\n');
+					count++;
 					j = table[j];
 				}else {
 					j++;
