@@ -27,7 +27,7 @@ public class Main {
 			}
 			if (text.charAt(i) == pattern.charAt(j)) {
 				if (j == patternSize - 1) {
-					sb.append(i - patternSize + 2).append('\n');
+					sb.append(i - patternSize + 2).append(' ');
 					count++;
 					j = table[j];
 				}else {
