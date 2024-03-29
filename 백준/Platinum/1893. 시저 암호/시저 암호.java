@@ -2,9 +2,8 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	static int[] table;
-	static char[] code;
-	static HashMap<Character, Integer> map;
+	static char[] A, W, S;
+	static HashMap<Character, Character> map;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -12,23 +11,23 @@ public class Main {
 
 		int T = Integer.parseInt(br.readLine());
 		for (int tc = 1; tc <= T; tc++) {
-			code = br.readLine().toCharArray();
+			A = br.readLine().toCharArray();
+			W = br.readLine().toCharArray();
+			S = br.readLine().toCharArray();
+
 			map = new HashMap<>();
-			for (int i = 0; i < code.length; i++) {
-				map.put(code[i], i);
+			for (int i = 0; i < A.length; i++) {
+				map.put(A[i], A[(i + 1) % A.length]);
 			}
 
-			String W = br.readLine();
-			String S = br.readLine();
-			makeTable(W);
-
 			ArrayList<Integer> answer = new ArrayList<>();
-			for (int i = 0; i < code.length; i++) {
+			for (int i = 0; i < A.length; i++) {
 				if (KMP(S, W)) {
 					answer.add(i);
 				}
 				shiftCode();
 			}
+
 			if (answer.size() == 0) {
 				sb.append("no solution");
 			} else if (answer.size() == 1) {
@@ -41,42 +40,42 @@ public class Main {
 			}
 			sb.append('\n');
 		}
+
 		System.out.println(sb);
 	}
 
 	private static void shiftCode() {
-		char last = code[code.length - 1];
-		for (int i = code.length - 1; i >= 1; i--) {
-			code[i] = code[i - 1];
+		for (int i = 0; i < W.length; i++) {
+			W[i] = map.get(W[i]);
 		}
-		code[0] = last;
 	}
 
-	private static void makeTable(String keyword) {
-		int keywordSize = keyword.length();
-		table = new int[keywordSize];
+	private static int[] makeTable(char[] pattern) {
+		int patternSize = pattern.length;
+		int[] table = new int[patternSize];
 		int j = 0;
-		for (int i = 1; i < keywordSize; i++) {
-			while (j > 0 && keyword.charAt(i) != keyword.charAt(i)) {
+		for (int i = 1; i < patternSize; i++) {
+			while (j > 0 && pattern[i] != pattern[i]) {
 				j = table[j - 1];
 			}
-			if (keyword.charAt(i) == keyword.charAt(j)) {
+			if (pattern[i] == pattern[j]) {
 				table[i] = ++j;
 			}
 		}
+		return table;
 	}
 
-	private static boolean KMP(String text, String keyword) {
+	private static boolean KMP(char[] text, char[] keyword) {
+		int[] table = makeTable(keyword);
 		int count = 0;
-		int textSize = text.length();
-		int keywordSize = keyword.length();
+		int textSize = text.length;
+		int keywordSize = keyword.length;
 		int j = 0;
 		for (int i = 0; i < textSize; i++) {
-			char textChar = code[map.get(text.charAt(i))];
-			while (j > 0 && textChar != keyword.charAt(j)) {
+			while (j > 0 && text[i] != keyword[j]) {
 				j = table[j - 1];
 			}
-			if (textChar == keyword.charAt(j)) {
+			if (text[i] == keyword[j]) {
 				if (j == keywordSize - 1) {
 					count++;
 					j = table[j];
