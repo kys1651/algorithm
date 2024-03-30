@@ -4,8 +4,8 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
-
 public class Main {
+    // 전깃줄 클래스
     static class Wire implements Comparable<Wire>{
         int from;
         int to;
@@ -28,25 +28,27 @@ public class Main {
 
         // 전기줄의 인덱스, 출발점과 도착점 디피 수
         Wire[] wires = new Wire[N];
+
+        // Input
         for (int i = 0; i < N; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
             int from = Integer.parseInt(st.nextToken());
             int to = Integer.parseInt(st.nextToken());
             int count = 0;
             wires[i] = new Wire(from, to, count);
-        }
+        }// Input End
+
         Arrays.sort(wires);
 
-        int answer = 0;
+        int answer = 0; // 최대 개수
         for (int i = 0; i < N; i++) {
-            int count = 0;
             Wire w = wires[i];
             for (int j = 0; j < i; j++) {
-                if (w.to > wires[j].to && count < wires[j].dp) {
-                    count = wires[j].dp;
+                if (w.to > wires[j].to && w.dp < wires[j].dp) {
+                    w.dp = wires[j].dp;
                 }
             }
-            w.dp = count + 1;
+            w.dp = w.dp + 1;
             answer = Math.max(w.dp, answer);
         }
         System.out.println(N - answer);
