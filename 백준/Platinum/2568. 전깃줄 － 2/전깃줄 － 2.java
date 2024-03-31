@@ -2,17 +2,21 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class Main {
-    static class Wire {
+    static class Wire implements Comparable<Wire> {
         int from;
         int to;
 
         public Wire(int from, int to) {
             this.from = from;
             this.to = to;
+        }
+
+        @Override
+        public int compareTo(Wire o) {
+            return this.from - o.from;
         }
     }
 
@@ -21,13 +25,12 @@ public class Main {
         int N = Integer.parseInt(br.readLine());
         Wire[] wires = new Wire[N];
 
+        // Input
         for (int i = 0; i < N; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
-            int from = Integer.parseInt(st.nextToken());
-            int to = Integer.parseInt(st.nextToken());
-            wires[i] = new Wire(from, to);
-        }
-        Arrays.sort(wires, (o1, o2) -> o1.from == o2.from ? o2.to - o1.to : o1.from - o2.from);
+            wires[i] = new Wire(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+        }// Input End
+        Arrays.sort(wires);
 
         int[] dp = new int[N];
         int[] next = new int[N];
@@ -50,17 +53,17 @@ public class Main {
         StringBuilder sb = new StringBuilder();
         sb.append(N - count).append('\n');
         count--;
-        Stack<Integer> stack = new Stack<>();
         for (int i = N - 1; i >= 0; i--) {
-            if(next[i] == count){
+            if (next[i] == count) {
+                wires[i].from = -1;
                 count--;
-            }else{
-                stack.push(wires[i].from);
             }
         }
 
-        while(!stack.isEmpty()){
-            sb.append(stack.pop()).append('\n');
+        for (int i = 0; i < N; i++) {
+            if (wires[i].from != -1) {
+                sb.append(wires[i].from).append('\n');
+            }
         }
         System.out.println(sb);
     }
