@@ -6,117 +6,116 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int R, C, T;
-    static int[][] map; // 배열 상태
-    static int[] airCleanUp; // 위를 보는 에어컨
-    static int[] airCleanDown; // 아래를 보는 에어컨
-    static Queue<int[]> dustList = new LinkedList<>(); // 미세먼지 큐
+	static int[][] map;
+	static int[][] air = new int[2][2];
+	static int R, C;
 
-    static int[] dirX = {0, 1, 0, -1};
-    static int[] dirY = {1, 0, -1, 0};
+	static int[] dirX = { 0, -1, 0, 1 };
+	static int[] dirY = { 1, 0, -1, 0 };
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        R = Integer.parseInt(st.nextToken());
-        C = Integer.parseInt(st.nextToken());
-        T = Integer.parseInt(st.nextToken());
-        map = new int[R][C];
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		R = Integer.parseInt(st.nextToken());
+		C = Integer.parseInt(st.nextToken());
+		int T = Integer.parseInt(st.nextToken());
+		map = new int[R][C];
+		// Input
+		int idx = 0;
+		for (int i = 0; i < R; i++) {
+			st = new StringTokenizer(br.readLine());
+			for (int j = 0; j < C; j++) {
+				map[i][j] = Integer.parseInt(st.nextToken());
+				if (map[i][j] == -1) {
+					air[idx][0] = i;
+					air[idx++][1] = j;
+				}
+			}
+		} // Input End
 
-        // Input
-        for (int i = 0; i < R; i++) {
-            st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < C; j++) {
-                map[i][j] = Integer.parseInt(st.nextToken());
-                if (map[i][j] == -1) {
-                    if (airCleanUp == null) {
-                        airCleanUp = new int[]{i, j};
-                    } else {
-                        airCleanDown = new int[]{i, j};
-                    }
-                }
-            }
-        }// Input End
+		for (int i = 1; i <= T; i++) {
+			dust();
+			airExcute();
+		}
+		
+		int sum = 0;
+		for(int i = 0 ; i < R; i++) {
+			for(int j = 0; j < C;j++) {
+				sum = sum + map[i][j];
+			}
+		}
+		System.out.println(sum + 2);
+	}
+	
+	// 에어컨 가동
+	private static void airExcute() {
+		rotate(air[0], true);
+		rotate(air[1], false);
+	}
 
-        while (T-- > 0) {
-            dust();
-            airClean();
-        }
+	private static void rotate(int[] start, boolean CW) {
+		int d = 0;
+		int x = start[0] + dirX[d];
+		int y = start[1] + dirY[d];
+		int prev = map[x][y];
+		map[x][y] = 0;
+		while (!(x == start[0] && y == start[1])) {
+			int nX = x + dirX[d];
+			int nY = y + dirY[d];
+			if (!isIn(nX, nY)) {
+				if (CW) {
+					d = (d + 1) % 4;
+				} else {
+					d = d - 1;
+					if (d < 0) {
+						d = 3;
+					}
+				}
+				nX = x + dirX[d];
+				nY = y + dirY[d];
+			}
 
-        // 마지막에 미세먼지를 Count
-        int answer = 0;
-        for (int i = 0; i < R; i++) {
-            for (int j = 0; j < C; j++) {
-                if (map[i][j] > 0) {
-                    answer += map[i][j];
-                }
-            }
-        }
-        System.out.println(answer);
-    }
+			int tmp = map[nX][nY];
+			map[nX][nY] = prev;
+			prev = tmp;
+			x = nX;
+			y = nY;
+		}
+		map[x][y] = -1;
+	}
 
-    // 에어컨이 공기 작동 메서드
-    private static void airClean() {
-        rotate(airCleanUp[0], airCleanUp[1], true);
-        rotate(airCleanDown[0], airCleanDown[1], false);
-    }
+	private static void dust() {
+		Queue<int[]> queue = new LinkedList<>();
+		// 미세먼지 위치 파악
+		for (int i = 0; i < R; i++) {
+			for (int j = 0; j < C; j++) {
+				if (map[i][j] > 0) {
+					queue.add(new int[] { i, j, map[i][j] });
+					map[i][j] = 0;
+				}
+			}
+		}
 
-    // 회전하도록 한다. 행 열
-    private static void rotate(int x, int y, boolean up) {
-        int dir = 0;
-        int nX = x + dirX[dir];
-        int nY = y + dirY[dir];
-        int prev = 0;
-        while (!(nX == x && nY == y)) {
-            int tmp = map[nX][nY];
-            map[nX][nY] = prev;
-            prev = tmp;
-            if (!isIn(nX + dirX[dir], nY + dirY[dir])) {
-                if (up) {
-                    dir = dir == 0 ? 3 : dir - 1;
-                } else {
-                    dir = (dir + 1) % 4;
-                }
-            }
-            nX = nX + dirX[dir];
-            nY = nY + dirY[dir];
-        }
-    }
+		while (!queue.isEmpty()) {
+			int cur[] = queue.poll();
+			int count = 0;
+			int dustValue = cur[2] / 5;
 
-    // 미세먼지를 퍼뜨린다.
-    private static void dust() {
+			for (int i = 0; i < 4; i++) {
+				int nX = cur[0] + dirX[i];
+				int nY = cur[1] + dirY[i];
 
-        // 미세먼지 위치를 세어주고 저장한다.
-        for (int i = 0; i < R; i++) {
-            for (int j = 0; j < C; j++) {
-                if (map[i][j] > 0) {
-                    dustList.add(new int[]{i, j, map[i][j]});
-                    map[i][j] = 0;
-                }
-            }
-        }
+				if (!isIn(nX, nY) || map[nX][nY] == -1) {
+					continue;
+				}
+				map[nX][nY] += dustValue;
+				count++;
+			}
+			map[cur[0]][cur[1]] += cur[2] - dustValue * count;
+		}
+	}
 
-        // 배열이 빌 때 까지 확인
-        while (!dustList.isEmpty()) {
-            int[] cur = dustList.poll();
-            int minus = cur[2] / 5;
-            int count = 0;
-
-            for (int i = 0; i < 4; i++) {
-                int nX = cur[0] + dirX[i];
-                int nY = cur[1] + dirY[i];
-                if (!isIn(nX, nY) || map[nX][nY] == -1) {
-                    continue;
-                }
-                map[nX][nY] += minus;
-                count++;
-            }
-            map[cur[0]][cur[1]] += cur[2] - (count * minus);
-        }
-    }
-
-    // 배열이 내부에 있는지 확인
-    private static boolean isIn(int x, int y) {
-        return x >= 0 && x < R && y >= 0 && y < C;
-    }
+	private static boolean isIn(int x, int y) {
+		return x >= 0 && x < R && y >= 0 && y < C;
+	}
 }
