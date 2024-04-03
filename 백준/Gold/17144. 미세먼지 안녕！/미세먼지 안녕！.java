@@ -37,16 +37,16 @@ public class Main {
 			dust();
 			airExcute();
 		}
-		
+
 		int sum = 0;
-		for(int i = 0 ; i < R; i++) {
-			for(int j = 0; j < C;j++) {
+		for (int i = 0; i < R; i++) {
+			for (int j = 0; j < C; j++) {
 				sum = sum + map[i][j];
 			}
 		}
 		System.out.println(sum + 2);
 	}
-	
+
 	// 에어컨 가동
 	private static void airExcute() {
 		rotate(air[0], true);
@@ -85,34 +85,30 @@ public class Main {
 	}
 
 	private static void dust() {
-		Queue<int[]> queue = new LinkedList<>();
-		// 미세먼지 위치 파악
+		int[][] nextMap = new int[R][C];
 		for (int i = 0; i < R; i++) {
 			for (int j = 0; j < C; j++) {
-				if (map[i][j] > 0) {
-					queue.add(new int[] { i, j, map[i][j] });
-					map[i][j] = 0;
-				}
-			}
-		}
-
-		while (!queue.isEmpty()) {
-			int cur[] = queue.poll();
-			int count = 0;
-			int dustValue = cur[2] / 5;
-
-			for (int i = 0; i < 4; i++) {
-				int nX = cur[0] + dirX[i];
-				int nY = cur[1] + dirY[i];
-
-				if (!isIn(nX, nY) || map[nX][nY] == -1) {
+				if(map[i][j] == -1) {
+					nextMap[i][j] = -1;
 					continue;
 				}
-				map[nX][nY] += dustValue;
-				count++;
+				
+				int count = 0;
+				for(int d = 0; d < 4; d++) {
+					int nX = i + dirX[d];
+					int nY = j + dirY[d];
+
+					if (!isIn(nX, nY) || map[nX][nY] == -1) {
+						continue;
+					}
+					nextMap[nX][nY] += map[i][j] / 5;
+					count++;
+				}
+				nextMap[i][j] += map[i][j] - (map[i][j] / 5) * count;
 			}
-			map[cur[0]][cur[1]] += cur[2] - dustValue * count;
 		}
+		
+		map = nextMap;
 	}
 
 	private static boolean isIn(int x, int y) {
