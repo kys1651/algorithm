@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Solution {
-  static int[][] mag = new int[4][8];
+ static int[][] mag = new int[4][8];
 	static boolean[] visit = new boolean[4];
 
 	public static void main(String[] args) throws IOException {
@@ -42,13 +42,11 @@ public class Solution {
 	}
 
 	private static void rotate(int idx, int cw) {
-		if (visit[idx])
-			return;
 		visit[idx] = true;
-		if (idx != 0 && mag[idx][6] != mag[idx - 1][2]) {
+		if (idx != 0 && mag[idx][6] != mag[idx - 1][2] && !visit[idx-1]) {
 			rotate(idx - 1, -cw);
 		}
-		if (idx != 3 && mag[idx][2] != mag[idx + 1][6]) {
+		if (idx != 3 && mag[idx][2] != mag[idx + 1][6] && !visit[idx+1]) {
 			rotate(idx + 1, -cw);
 		}
 		if (cw == 1) cw(idx);
