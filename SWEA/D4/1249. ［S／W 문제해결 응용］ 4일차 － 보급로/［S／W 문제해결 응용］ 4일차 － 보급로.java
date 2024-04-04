@@ -1,7 +1,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.PriorityQueue;
+import java.util.LinkedList;
+import java.util.Queue;
 
 class Solution {
 	static int N;
@@ -35,23 +36,24 @@ class Solution {
 	}
 
 	private static void bfs() {
-		PriorityQueue<int[]> queue = new PriorityQueue<>((o1, o2) -> o1[2] - o2[2]);
-		queue.add(new int[] { 0, 0, 0 });
+		Queue<int[]> queue = new LinkedList<>();
+		queue.add(new int[] { 0, 0 });
 		dist[0][0] = 0;
 		while (!queue.isEmpty()) {
 			int[] cur = queue.poll();
+			int value = dist[cur[0]][cur[1]];
 			for (int i = 0; i < 4; i++) {
 				int nX = cur[0] + dirX[i];
 				int nY = cur[1] + dirY[i];
 
-				if (!isIn(nX, nY) || dist[nX][nY] <= cur[2] + map[nX][nY]) {
+				if (!isIn(nX, nY) || dist[nX][nY] <= value + map[nX][nY]) {
 					continue;
 				}
-				dist[nX][nY] = map[nX][nY] + cur[2];
-				if (nX == N - 1 && nY == N - 1) {
+				if(nX == -1 && nY == -1) {
 					return;
 				}
-				queue.add(new int[] { nX, nY, dist[nX][nY] });
+				dist[nX][nY] = map[nX][nY] + value;
+				queue.add(new int[] { nX, nY });
 			}
 		}
 	}
