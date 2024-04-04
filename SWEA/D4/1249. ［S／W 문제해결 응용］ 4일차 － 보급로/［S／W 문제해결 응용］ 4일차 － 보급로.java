@@ -1,5 +1,7 @@
-import java.util.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.PriorityQueue;
 
 class Solution {
 	static int N;
@@ -26,12 +28,13 @@ class Solution {
 				}
 			} // Input End
 
-			sb.append('#').append(tc).append(' ').append(bfs()).append('\n');
+			bfs();
+			sb.append('#').append(tc).append(' ').append(dist[N - 1][N - 1]).append('\n');
 		}
 		System.out.println(sb);
 	}
 
-	private static int bfs() {
+	private static void bfs() {
 		PriorityQueue<int[]> queue = new PriorityQueue<>((o1, o2) -> o1[2] - o2[2]);
 		queue.add(new int[] { 0, 0, 0 });
 		dist[0][0] = 0;
@@ -46,12 +49,11 @@ class Solution {
 				}
 				dist[nX][nY] = map[nX][nY] + cur[2];
 				if (nX == N - 1 && nY == N - 1) {
-					return dist[nX][nY];
+					return;
 				}
 				queue.add(new int[] { nX, nY, dist[nX][nY] });
 			}
 		}
-		return -1;
 	}
 
 	private static boolean isIn(int x, int y) {
