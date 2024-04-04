@@ -1,66 +1,60 @@
-import java.util.Queue;
-import java.util.LinkedList;
-import java.io.InputStreamReader;
-import java.io.BufferedReader;
+import java.util.*;
+import java.io.*;
 
 class Solution {
-    // 지도를 저장 할 map
-    static int[][] map;
-    // 방문하는데 필요한 시간이 저장 될 visit
-    static int[][] visit;
-    // 상하좌우
-    static int[] dirX = {-1,1,0,0};
-    static int[] dirY ={0,0,-1,1};
-    public static void main(String args[]) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-        int T = Integer.parseInt(br.readLine());
-        for(int tc = 1; tc <= T; tc++) {
-            int n = Integer.parseInt(br.readLine());
-            map = new int[n][n];
-            visit = new int[n][n];
-            for(int i = 0; i < n; i++){
-                String line = br.readLine();
-                for(int j = 0; j < n; j++){
-                    map[i][j] = line.charAt(j) - '0';
-                    // visit 배열은 0값을 가질 수 있으므로 -1로 초기화해준다.
-                    visit[i][j] = -1;
-                }
-            }
-            bfs();
-            sb.append("#" + tc + " " + visit[n-1][n-1]).append("\n");
-        }
-        System.out.println(sb);
-    }
-    private static void bfs(){
-        Queue<int[]> queue = new LinkedList<>();
-        // 시작 지점 저장 후 0 넣어줌
-        queue.offer(new int[]{0, 0});
-        visit[0][0] = 0;
+	static int N;
+	static int[][] map, dist;
 
-        while(!queue.isEmpty()){
-            int[] cur = queue.poll();
-            int curTime = visit[cur[0]][cur[1]];
+	// 상,하,좌,우
+	static int[] dirX = { -1, 1, 0, 0 };
+	static int[] dirY = { 0, 0, -1, 1 };
 
-            for(int i = 0; i < dirX.length; i++){
-                int nX = cur[0] + dirX[i];
-                int nY = cur[1] + dirY[i];
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		int T = Integer.parseInt(br.readLine());
+		for (int tc = 1; tc <= T; tc++) {
+			N = Integer.parseInt(br.readLine());
+			// Input
+			map = new int[N][N];
+			dist = new int[N][N];
+			for (int i = 0; i < N; i++) {
+				String input = br.readLine();
+				for (int j = 0; j < N; j++) {
+					map[i][j] = input.charAt(j) - '0';
+					dist[i][j] = Integer.MAX_VALUE;
+				}
+			} // Input End
 
-                // 범위밖인 경우
-                if(check(nX, nY)){
-                    continue;
-                }
+			sb.append('#').append(tc).append(' ').append(bfs()).append('\n');
+		}
+		System.out.println(sb);
+	}
 
-                // 처음 방문했거나 기존 방문시간보다 작은 경로 복구 시간을 가질 경우
-                if(visit[nX][nY] == -1 || (visit[nX][nY] > curTime + map[nX][nY])){
-                    visit[nX][nY] = curTime + map[nX][nY];
-                    queue.offer(new int[]{nX, nY});
-                }
-            }
-        }
-    }
+	private static int bfs() {
+		PriorityQueue<int[]> queue = new PriorityQueue<>((o1, o2) -> o1[2] - o2[2]);
+		queue.add(new int[] { 0, 0, 0 });
+		dist[0][0] = 0;
+		while (!queue.isEmpty()) {
+			int[] cur = queue.poll();
+			for (int i = 0; i < 4; i++) {
+				int nX = cur[0] + dirX[i];
+				int nY = cur[1] + dirY[i];
 
-    private static boolean check(int nX, int nY) {
-        return nX < 0 || nX >= map.length || nY < 0 || nY >= map[nX].length;
-    }
+				if (!isIn(nX, nY) || dist[nX][nY] <= cur[2] + map[nX][nY]) {
+					continue;
+				}
+				dist[nX][nY] = map[nX][nY] + cur[2];
+				if (nX == N - 1 && nY == N - 1) {
+					return dist[nX][nY];
+				}
+				queue.add(new int[] { nX, nY, dist[nX][nY] });
+			}
+		}
+		return -1;
+	}
+
+	private static boolean isIn(int x, int y) {
+		return x >= 0 && x < N && y >= 0 && y < N;
+	}
 }
