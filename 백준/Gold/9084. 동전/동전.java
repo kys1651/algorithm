@@ -17,11 +17,11 @@ public class Main {
 
             int total = Integer.parseInt(br.readLine());
             int[] dp = new int[total + 1];
+            dp[0] = 1;
             for (int i = 1; i <= N; i++) {
                 int coin = unit[i];
                 for (int j = coin; j <= total; j++) {
-                    if(j == coin) dp[j]++;
-                    else dp[j] = dp[j] + dp[j - coin];
+                    dp[j] += dp[j - coin];
                 }
             }
             sb.append(dp[total]).append('\n');
