@@ -6,17 +6,18 @@ import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
-	static class Planet {
+	static class Planet implements Comparable<Planet>{
 		int idx;
-		int x;
-		int y;
-		int z;
+		int value;
 
-		public Planet(int idx, int x, int y, int z) {
+		public Planet(int idx,int value) {
 			this.idx = idx;
-			this.x = x;
-			this.y = y;
-			this.z = z;
+			this.value= value;
+		}
+
+		@Override
+		public int compareTo(Planet o) {
+			return this.value - o.value;
 		}
 	}
 
@@ -38,22 +39,26 @@ public class Main {
 	}
 
 	static PriorityQueue<Edge> pq = new PriorityQueue<>();
-	static Planet[] planets;
+	static Planet[] pX,pY,pZ;
 	static int N;
 	static int[] rank, parents;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		N = Integer.parseInt(br.readLine());
-		planets = new Planet[N];
-
+		pX = new Planet[N];
+		pY = new Planet[N];
+		pZ = new Planet[N];
+		
 		// Input
 		for (int i = 0; i < N; i++) {
 			StringTokenizer st = new StringTokenizer(br.readLine());
 			int x = Integer.parseInt(st.nextToken());
 			int y = Integer.parseInt(st.nextToken());
 			int z = Integer.parseInt(st.nextToken());
-			planets[i] = new Planet(i, x, y, z);
+			pX[i] = new Planet(i, x);
+			pY[i] = new Planet(i, y);
+			pZ[i] = new Planet(i, z);
 		} // Input End
 
 		getEdge();
@@ -71,7 +76,6 @@ public class Main {
 				break;
 			}
 		}
-
 		System.out.println(answer);
 	}
 
@@ -109,19 +113,13 @@ public class Main {
 	}
 
 	private static void getEdge() {
-		Arrays.sort(planets, (o1, o2) -> o1.x - o2.x);
+		Arrays.sort(pX);
+		Arrays.sort(pY);
+		Arrays.sort(pZ);
 		for (int i = 0; i < N - 1; i++) {
-			pq.add(new Edge(planets[i].idx, planets[i + 1].idx, Math.abs(planets[i].x - planets[i + 1].x)));
-		}
-
-		Arrays.sort(planets, (o1, o2) -> o1.y - o2.y);
-		for (int i = 0; i < N - 1; i++) {
-			pq.add(new Edge(planets[i].idx, planets[i + 1].idx, Math.abs(planets[i].y - planets[i + 1].y)));
-		}
-
-		Arrays.sort(planets, (o1, o2) -> o1.z - o2.z);
-		for (int i = 0; i < N - 1; i++) {
-			pq.add(new Edge(planets[i].idx, planets[i + 1].idx, Math.abs(planets[i].z - planets[i + 1].z)));
+			pq.add(new Edge(pX[i].idx, pX[i + 1].idx, Math.abs(pX[i].value - pX[i + 1].value)));
+			pq.add(new Edge(pY[i].idx, pY[i + 1].idx, Math.abs(pY[i].value - pY[i + 1].value)));
+			pq.add(new Edge(pZ[i].idx, pZ[i + 1].idx, Math.abs(pZ[i].value - pZ[i + 1].value)));
 		}
 	}
 }
