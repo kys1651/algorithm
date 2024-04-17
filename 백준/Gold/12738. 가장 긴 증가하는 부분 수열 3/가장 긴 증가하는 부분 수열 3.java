@@ -3,42 +3,41 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-public class Main {
+public class Main{
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int N = Integer.parseInt(br.readLine());
-
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		int[] LIS = new int[N];
+		int[] lis = new int[N];
 		int count = 0;
 		for (int i = 0; i < N; i++) {
-			int value = Integer.parseInt(st.nextToken());
-			if (i == 0) {
-				LIS[count++] = value;
+			int tmp = Integer.parseInt(st.nextToken());
+			if (count == 0) {
+				lis[count++] = tmp;
 			} else {
-				if (LIS[count - 1] < value) {
-					LIS[count++] = value;
-				} else if (LIS[0] > value) {
-					LIS[0] = value;
+				if (lis[count - 1] < tmp) {
+					lis[count++] = tmp;
+				} else if (lis[0] > tmp) {
+					lis[0] = tmp;
 				} else {
-					LIS[bineary(0, count - 1, LIS, value)] = value;
+					lis[search(0, count - 1, tmp, lis)] = tmp;
 				}
 			}
 		}
 		System.out.println(count);
 	}
 
-	private static int bineary(int left, int right, int[] LIS, int value) {
-		while (left <= right) {
-			int mid = (left + right) >> 1;
-			if (LIS[mid] < value) {
-				left = mid + 1;
-			} else if (LIS[mid] > value) {
-				right = mid - 1;
+	private static int search(int l, int r, int key, int[] lis) {
+		while (l <= r) {
+			int m = (l + r) >> 1;
+			if (lis[m] > key) {
+				r = m - 1;
+			} else if (lis[m] < key) {
+				l = m + 1;
 			} else {
-				return mid;
+				return m;
 			}
 		}
-		return left;
+		return l;
 	}
 }
