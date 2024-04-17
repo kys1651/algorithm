@@ -7,12 +7,19 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(br.readLine());
-        int size = 500 * N;
-        boolean[] check = new boolean[size + 1];
+
+        int size = 0;
+        int[] c = new int[N];
         StringTokenizer st = new StringTokenizer(br.readLine());
-        check[Integer.parseInt(st.nextToken())] = true;
+        for (int i = 0; i < N; i++) {
+            c[i] = Integer.parseInt(st.nextToken());
+            size += c[i];
+        }
+
+        boolean[] check = new boolean[size + 1];
+        check[c[0]] = true;
         for (int i = 1; i < N; i++) {
-            int tmp = Integer.parseInt(st.nextToken());
+            int tmp = c[i];
             for (int j = size; j >= 1; j--) {
                 if(check[j]) check[j+tmp] = true;
             }
@@ -26,9 +33,8 @@ public class Main {
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < M; i++) {
             int tmp = Integer.parseInt(st.nextToken());
-            if(tmp > size || !check[tmp]) sb.append('N');
-            else sb.append('Y');
-            sb.append(' ');
+            if(tmp > size || !check[tmp]) sb.append("N ");
+            else sb.append("Y ");
         }
         System.out.println(sb);
     }
