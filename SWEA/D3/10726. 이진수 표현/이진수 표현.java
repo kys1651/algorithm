@@ -1,19 +1,27 @@
-import java.util.Scanner;
-class Solution
-{
-	public static void main(String args[]) throws Exception {
-		Scanner sc = new Scanner(System.in);
-		int T = sc.nextInt();
-		for(int tc = 1; tc <= T; tc++)
-		{
-            int n = sc.nextInt();
-            String m = Integer.toBinaryString(sc.nextInt());
-            if(m.length() < n){
-                int len = n - m.length();
-                for(int i = 0; i < len ; i++) m = "0" + m;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
+        int T = Integer.parseInt(br.readLine());
+        for (int tc = 1; tc <= T; tc++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int N = Integer.parseInt(st.nextToken());
+            int M = Integer.parseInt(st.nextToken());
+            int check = (1 << N) - 1;
+
+            sb.append('#').append(tc).append(' ');
+            if ((M & check) == check) {
+                sb.append("ON");
+            } else {
+                sb.append("OFF");
             }
-            m = m.substring(m.length() - n);
-            System.out.println("#" + tc + " " + (m.contains("0")? "OFF" : "ON"));
-		}
-	}
+            sb.append('\n');
+        }
+        System.out.println(sb);
+    }
 }
