@@ -4,54 +4,46 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int N;
-    static boolean[][] map = new boolean[101][101];
     static int[] dirX = {-1, 1, 0, 0};
     static int[] dirY = {0, 0, -1, 1};
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        N = Integer.parseInt(br.readLine());
+        int N = Integer.parseInt(br.readLine());
+        boolean[][] map = new boolean[101][101];
 
         // Input
         for (int i = 0; i < N; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
-            for (int j = a; j < a + 10; j++) {
-                for (int k = b; k < b + 10; k++) {
-                    map[j][k] = true;
+            int x = Integer.parseInt(st.nextToken());
+            int y = Integer.parseInt(st.nextToken());
+            for (int j = 0; j < 10; j++) {
+                for (int k = 0; k < 10; k++) {
+                    map[x + j][y + k] = true;
                 }
             }
         }// Input End
 
-        int count = 0;
+        int answer=  0;
         for (int i = 1; i <= 100; i++) {
             for (int j = 1; j <= 100; j++) {
-                if (map[i][j]) {
-                    count += getCount(i, j);
-                }
+                if(!map[i][j]) continue;
+                int emptyCount = get(i,j,map);
+                answer += emptyCount;
             }
         }
-
-        System.out.println(count);
+        System.out.println(answer);
     }
 
-    private static int getCount(int x, int y) {
-        int tmp = 0;
+    private static int get(int x, int y, boolean[][] map) {
+        int empty = 0;
         for (int i = 0; i < 4; i++) {
             int nX = x + dirX[i];
             int nY = y + dirY[i];
-            if (map[nX][nY]) {
-                tmp++;
+            if (!map[nX][nY]) {
+                empty++;
             }
         }
-        if(tmp == 3){
-            return 1;
-        }else if(tmp == 2){
-            return 2;
-        }else{
-            return 0;
-        }
+        return empty;
     }
 }
