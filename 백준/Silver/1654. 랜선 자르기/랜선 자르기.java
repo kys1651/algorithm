@@ -3,41 +3,45 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-public class Main{
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int n = Integer.parseInt(st.nextToken());
-		int k = Integer.parseInt(st.nextToken());
-		int[] num = new int[n];
+public class Main {
+    static long[] arr;
+    static int N, K;
 
-		long upper = 0, lower = 1;
-		for (int i = 0; i < n; i++) {
-			num[i] = Integer.parseInt(br.readLine());
-			if (num[i] > upper)
-				upper = num[i];
-		}
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        K = Integer.parseInt(st.nextToken());
 
-		// 홀수인 경우를 대비하여 1을 증가시켜줌
-		upper++;
-		long mid,tmp;
-		while (lower < upper) {
-			mid = (upper + lower) >> 1;
+        //Input
+        long r = 0, l = 1;
+        arr = new long[N];
+        for (int i = 0; i < N; i++) {
+            arr[i] = Long.parseLong(br.readLine());
+            if (r < arr[i]) r = arr[i];
+        }// Input End
 
-			tmp = 0;
-			for (int number:num) {
-				tmp += (number / mid);
-			}
+        r++;
+        while (l <= r) {
+            long m = (l + r) >> 1;
+            // 자를 수 있으면 길이를 더 길게 자름
+            if (isCan(m)) {
+                l = m + 1;
+            }
+            // 못자르면 줄인다.
+            else {
+                r = m - 1;
+            }
+        }
+        System.out.println(l - 1);
+    }
 
-			// tmp가 k보다 크다면 너무 조금 자른 것
-			if (tmp >= k) {
-				lower = mid + 1;
-			}
-			// tmp가 k보다 작다면 너무 크게 자른 것
-			else if (tmp < k) {
-				upper = mid;
-			}
-		}
-		System.out.println(lower - 1);
-	}
+    private static boolean isCan(long value) {
+        int count = 0;
+        for (int i = 0; i < N; i++) {
+            count += arr[i] / value;
+            if (count >= K) return true;
+        }
+        return false;
+    }
 }
