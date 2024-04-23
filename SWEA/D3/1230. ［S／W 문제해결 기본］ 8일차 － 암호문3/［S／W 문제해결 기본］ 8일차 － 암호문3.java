@@ -10,33 +10,35 @@ public class Solution {
         StringBuilder sb = new StringBuilder();
         for (int tc = 1; tc <= 10; tc++) {
             int N = Integer.parseInt(br.readLine());
+
             // Input
-            LinkedList<Integer> list = new LinkedList<>();
+            LinkedList<String> list = new LinkedList<>();
             StringTokenizer st = new StringTokenizer(br.readLine());
             for (int i = 0; i < N; i++) {
-                list.add(Integer.parseInt(st.nextToken()));
+                list.add(st.nextToken());
             }// Input End
 
             int M = Integer.parseInt(br.readLine());
             st = new StringTokenizer(br.readLine());
+            int x, y;
             for (int i = 0; i < M; i++) {
                 String command = st.nextToken();
-                int x = Integer.parseInt(st.nextToken());
-                int y = Integer.parseInt(st.nextToken());
                 if (command.equals("I")) {
+                    x = Integer.parseInt(st.nextToken());
+                    y = Integer.parseInt(st.nextToken());
                     for (int j = 0; j < y; j++) {
-                        int s = Integer.parseInt(st.nextToken());
-                        list.add(x + j, s);
+                        list.add(x++, st.nextToken());
                     }
                 } else if (command.equals("D")) {
-                    while (y-- > 0) {
+                    x = Integer.parseInt(st.nextToken());
+                    y = Integer.parseInt(st.nextToken());
+                    for (int j = 0; j < y; j++) {
                         list.remove(x);
                     }
                 } else {
-                    list.addLast(y);
-                    for (int j = 1; j < x; j++) {
-                        y = Integer.parseInt(st.nextToken());
-                        list.addLast(y);
+                    y = Integer.parseInt(st.nextToken());
+                    for (int j = 0; j < y; j++) {
+                        list.add(st.nextToken());
                     }
                 }
             }
