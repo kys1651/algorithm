@@ -20,25 +20,23 @@ public class Solution {
 
             int M = Integer.parseInt(br.readLine());
             st = new StringTokenizer(br.readLine());
-            int x, y;
+            int x,y;
             for (int i = 0; i < M; i++) {
                 String command = st.nextToken();
+                x = Integer.parseInt(st.nextToken());
                 if (command.equals("I")) {
-                    x = Integer.parseInt(st.nextToken());
                     y = Integer.parseInt(st.nextToken());
                     for (int j = 0; j < y; j++) {
-                        list.add(x++, st.nextToken());
+                        list.add(x + j, st.nextToken());
                     }
                 } else if (command.equals("D")) {
-                    x = Integer.parseInt(st.nextToken());
                     y = Integer.parseInt(st.nextToken());
-                    for (int j = 0; j < y; j++) {
+                    while (y-- > 0) {
                         list.remove(x);
                     }
                 } else {
-                    y = Integer.parseInt(st.nextToken());
-                    for (int j = 0; j < y; j++) {
-                        list.add(st.nextToken());
+                    for (int j = 0; j < x; j++) {
+                        list.addLast(st.nextToken());
                     }
                 }
             }
