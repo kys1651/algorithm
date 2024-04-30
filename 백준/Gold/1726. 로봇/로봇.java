@@ -27,15 +27,19 @@ public class Main {
         }
     }
 
+    private static boolean[][] map;
+    private static int[][][] visit;
     private static int[] dirX = {0, 0, 1, -1};
     private static int[] dirY = {1, -1, 0, 0};
+    private static int N, M, endX, endY, endDir;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
-        boolean[][] map = new boolean[N][M];
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        map = new boolean[N][M];
+
         // Input
         for (int i = 0; i < N; i++) {
             String input = br.readLine();
@@ -51,34 +55,31 @@ public class Main {
         Robot s = new Robot(sX, sE, sDir, 0);
 
         st = new StringTokenizer(br.readLine());
-        int eX = Integer.parseInt(st.nextToken()) - 1;
-        int eY = Integer.parseInt(st.nextToken()) - 1;
-        int eDir = Integer.parseInt(st.nextToken()) - 1;
+        endX = Integer.parseInt(st.nextToken()) - 1;
+        endY = Integer.parseInt(st.nextToken()) - 1;
+        endDir = Integer.parseInt(st.nextToken()) - 1;
 
-        int[][][] visit = new int[4][N][M];
-        visit[s.d][sX][sE] = 0;
+        System.out.println(bfs(s));
+    }
+
+    private static int bfs(Robot start) {
         Queue<Robot> queue = new LinkedList<>();
-        queue.add(s);
-        int result = Integer.MAX_VALUE;
+        queue.add(start);
+
+        visit = new int[4][N][M];
         while (!queue.isEmpty()) {
             Robot r = queue.poll();
 
-            if (r.count >= result) {
-                continue;
+            if (r.x == endX && r.y == endY && r.d == endDir) {
+                return r.count;
             }
-            if (r.x == eX && r.y == eY && r.d == eDir) {
-                if (result > r.count) {
-                    result = r.count;
-                }
-                continue;
-            }
-            int nextDir = getLeft(r.d);
-            if (visit[nextDir][r.x][r.y] == 0 || visit[nextDir][r.x][r.y] > r.count + 1) {
+            int nextDir = getDir(r.d, true);
+            if (isRotate(r, nextDir)) {
                 visit[nextDir][r.x][r.y] = r.count + 1;
                 queue.add(new Robot(r.x, r.y, nextDir, r.count + 1));
             }
-            nextDir = getRight(r.d);
-            if (visit[nextDir][r.x][r.y] == 0 || visit[nextDir][r.x][r.y] > r.count + 1) {
+            nextDir = getDir(r.d, false);
+            if (isRotate(r, nextDir)) {
                 visit[nextDir][r.x][r.y] = r.count + 1;
                 queue.add(new Robot(r.x, r.y, nextDir, r.count + 1));
             }
@@ -88,42 +89,52 @@ public class Main {
                 if (!isIn(nX, nY, N, M) || map[nX][nY]) {
                     break;
                 }
-                if (visit[r.d][nX][nY] == 0 || visit[r.d][nX][nY] > r.count + 1) {
+                if (isForward(r, nX, nY)) {
                     visit[r.d][nX][nY] = r.count + 1;
                     queue.add(new Robot(nX, nY, r.d, r.count + 1));
                 }
             }
         }
-        System.out.println(visit[eDir][eX][eY]);
+        return 0;
+    }
+
+    private static boolean isForward(Robot r, int nX, int nY) {
+        return visit[r.d][nX][nY] == 0 || visit[r.d][r.x][r.y] > r.count + 1;
+    }
+
+    private static boolean isRotate(Robot r, int next) {
+        return visit[next][r.x][r.y] == 0 || visit[next][r.x][r.y] > r.count + 1;
     }
 
     private static boolean isIn(int x, int y, int n, int m) {
         return x >= 0 && x < n && y >= 0 && y < m;
     }
 
-    private static int getRight(int d) {
-        switch (d) {
-            case 0:
-                return 2;
-            case 1:
-                return 3;
-            case 2:
-                return 1;
-            default:
-                return 0;
+    private static int getDir(int d, boolean right) {
+        if (right) {
+            switch (d) {
+                case 0:
+                    return 2;
+                case 1:
+                    return 3;
+                case 2:
+                    return 1;
+                default:
+                    return 0;
+            }
+        } else {
+            switch (d) {
+                case 0:
+                    return 3;
+                case 1:
+                    return 2;
+                case 2:
+                    return 0;
+                default:
+                    return 1;
+            }
         }
+
     }
 
-    private static int getLeft(int d) {
-        switch (d) {
-            case 0:
-                return 3;
-            case 1:
-                return 2;
-            case 2:
-                return 0;
-            default:
-                return 1;
-        }
-    }
 }
