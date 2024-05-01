@@ -13,21 +13,16 @@ public class Main {
         int remove = K;
         int top = -1;
         for (char ch : input.toCharArray()) {
-            if (top == -1) {
-                stack[++top] = ch;
-            } else {
+            if (top != -1) {
                 while (top != -1 && remove != 0 && stack[top] < ch) {
                     remove--;
                     top--;
                 }
-                stack[++top] = ch;
             }
+            stack[++top] = ch;
         }
-        StringBuilder sb = new StringBuilder();
-        if(remove != 0) top -= remove;
-        for (int i = 0; i <= top; i++) {
-            sb.append(stack[i]);
-        }
-        System.out.println(sb);
+        if (remove != 0) top -= remove;
+
+        System.out.println(new String(stack, 0, top + 1));
     }
 }
