@@ -100,15 +100,14 @@ public class Main {
             pos[x][y] = i;
         } // Player Input End
 
-        int result = bfs();
-        System.out.println(result);
+        System.out.println(bfs());
     }
 
     private static int bfs() {
         int count = 0;
+
         while (count < 1000) {
             count++;
-
             for (int i = 0; i < K; i++) {
                 Player p = players[i];
                 int nX = p.x + dirX[p.d];
@@ -126,10 +125,11 @@ public class Main {
 
                 if (pos[p.x][p.y] == i) {
                     pos[p.x][p.y] = -1;
-                }else{
+                } else {
                     p.down.up = null;
                     p.down = null;
                 }
+                
                 // 빈 공간
                 int nextIdx = pos[nX][nY];
                 if (map[nX][nY] == 0) {
@@ -137,29 +137,16 @@ public class Main {
                     // 아무것도 없다면
                     if (nextIdx == -1) {
                         pos[nX][nY] = i;
-                        if (p.down != null) {
-                            p.down.up = null;
-                            p.down = null;
-                        }
-
                     } else {
                         Player nextTop = players[nextIdx].getTop();
                         nextTop.up = p;
                         p.down = nextTop;
-                        if (players[nextIdx].getCount() >= 4) {
-                            return count;
-                        }
                     }
                 }
                 // 빨간 공간이면 현재 말을 뒤집어주고 추가
                 else {
-                    if(p.down != null){
-                        p.down.up = null;
-                        p.down = null;
-                    }
                     Player curTop = p.getTop();
                     p.swap();
-
                     curTop.move(nX, nY);
                     if (nextIdx == -1) {
                         pos[nX][nY] = curTop.idx;
@@ -167,22 +154,15 @@ public class Main {
                         Player nextTop = players[nextIdx].getTop();
                         nextTop.up = curTop;
                         curTop.down = nextTop;
-                        if (players[nextIdx].getCount() >= 4) {
-                            return count;
-                        }
                     }
+                }
+                if (players[pos[nX][nY]].getCount() >= 4) {
+                    return count;
                 }
             }
         }
-        return -1;
-    }
 
-    private static void print() {
-        for (int i = 0; i < K; i++) {
-            Player p = players[i];
-            System.out.println(i + 1 + ": " + p.x + ", " + p.y + " d : " + p.d);
-        }
-        System.out.println();
+        return -1;
     }
 
     private static boolean isIn(int x, int y) {
