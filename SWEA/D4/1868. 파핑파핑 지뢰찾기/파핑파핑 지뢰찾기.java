@@ -1,79 +1,80 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.*;
+import java.io.*;
 
 public class Solution {
-    static int N, result;
-    static char[][] map;
+    static int[][] map;
+    static int[] dirX = {-1, -1, -1, 0, 1, 1, 1, 0};
+    static int[] dirY = {-1, 0, 1, 1, 1, 0, -1, -1};
 
-    // 현재 좌표 평면 8 방향 체크
-    static int[] dirX = {-1, -1, -1, 0, 0, 1, 1, 1};
-    static int[] dirY = {-1, 0, 1, -1, 1, -1, 0, 1};
+    static int N;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
         int T = Integer.parseInt(br.readLine());
+        StringBuilder answer = new StringBuilder();
         for (int tc = 1; tc <= T; tc++) {
             N = Integer.parseInt(br.readLine());
-            result = 0;
-
-            map = new char[N][N];
+            map = new int[N][N];
+            // Input
             for (int i = 0; i < N; i++) {
-                map[i] = br.readLine().toCharArray();
-            }
+                String input = br.readLine();
+                for (int j = 0; j < N; j++) {
+                    char ch = input.charAt(j);
+                    if (ch == '*') {
+                        map[i][j] = -2;
+                    } else {
+                        map[i][j] = -1;
+                    }
+                }
+            }// Input End
 
+            int result = 0;
             for (int i = 0; i < N; i++) {
                 for (int j = 0; j < N; j++) {
-                    if (map[i][j] == '.') {
-                        removeMine(i, j);
+                    if (map[i][j] == -2 || map[i][j] != -1) {
+                        continue;
+                    }
+                    if (getCount(i, j) == 0) {
+                        map[i][j] = 0;
+                        dfs(i, j);
+                        result++;
                     }
                 }
             }
-
             for (int i = 0; i < N; i++) {
                 for (int j = 0; j < N; j++) {
-                    if(map[i][j] == '.') result++;
+                    if (map[i][j] == -1) result++;
                 }
             }
-            sb.append(String.format("#%d %d\n", tc, result));
+            answer.append(String.format("#%d %d\n", tc, result));
         }
-        System.out.println(sb);
+        System.out.println(answer);
     }
 
-    private static void removeMine(int x, int y) {
+    private static int getCount(int x, int y) {
         int count = 0;
-
-        boolean write = false;
         for (int i = 0; i < 8; i++) {
             int nX = x + dirX[i];
             int nY = y + dirY[i];
-
-            if (!isIn(nX, nY)) {
-                continue;
-            }
-            if (map[nX][nY] == '*') {
+            if (isIn(nX, nY) && map[nX][nY] == -2) {
                 count++;
             }
-            if (map[nX][nY] == '0') {
-                write = true;
-            }
+        }
+        return count;
+    }
+
+    private static void dfs(int x, int y) {
+        if (map[x][y] == -1) {
+            map[x][y] = getCount(x, y);
         }
 
-        if (write) {
-            map[x][y] = (char) ('0' + count);
-        }
-        if (count == 0) {
-            map[x][y] = '0';
+        if (map[x][y] == 0) {
             for (int i = 0; i < 8; i++) {
                 int nX = x + dirX[i];
                 int nY = y + dirY[i];
-                if (isIn(nX, nY)&&map[nX][nY] == '.') {
-                    removeMine(x + dirX[i], y + dirY[i]);
+                if (isIn(nX, nY) && map[nX][nY] == -1) {
+                    dfs(nX, nY);
                 }
-            }
-            if (!write) {
-                result++;
             }
         }
     }
