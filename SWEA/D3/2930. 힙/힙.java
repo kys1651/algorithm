@@ -1,23 +1,27 @@
 import java.util.*;
-class Solution
-{
-	public static void main(String args[]) throws Exception {
-		Scanner sc = new Scanner(System.in);
-		int T = sc.nextInt();;
-		for(int tc = 1; tc <= T; tc++)
-		{
-            int n = sc.nextInt();
-            PriorityQueue<Integer> pq = new PriorityQueue<>((o1,o2) -> o2-o1);
-            StringBuilder sb = new StringBuilder();
-            for(int i = 0; i < n; i++){
-                int x = sc.nextInt();
-                if(x == 1){
-                    pq.offer(sc.nextInt());
+import java.io.*;
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
+        int T = Integer.parseInt(br.readLine());
+        for (int tc = 1; tc <= T; tc++) {
+            int N = Integer.parseInt(br.readLine());
+            PriorityQueue<Integer> pq = new PriorityQueue<>((o1, o2) -> o2 - o1);
+            sb.append('#').append(tc).append(' ');
+            for (int i = 0; i < N; i++) {
+                String[] input = br.readLine().split(" ");
+                if (input[0].equals("1")) {
+                    pq.add(Integer.parseInt(input[1]));
                 }else{
-                    sb.append(pq.isEmpty() ? "-1" : String.valueOf(pq.poll())).append(" ");
+                    if(pq.isEmpty()) sb.append("-1");
+                    else sb.append(pq.poll());
+                    sb.append(' ');
                 }
             }
-            System.out.println("#" + tc + " " + sb.toString());
+            sb.append('\n');
         }
-	}
+        System.out.println(sb);
+    }
 }
