@@ -1,37 +1,60 @@
-import java.util.StringTokenizer;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.util.*;
+import java.io.*;
 
-class Solution {
-    static String[] graph;
-    static StringBuilder sb = new StringBuilder();
-    static int n;
-    public static void main(String args[]) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+public class Solution {
+    static class Node {
+        int left, right;
+        char value;
 
-        for(int tc = 1; tc <= 10; tc++) {
-            n = Integer.parseInt(br.readLine());
-            graph = new String[n+1];
-            for(int i = 1; i <= n; i++){
-                StringTokenizer st = new StringTokenizer(br.readLine());
-                graph[Integer.parseInt(st.nextToken())] = st.nextToken();
-            }
-
-            sb.append("#" + tc + " ");
-            // 중위순회
-            LVR(1);
-            sb.append("\n");
+        public Node(int left, int right, char value) {
+            this.left = left;
+            this.right = right;
+            this.value = value;
         }
-        System.out.println(sb);
     }
-    private static void LVR(int V){
-        int left = V * 2;
-        if(left <= n){
-            LVR(left);
+
+    static Node[] tree;
+    static StringBuilder sb;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder answer = new StringBuilder();
+        for (int tc = 1; tc <= 10; tc++) {
+            int N = Integer.parseInt(br.readLine());
+            tree = new Node[N + 1];
+
+            // Input
+            for (int i = 0; i < N; i++) {
+                StringTokenizer st = new StringTokenizer(br.readLine());
+                int idx = Integer.parseInt(st.nextToken());
+                char value = st.nextToken().charAt(0);
+                int left = 0, right = 0;
+                if (st.hasMoreTokens()) {
+                    left = Integer.parseInt(st.nextToken());
+                }
+                if (st.hasMoreTokens()) {
+                    right = Integer.parseInt(st.nextToken());
+                }
+                tree[idx] = new Node(left, right, value);
+            }// Input End
+
+            sb = new StringBuilder();
+            dfs(1);
+            answer.append('#').append(tc).append(' ');
+            answer.append(sb.toString()).append('\n');
         }
-        sb.append(graph[V]);
-        if(left + 1 <= n){
-            LVR(left+1);
+        System.out.println(answer);
+    }
+
+    private static void dfs(int V) {
+        Node node = tree[V];
+        if (node.left != 0) {
+            dfs(node.left);
+        }
+        sb.append(node.value);
+        if (node.right != 0) {
+            dfs(node.right);
         }
     }
 }
+
