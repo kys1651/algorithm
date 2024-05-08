@@ -1,7 +1,9 @@
-import java.util.*;
 import java.io.*;
 
 public class Main {
+	static final String invalid = "invalid";
+	static final String valid = "valid";
+	
 	static char[][] map = new char[3][3];
 	static boolean xCan, oCan;
 
@@ -58,9 +60,9 @@ public class Main {
 				result = true;
 			}
 			if (result) {
-				answer.append("valid");
+				answer.append(valid);
 			} else {
-				answer.append("invalid");
+				answer.append(invalid);
 			}
 			answer.append('\n');
 		}
