@@ -38,24 +38,21 @@ public class Main {
             sum += cost;
 
             queue.add(new Edge(from, to, cost));
-            queue.add(new Edge(to, from, cost));
         }
 
         init();
-        int count = 0;
+        int count = 1;
         long totalCost = 0;
-        while (count != N - 1 && !queue.isEmpty()) {
+        while (count != N && !queue.isEmpty()) {
             Edge edge = queue.poll();
 
-            if (!union(edge.from, edge.to)) {
-                continue;
+            if (union(edge.from, edge.to)) {
+                count++;
+                totalCost += edge.cost;
             }
-
-            count++;
-            totalCost += edge.cost;
         }
 
-        if (count == N - 1) {
+        if (count == N) {
             System.out.println(sum - totalCost);
         } else {
             System.out.println(-1);
@@ -71,18 +68,14 @@ public class Main {
         }
     }
 
-    private static int getParent(int a) {
+    private static int find(int a) {
         if (parent[a] == a) return a;
-        return parent[a] = getParent(parent[a]);
+        return parent[a] = find(parent[a]);
     }
 
     private static boolean union(int a, int b) {
-        a = getParent(a);
-        b = getParent(b);
-        if (a == b) {
-            return false;
-        }
-
+        a = find(a); b = find(b);
+        if (a == b) return false;
         if (rank[a] > rank[b]) {
             parent[b] = a;
             rank[a] += rank[b];
