@@ -2,18 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static class Point {
-        int x;
-        int y;
-
-        public Point(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
-
     static int N, M;
-    static int[][] map;
     static boolean[][] trafficBoard;
     static int[] dirX = {-1, 0, 1, 0};
     static int[] dirY = {0, 1, 0, -1};
@@ -23,8 +12,6 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
-
-        map = new int[N][M];
         trafficBoard = new boolean[N][M];
 
         // Input
