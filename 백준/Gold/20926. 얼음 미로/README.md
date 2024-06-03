@@ -4,7 +4,7 @@
 
 ### 성능 요약
 
-메모리: 24180 KB, 시간: 312 ms
+메모리: 24316 KB, 시간: 280 ms
 
 ### 분류
 
@@ -12,7 +12,7 @@
 
 ### 제출 일자
 
-2024년 6월 3일 10:35:08
+2024년 6월 3일 10:37:42
 
 ### 문제 설명
 
@@ -24,7 +24,7 @@
 
 <ol>
 	<li><img alt="" height="32px" src="https://upload.acmicpc.net/1727be99-41c5-41d1-8f49-85745820114a/-/preview/">  테라 : 얼음 미로에 갇힌 탐험가. 상하좌우 <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;"><mjx-math class="MJX-TEX" aria-hidden="true"><mjx-mn class="mjx-n"><mjx-c class="mjx-c34"></mjx-c></mjx-mn></mjx-math><mjx-assistive-mml unselectable="on" display="inline"><math xmlns="http://www.w3.org/1998/Math/MathML"><mn>4</mn></math></mjx-assistive-mml><span aria-hidden="true" class="no-mathjax mjx-copytext">$4$</span></mjx-container>방향으로 이동할 수 있다. 얼음 미로에 단 <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;"><mjx-math class="MJX-TEX" aria-hidden="true"><mjx-mn class="mjx-n"><mjx-c class="mjx-c31"></mjx-c></mjx-mn></mjx-math><mjx-assistive-mml unselectable="on" display="inline"><math xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn></math></mjx-assistive-mml><span aria-hidden="true" class="no-mathjax mjx-copytext">$1$</span></mjx-container>명의 테라만 존재한다. 테라가 최초 위치한 빙판의 <strong>미끌 시간</strong>은 <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;"><mjx-math class="MJX-TEX" aria-hidden="true"><mjx-mn class="mjx-n"><mjx-c class="mjx-c30"></mjx-c></mjx-mn></mjx-math><mjx-assistive-mml unselectable="on" display="inline"><math xmlns="http://www.w3.org/1998/Math/MathML"><mn>0</mn></math></mjx-assistive-mml><span aria-hidden="true" class="no-mathjax mjx-copytext">$0$</span></mjx-container>이다.</li>
-	<li><img alt="" height="32px" src="">  바위 : 통과할 수 없다. 미끄러지다 부딪히면 앞에서 멈춘다.</li>
+	<li><img alt="" height="32px" src="https://upload.acmicpc.net/1019dc88-5904-48c4-8db5-748efaa17076/-/preview/">  바위 : 통과할 수 없다. 미끄러지다 부딪히면 앞에서 멈춘다.</li>
 	<li><img alt="" height="32px" src="https://upload.acmicpc.net/2fb7171d-22a1-4bae-82a1-241738606465/-/preview/">  구멍 : 이곳에 빠지면 영영 탈출할 수 없다.</li>
 	<li><img alt="" height="32px" src="https://upload.acmicpc.net/ed684f4e-0a35-4ffc-a961-5d9a1efdee96/-/preview/">  출구 : 이곳에 방문하는 즉시 얼음 미로를 탈출한다. 얼음 미로에 단 <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;"><mjx-math class="MJX-TEX" aria-hidden="true"><mjx-mn class="mjx-n"><mjx-c class="mjx-c31"></mjx-c></mjx-mn></mjx-math><mjx-assistive-mml unselectable="on" display="inline"><math xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn></math></mjx-assistive-mml><span aria-hidden="true" class="no-mathjax mjx-copytext">$1$</span></mjx-container>개의 출구만 존재한다.</li>
 </ol>

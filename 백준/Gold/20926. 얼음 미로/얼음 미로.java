@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static class Point implements Comparable<Point>{
+    static class Point implements Comparable<Point> {
         int x;
         int y;
         int weight;
@@ -14,7 +14,7 @@ public class Main {
         }
 
         @Override
-        public int compareTo(Point o){
+        public int compareTo(Point o) {
             return this.weight - o.weight;
         }
     }
@@ -77,9 +77,7 @@ public class Main {
                 }
                 if (map[next.x][next.y] > next.weight) {
                     map[next.x][next.y] = next.weight;
-                    if (!(next.x == e.x && next.y == e.y)) {
-                        queue.add(next);
-                    }
+                    queue.add(next);
                 }
             }
         }
@@ -98,8 +96,9 @@ public class Main {
             next.x = nX;
             next.y = nY;
             next.weight += weight[nX][nY];
-            if(nX == e.x && nY == e.y){
-                return next;
+            if (nX == e.x && nY == e.y) {
+                map[next.x][next.y] = Math.min(next.weight, map[next.x][next.y]);
+                return null;
             }
         }
     }
