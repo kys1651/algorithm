@@ -17,13 +17,11 @@ public class Main {
     static final String CHEAT = "Lier!";
     static final String NO_CHEAT = "King-God-Emperor";
 
-    static int N, M;
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
         int K = Integer.parseInt(st.nextToken());
 
         // Input
@@ -38,49 +36,46 @@ public class Main {
             inDegree[to]++;
         }// Input
 
-        boolean answer = true;
-        for (int i = 0; i < K; i++) {
+        int i = 0;
+        for (; i < K; i++) {
             st = new StringTokenizer(br.readLine());
             int command = Integer.parseInt(st.nextToken());
             int idx = Integer.parseInt(st.nextToken());
 
             // 건물 건설
-            if (command == 1 && !createBuilding(idx)) {
-                answer = false;
-                break;
+            if (command == 1 ) {
+                if(inDegree[idx] != 0){
+                    break;
+                }
+                createBuilding(idx);
             }
             // 건물 파괴
-            else if (command == 2 && !destroyBuilding(idx)) {
-                answer = false;
-                break;
+            else if (command == 2) {
+                if(created[idx] == 0){
+                    break;
+                }
+                destroyBuilding(idx);
             }
         }
 
-        System.out.println(answer ? NO_CHEAT : CHEAT);
+        System.out.println(i == K ? NO_CHEAT : CHEAT);
     }
 
-    private static boolean destroyBuilding(int idx) {
-        if (created[idx] == 0) return false;
-
+    private static void destroyBuilding(int idx) {
         created[idx]--;
         if (created[idx] == 0) {
             for (Node tmp = graph[idx]; tmp != null; tmp = tmp.next) {
                 inDegree[tmp.idx]++;
             }
         }
-
-        return true;
     }
 
-    private static boolean createBuilding(int idx) {
-        if (inDegree[idx] != 0) return false;
-
+    private static void createBuilding(int idx) {
         created[idx]++;
         if (created[idx] == 1) {
             for (Node tmp = graph[idx]; tmp != null; tmp = tmp.next) {
                 inDegree[tmp.idx]--;
             }
         }
-        return true;
     }
 }
