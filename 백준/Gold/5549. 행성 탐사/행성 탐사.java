@@ -30,16 +30,18 @@ public class Main {
         }// Input End
 
         StringBuilder sb = new StringBuilder();
+        int sX, sY, eX, eY, jungle, ocean, ice;
         for (int i = 1; i <= K; i++) {
             st = new StringTokenizer(br.readLine());
-            int sX = Integer.parseInt(st.nextToken());
-            int sY = Integer.parseInt(st.nextToken());
-            int eX = Integer.parseInt(st.nextToken());
-            int eY = Integer.parseInt(st.nextToken());
+            sX = Integer.parseInt(st.nextToken());
+            sY = Integer.parseInt(st.nextToken());
+            eX = Integer.parseInt(st.nextToken());
+            eY = Integer.parseInt(st.nextToken());
 
-            int jungle = map[0][eX][eY] - map[0][sX - 1][eY] - map[0][eX][sY - 1] + map[0][sX - 1][sY - 1];
-            int ocean = map[1][eX][eY] - map[1][sX - 1][eY] - map[1][eX][sY - 1] + map[1][sX - 1][sY - 1];
-            int ice = map[2][eX][eY] - map[2][sX - 1][eY] - map[2][eX][sY - 1] + map[2][sX - 1][sY - 1];
+            jungle = map[0][eX][eY] - map[0][sX - 1][eY] - map[0][eX][sY - 1] + map[0][sX - 1][sY - 1];
+            ocean = map[1][eX][eY] - map[1][sX - 1][eY] - map[1][eX][sY - 1] + map[1][sX - 1][sY - 1];
+            ice = map[2][eX][eY] - map[2][sX - 1][eY] - map[2][eX][sY - 1] + map[2][sX - 1][sY - 1];
+
             sb.append(jungle).append(' ').append(ocean).append(' ').append(ice).append('\n');
         }
 
