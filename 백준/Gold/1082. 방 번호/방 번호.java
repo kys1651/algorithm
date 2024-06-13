@@ -36,27 +36,23 @@ public class Main {
                 }
 
                 int spend = prices[j];
-//                System.out.println(i + " 길이에 " + j + "를 붙힌 경우 ------");
-//                System.out.println("사용 비용 - " + spend);
                 for (int k = spend; k <= M; k++) {
                     if (dp[i - 1][k].equals(EMPTY) && j == 0) {
                         continue;
                     }
                     String newValue = dp[i - 1][k] + j;
                     String curValue = dp[i][k - spend];
-//                    System.out.println(k + "원인 기존 " + dp[i - 1][k] + "에서 " + spend + "사용해서 " + j + "를 붙힌 경우 : " + newValue);
-//                    System.out.println("현재 - " + (k - spend) + " 비용 최대값은 - " + curValue);
                     if (newValue.length() > curValue.length() || (newValue.length() == curValue.length() && newValue.compareTo(curValue) > 0)) {
                         dp[i][k - spend] = newValue;
                     }
-//                    System.out.println("갱신된 비용 - " + dp[i][k - spend]);
                 }
 
             }
         }
 
         String answer = EMPTY;
-        for (int i = 0; i <= 50; i++) {
+        for (int i = 1; i <= 50; i++) {
+            boolean exit = true;
             for (int j = 0; j <= M; j++) {
                 int answerLength = answer.length();
                 String checkNumber = dp[i][j];
@@ -66,7 +62,12 @@ public class Main {
                 } else if (answerLength == dpLength && checkNumber.compareTo(answer) > 0) {
                     answer = checkNumber;
                 }
+
+                if(!checkNumber.equals(EMPTY)){
+                    exit = false;
+                }
             }
+            if(exit) break;
         }
 
         System.out.println(answer.equals(EMPTY) ? 0 : answer);
