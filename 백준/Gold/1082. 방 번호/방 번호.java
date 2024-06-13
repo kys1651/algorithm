@@ -12,64 +12,65 @@ public class Main {
         int[] prices = new int[N];
 
         // Input
+        int size = 51;
         StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
             prices[i] = Integer.parseInt(st.nextToken());
+            if (size > prices[i]) {
+                size = prices[i];
+            }
         }// Input End
 
         int M = Integer.parseInt(br.readLine());
 
         // 공백으로 초기화
-        String[][] dp = new String[51][M + 1];
-        for (int i = 0; i <= 50; i++) {
+        size = (M / size);
+        String[][] dp = new String[size + 1][M + 1];
+        for (int i = 0; i <= size; i++) {
             for (int j = 0; j <= M; j++) {
                 dp[i][j] = EMPTY;
             }
         }
 
-        // 각 길이별로 진행
-        for (int i = 1; i <= 50; i++) {
-            // 0부터 직접 넣어본다.
+        for (int i = 1; i <= size; i++) {
+            boolean exit = true;
             for (int j = 0; j < N; j++) {
-                if (i == 1 && j == 0) {
-                    continue;
-                }
+                if(i == 1 && j == 0) continue;
 
                 int spend = prices[j];
                 for (int k = spend; k <= M; k++) {
-                    if (dp[i - 1][k].equals(EMPTY) && j == 0) {
+                    if (j == 0 && dp[i - 1][k].equals(EMPTY)) {
                         continue;
                     }
+
                     String newValue = dp[i - 1][k] + j;
-                    String curValue = dp[i][k - spend];
-                    if (newValue.length() > curValue.length() || (newValue.length() == curValue.length() && newValue.compareTo(curValue) > 0)) {
+                    if (isBig(dp[i][k - spend], newValue)) {
                         dp[i][k - spend] = newValue;
+                        exit = false;
                     }
-                }
-
-            }
-        }
-
-        String answer = EMPTY;
-        for (int i = 1; i <= 50; i++) {
-            boolean exit = true;
-            for (int j = 0; j <= M; j++) {
-                int answerLength = answer.length();
-                String checkNumber = dp[i][j];
-                int dpLength = checkNumber.length();
-                if (answerLength < dpLength) {
-                    answer = checkNumber;
-                } else if (answerLength == dpLength && checkNumber.compareTo(answer) > 0) {
-                    answer = checkNumber;
-                }
-
-                if(!checkNumber.equals(EMPTY)){
-                    exit = false;
                 }
             }
             if(exit) break;
         }
 
+        String answer = EMPTY;
+        for (int j = 0; j <= M; j++) {
+            if (isBig(answer, dp[size][j])) {
+                answer = dp[size][j];
+            }
+        }
+
         System.out.println(answer.equals(EMPTY) ? 0 : answer);
+    }
+
+    // 더 큰 값 리턴
+    private static boolean isBig(String prevValue, String newValue) {
+        int prevLen = prevValue.length();
+        int newLen = newValue.length();
+        if (prevLen > newLen) return false;
+        else if (prevLen < newLen) return true;
+        else {
+            return newValue.compareTo(prevValue) > 0;
+        }
     }
 }
