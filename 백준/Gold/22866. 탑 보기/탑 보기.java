@@ -54,30 +54,29 @@ public class Main {
         int N = Integer.parseInt(br.readLine());
 
         // Input
-        int[] count = new int[N];
-        int[] mem = new int[N];
-        int[] heights = new int[N];
+        int[] count = new int[N]; 
+        int[] mem = new int[N]; 
+        Building[] buildings = new Building[N]; 
         StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
-            heights[i] = Integer.parseInt(st.nextToken());
+            buildings[i] = new Building(i, Integer.parseInt(st.nextToken()));
             mem[i] = -1;
         }// Input End
 
         Stack left = new Stack(N);
         Stack right = new Stack(N);
         for (int i = 0; i < N; i++) {
-            removeHeight(left, heights, count, i);
+            removeHeight(left, buildings, count, i);
             if (!left.isEmpty()) {
                 setIdx(mem, i, left.peek().idx);
             }
-            left.push(new Building(i, heights[i]));
+            left.push(buildings[i]);
 
-            int rightIdx = N - i - 1;
-            removeHeight(right, heights, count, rightIdx);
+            removeHeight(right, buildings, count, N - i - 1);
             if (!right.isEmpty()) {
-                setIdx(mem, rightIdx, right.peek().idx);
+                setIdx(mem, N - i - 1, right.peek().idx);
             }
-            right.push(new Building(rightIdx, heights[rightIdx]));
+            right.push(buildings[N - i - 1]);
         }
         while (!left.isEmpty()) {
             Building b = left.pop();
@@ -89,7 +88,6 @@ public class Main {
             count[b.idx] += right.size();
         }
 
-        // OutPut
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < N; i++) {
             sb.append(count[i]);
@@ -99,11 +97,10 @@ public class Main {
             sb.append('\n');
         }
         System.out.println(sb);
-        // OutPutEnd
     }
 
-    private static void removeHeight(Stack stack, int[] heights, int[] count, int idx) {
-        while (!stack.isEmpty() && stack.peek().height <= heights[idx]) {
+    private static void removeHeight(Stack stack, Building[] buildings, int[] count, int idx) {
+        while (!stack.isEmpty() && stack.peek().height <= buildings[idx].height) {
             Building b = stack.pop();
             count[b.idx] = count[b.idx] + stack.size();
         }
