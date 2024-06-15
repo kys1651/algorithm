@@ -2,18 +2,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
     static ArrayList<int[]> milk = new ArrayList<>();
     static boolean[] eat;
-    static int[][] dist;
-    static boolean[][][] visit;
-    static int N, H, result;
-    static int[] dirX = {-1, 1, 0, 0};
-    static int[] dirY = {0, 0, -1, 1};
+    static int[] homeDist;
+    static int N, H, milkCount, result;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -24,7 +19,6 @@ public class Main {
         int sX = 0, sY = 0;
 
         // Input
-        dist = new int[N][N];
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
             for (int j = 0; j < N; j++) {
@@ -34,25 +28,26 @@ public class Main {
                     sY = j;
                 } else if (val == 2) {
                     milk.add(new int[]{i, j});
+                    milkCount++;
                 }
             }
         } // Input End
 
-        visit = new boolean[milk.size() + 1][N][N];
-        eat = new boolean[milk.size()];
-        // 다른 위치 -> 진우 집 갈 수 있는 거리를 구해준다.
-        getHomeDist(sX, sY);
+        // 각 우유에서 집으로 가는 거리를 구함
+        homeDist = new int[milkCount];
+        for(int i = 0; i < milkCount; i++) {
+            int[] m = milk.get(i);
+            homeDist[i] = getDist(sX,sY,m[0],m[1]);
+        }
+
+        eat = new boolean[milkCount];
         solve(sX, sY, M, 0);
         System.out.println(result);
     }
 
     private static void solve(int x, int y, int move, int eatCount) {
-        if (dist[x][y] <= move && result < eatCount) {
-            result = eatCount;
-        }
-
         // 이미 최대값만큼 먹었거나 움직일 수 없다면 멈춤
-        if (result == milk.size() || move == 0) {
+        if (result == milkCount) {
             return;
         }
 
@@ -63,38 +58,17 @@ public class Main {
             if (d > move || eat[i]) {
                 continue;
             }
+            int nextMove = move - d + H;
+            if(nextMove >= homeDist[i] && eatCount + 1 > result) {
+                result = eatCount + 1;
+            }
             eat[i] = true;
-            solve(m[0], m[1], move - d + H, eatCount + 1);
+            solve(m[0], m[1], nextMove, eatCount + 1);
             eat[i] = false;
         }
     }
 
     private static int getDist(int x1, int y1, int x2, int y2) {
         return Math.abs(x1 - x2) + Math.abs(y1 - y2);
-    }
-
-    private static void getHomeDist(int sX, int sY) {
-        Queue<int[]> q = new LinkedList<>();
-        q.add(new int[]{sX, sY});
-        boolean[][] visit = new boolean[N][N];
-        visit[sX][sY] = true;
-
-        while (!q.isEmpty()) {
-            int[] cur = q.poll();
-
-            for (int i = 0; i < 4; i++) {
-                int nX = cur[0] + dirX[i];
-                int nY = cur[1] + dirY[i];
-                if (isIn(nX, nY) && !visit[nX][nY]) {
-                    dist[nX][nY] = dist[cur[0]][cur[1]] + 1;
-                    visit[nX][nY] = true;
-                    q.offer(new int[]{nX, nY});
-                }
-            }
-        }
-    }
-
-    private static boolean isIn(int x, int y) {
-        return x >= 0 && x < N && y >= 0 && y < N;
     }
 }
