@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    static final int MOD = 1_000_000_007;
+    static final long MOD = 1_000_000_007;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -14,13 +14,9 @@ public class Main {
         StringTokenizer st;
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
-            long c = Integer.parseInt(st.nextToken());
-            long k = Integer.parseInt(st.nextToken());
-
-            long a = c * k % MOD;
-            long b = pow(k - 1);
-            long add = a * b % MOD;
-            answer = (answer + add) % MOD;
+            long c = Long.parseLong(st.nextToken());
+            long k = Long.parseLong(st.nextToken());
+            answer = (answer + (c * k % MOD) * pow(k - 1) % MOD) % MOD;
         }
         System.out.println(answer);
     }
