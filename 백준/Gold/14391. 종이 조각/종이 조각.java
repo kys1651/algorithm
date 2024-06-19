@@ -48,27 +48,29 @@ public class Main {
         visit[x][y] = false;
 
         // 가로 확인
-        for (int i = 1; x + i < N; i++) {
+        int i = 1;
+        for (; x + i < N; i++) {
             int nX = x + i;
             if (visit[nX][y]) break;
 
             tmp *= 10;
             tmp += map[nX][y];
-            for(int j = 1; j <= i; j++) visit[x + j][y] = true;
+            visit[nX][y] = true;
             solve(x, y + 1, value + tmp);
-            for(int j = 1; j <= i; j++) visit[x + j][y] = false;
         }
+        for(int j = 1; j < i; j++) visit[x + j][y] = false;
 
         tmp = map[x][y];
-        for (int i = 1; y + i < M; i++) {
+        i = 1;
+        for (; y + i < M; i++) {
             int nY = y + i;
             if (visit[x][nY]) break;
 
             tmp *= 10;
             tmp += map[x][nY];
-            for (int j = 1; j <= i; j++) visit[x][y + j] = true;
+            visit[x][nY] = true;
             solve(x, y + 1, value + tmp);
-            for (int j = 1; j <= i; j++) visit[x][y + j] = false;
         }
+        for (int j = 1; j < i; j++) visit[x][y + j] = false;
     }
 }
