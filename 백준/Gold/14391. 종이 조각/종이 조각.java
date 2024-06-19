@@ -16,6 +16,7 @@ public class Main {
 
         map = new int[N][M];
         visit = new boolean[N][M];
+
         for (int i = 0; i < N; i++) {
             String input = br.readLine();
             for (int j = 0; j < M; j++) {
@@ -41,37 +42,33 @@ public class Main {
             return;
         }
 
-        boolean[][] copy = new boolean[N][M];
-        getCopy(copy, visit);
+        int tmp = map[x][y];
+        visit[x][y] = true;
+        solve(x, y + 1, value + tmp);
+        visit[x][y] = false;
 
         // 가로 확인
-        int tmp = 0;
-        for (int i = x; i < N; i++) {
-            if(visit[i][y]) break;
+        for (int i = 1; x + i < N; i++) {
+            int nX = x + i;
+            if (visit[nX][y]) break;
+
             tmp *= 10;
-            tmp += map[i][y];
-            visit[i][y] = true;
+            tmp += map[nX][y];
+            for(int j = 1; j <= i; j++) visit[x + j][y] = true;
             solve(x, y + 1, value + tmp);
+            for(int j = 1; j <= i; j++) visit[x + j][y] = false;
         }
 
-        tmp = 0;
-        getCopy(visit, copy);
-        for (int j = y; j < M; j++) {
-            if(visit[x][j]) break;
+        tmp = map[x][y];
+        for (int i = 1; y + i < M; i++) {
+            int nY = y + i;
+            if (visit[x][nY]) break;
+
             tmp *= 10;
-            tmp += map[x][j];
-            visit[x][j] = true;
+            tmp += map[x][nY];
+            for (int j = 1; j <= i; j++) visit[x][y + j] = true;
             solve(x, y + 1, value + tmp);
-        }
-
-        getCopy(visit, copy);
-    }
-
-    private static void getCopy(boolean[][] a, boolean[][] b) {
-        for (int i = 0; i < N; i++) {
-            System.arraycopy(b[i], 0, a[i], 0, M);
+            for (int j = 1; j <= i; j++) visit[x][y + j] = false;
         }
     }
-
-
 }
