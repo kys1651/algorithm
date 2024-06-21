@@ -19,12 +19,11 @@ public class Main {
     }
 
     private static int getIdx(int x, boolean[] visit) {
-        int rt = 0, move = x;
-        while (move != 1) {
+        int rt = 0;
+        for(int move = x; move != 1; move >>= 1){
             if (visit[move]) rt = move;
-            move /= 2;
         }
-        if (rt == 0) visit[x] = true;
+        if(rt == 0) visit[x] = true;
         return rt;
     }
 }
