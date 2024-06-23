@@ -1,44 +1,39 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.io.*;
 
-public class Main {
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int N = Integer.parseInt(br.readLine());
+class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
+        int[] lis = new int[N];
+        int idx = 0;
 
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int[] LIS = new int[N];
-		int count = 0;
-		for (int i = 0; i < N; i++) {
-			int value = Integer.parseInt(st.nextToken());
-			if (i == 0) {
-				LIS[count++] = value;
-			} else {
-				if (LIS[count - 1] < value) {
-					LIS[count++] = value;
-				} else if (LIS[0] > value) {
-					LIS[0] = value;
-				} else {
-					LIS[bineary(0, count - 1, LIS, value)] = value;
-				}
-			}
-		}
-		System.out.println(count);
-	}
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < N; i++) {
+            int value = Integer.parseInt(st.nextToken());
+            if (i == 0) {
+                lis[idx++] = value;
+            } else {
+                if (lis[idx - 1] < value) {
+                    lis[idx++] = value;
+                } else if (lis[0] > value) {
+                    lis[0] = value;
+                } else {
+                    lis[search(value, idx - 1, lis)] = value;
+                }
+            }
+        }
+        System.out.println(idx);
+    }
 
-	private static int bineary(int left, int right, int[] LIS, int value) {
-		while (left <= right) {
-			int mid = (left + right) >> 1;
-			if (LIS[mid] < value) {
-				left = mid + 1;
-			} else if (LIS[mid] > value) {
-				right = mid - 1;
-			} else {
-				return mid;
-			}
-		}
-		return left;
-	}
+    private static int search(int key, int r, int[] lis) {
+        int l = 0;
+        while (l <= r) {
+            int mid = (l + r) >> 1;
+            if (lis[mid] > key) r = mid - 1;
+            else if (lis[mid] < key) l = mid + 1;
+            else return mid;
+        }
+        return l;
+    }
 }
