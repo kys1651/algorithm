@@ -11,15 +11,15 @@ class Main {
         if (K == 0) {
             System.out.println(getDist(N, M));
         } else {
-            int a = (K / M) + 1;
-            int b = K % M;
+            int a = (K / M) + (K % M == 0 ? 0 : 1);
+            int b = K - ((a - 1) * M);
             System.out.println(getDist(a, b) * getDist(N - a + 1, M - b + 1));
         }
     }
 
     private static int getDist(int x, int y) {
         int[][] dp = new int[x + 1][y + 1];
-        dp[0][1] = 1;
+        dp[1][0] = 1;
         for (int i = 1; i <= x; i++) {
             for (int j = 1; j <= y; j++) {
                 dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
