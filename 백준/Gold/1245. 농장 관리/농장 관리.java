@@ -29,34 +29,35 @@ public class Main {
             }
         } // Input End
 
+        Queue<int[]> queue = new LinkedList<>();
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
                 if (map[i][j] == 0 || visit[i][j]) {
                     continue;
                 }
-                bfs(i, j, map[i][j]);
+                queue.add(new int[]{i, j});
+                bfs(queue, map[i][j]);
             }
         }
         System.out.println(count);
     }
 
-    private static void bfs(int x, int y, int top) {
-        Queue<int[]> q = new LinkedList<>();
+    private static void bfs(Queue<int[]> queue, int top) {
         boolean isTop = true;
-        q.offer(new int[]{x, y});
 
-        while (!q.isEmpty()) {
-            int[] cur = q.poll();
+        while (!queue.isEmpty()) {
+            int[] cur = queue.poll();
 
             for (int i = 0; i < 8; i++) {
                 int nX = cur[0] + dirX[i];
                 int nY = cur[1] + dirY[i];
+
                 if (isIn(nX, nY)) {
                     if (map[nX][nY] > top) {
                         isTop = false;
                     } else if (!visit[nX][nY] && map[nX][nY] == top) {
                         visit[nX][nY] = true;
-                        q.offer(new int[]{nX, nY});
+                        queue.offer(new int[]{nX, nY});
                     }
                 }
             }
@@ -64,7 +65,6 @@ public class Main {
 
         if(isTop) count++;
     }
-
 
     private static boolean isIn(int x, int y) {
         return x >= 0 && x < N && y >= 0 && y < M;
