@@ -1,9 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -15,31 +13,28 @@ public class Main {
         int[] items = new int[N];
 
         st = new StringTokenizer(br.readLine());
-        for(int i = 0; i < N; i++) {
+        for (int i = 0; i < N; i++) {
             int value = Integer.parseInt(st.nextToken());
             items[i] = value;
-            if(value == C) {
+            if (value == C) {
                 System.out.println(1);
                 return;
             }
         }
         Arrays.sort(items);
-
-        System.out.println(isValidWeight(items, C) ? 1 : 0);
+        System.out.println(isValidWeight(items, 0, N - 1, C) ? 1 : 0);
     }
 
-    private static boolean isValidWeight(int[] items, int goal) {
-        int l = 0, r = items.length - 1;
-
-        while(l < r){
+    private static boolean isValidWeight(int[] items, int l, int r, int goal) {
+        while (l < r) {
             int sum = items[l] + items[r];
-            if(sum > goal){
+            if (sum > goal) {
                 r--;
-            }else if(sum == goal){
+            } else if (sum == goal) {
                 return true;
             } else {
                 int rest = goal - sum;
-                if(binarySearch(l + 1, r - 1, rest, items)) return true;
+                if (binarySearch(l + 1, r - 1, rest, items)) return true;
                 l++;
             }
         }
@@ -47,13 +42,13 @@ public class Main {
     }
 
     private static boolean binarySearch(int l, int r, int key, int[] items) {
-        while(l <= r){
+        while (l <= r) {
             int mid = (r + l) >> 1;
-            if(items[mid] == key){
+            if (items[mid] == key) {
                 return true;
             } else if (items[mid] < key) {
                 l = mid + 1;
-            }else {
+            } else {
                 r = mid - 1;
             }
         }
