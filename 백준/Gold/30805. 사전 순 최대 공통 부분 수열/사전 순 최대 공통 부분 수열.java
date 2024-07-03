@@ -52,39 +52,36 @@ public class Main {
             rb = tmp;
         }
 
-        while(true){
-            ArrayList<Point> listA = getList(la, ra, a);
-            ArrayList<Point> listB = getList(lb, rb, b);
-            if(!getCommon(listA,listB)){
+        while (la != ra && lb != rb) {
+            if (!getCommon(getList(la, ra, a), getList(lb, rb, b))) {
                 break;
             }
         }
 
         StringBuilder sb = new StringBuilder();
         sb.append(answer.size()).append('\n');
-        for(int idx : answer){
-            sb.append(b[idx]).append(' ');
+        for (int idx : answer) {
+            sb.append(idx).append(' ');
         }
         System.out.println(sb);
     }
 
     private static boolean getCommon(ArrayList<Point> a, ArrayList<Point> b) {
-        int aIdx = a.size()-1, bIdx =b.size()-1;
-        while(aIdx >= 0 && bIdx >= 0){
+        int aIdx = a.size() - 1, bIdx = b.size() - 1;
+        while (aIdx >= 0 && bIdx >= 0) {
             Point pA = a.get(aIdx);
             Point pB = b.get(bIdx);
-            if(pA.value == pB.value){
+            if (pA.value == pB.value) {
                 la = pA.idx + 1;
                 lb = pB.idx + 1;
-                answer.add(b.get(bIdx).idx);
+                answer.add(pB.value);
                 return true;
-            }else if(pA.value > pB.value){
+            } else if (pA.value > pB.value) {
                 aIdx--;
-            }else{
+            } else {
                 bIdx--;
             }
         }
-
         return false;
     }
 
