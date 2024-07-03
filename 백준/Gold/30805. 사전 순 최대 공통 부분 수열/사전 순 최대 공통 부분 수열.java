@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.StringTokenizer;
 
@@ -22,8 +23,8 @@ public class Main {
         }
     }
 
-    static int la, ra, lb, rb;
-    static ArrayList<Integer> answer = new ArrayList<>();
+    static int la, ra, lb, rb, size;
+    static int[] answer = new int[101];
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -35,7 +36,6 @@ public class Main {
         for (int i = 0; i < ra; i++) {
             a[i] = Integer.parseInt(st.nextToken());
         }
-
         rb = Integer.parseInt(br.readLine());
         int[] b = new int[rb];
         st = new StringTokenizer(br.readLine());
@@ -43,38 +43,25 @@ public class Main {
             b[i] = Integer.parseInt(st.nextToken());
         }// Input End
 
-        if (ra > rb) {
-            int[] tmpArr = a;
-            a = b;
-            b = tmpArr;
-            int tmp = ra;
-            ra = rb;
-            rb = tmp;
-        }
-
         while (la != ra && lb != rb) {
-            if (!getCommon(getList(la, ra, a), getList(lb, rb, b))) {
-                break;
-            }
+            if (!getCommon(getList(la, ra, a), getList(lb, rb, b))) break;
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.append(answer.size()).append('\n');
-        for (int idx : answer) {
-            sb.append(idx).append(' ');
-        }
+        sb.append(size).append('\n');
+        for(int i = 0; i < size; i++) sb.append(answer[i]).append(' ');
         System.out.println(sb);
     }
 
-    private static boolean getCommon(ArrayList<Point> a, ArrayList<Point> b) {
-        int aIdx = a.size() - 1, bIdx = b.size() - 1;
+    private static boolean getCommon(Point[] a, Point[] b) {
+        int aIdx = a.length - 1, bIdx = b.length - 1;
         while (aIdx >= 0 && bIdx >= 0) {
-            Point pA = a.get(aIdx);
-            Point pB = b.get(bIdx);
+            Point pA = a[aIdx];
+            Point pB = b[bIdx];
             if (pA.value == pB.value) {
                 la = pA.idx + 1;
                 lb = pB.idx + 1;
-                answer.add(pB.value);
+                answer[size++] = pB.value;
                 return true;
             } else if (pA.value > pB.value) {
                 aIdx--;
@@ -85,12 +72,12 @@ public class Main {
         return false;
     }
 
-    private static ArrayList<Point> getList(int l, int r, int[] arr) {
-        ArrayList<Point> list = new ArrayList<>();
+    private static Point[] getList(int l, int r, int[] arr) {
+        Point[] points = new Point[r - l];
         for (int i = l; i < r; i++) {
-            list.add(new Point(arr[i], i));
+            points[i - l] = new Point(arr[i], i);
         }
-        Collections.sort(list);
-        return list;
+        Arrays.sort(points);
+        return points;
     }
 }
