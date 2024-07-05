@@ -3,23 +3,24 @@ import java.io.*;
 
 public class Main {
     static final String CONFUSED = "Confused";
-    static ArrayList<Integer>[] graph;
-    static Stack<Integer> stack;
+    static int size, idx;
     static int[] sccIdx, parent;
     static boolean[] visit;
-    static int idx, size;
+    static ArrayList<Integer>[] graph;
+    static Stack<Integer> stack;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
         StringTokenizer st;
+        int N, M;
         int T = Integer.parseInt(br.readLine());
         for (int t = 0; t < T; t++) {
             if (t != 0) br.readLine();
-
             st = new StringTokenizer(br.readLine());
-            int N = Integer.parseInt(st.nextToken());
-            int M = Integer.parseInt(st.nextToken());
+
+            N = Integer.parseInt(st.nextToken());
+            M = Integer.parseInt(st.nextToken());
 
             init(N);
 
@@ -30,8 +31,18 @@ public class Main {
                 graph[from].add(to);
             }
 
-            SCC(N);
-            int[] inDegree = getInDegree(N);
+            for (int i = 0; i < N; i++) {
+                if (parent[i] == 0) SCC(i);
+            }
+
+            int[] inDegree = new int[size];
+            for (int i = 0; i < N; i++) {
+                for (int next : graph[i]) {
+                    if (sccIdx[i] != sccIdx[next]) {
+                        inDegree[sccIdx[next]]++;
+                    }
+                }
+            }
 
             int count = 0, start = 0;
             for (int i = 0; i < size; i++) {
@@ -42,10 +53,10 @@ public class Main {
             }
 
             if (count != 1) {
-                sb.append(CONFUSED).append('\n');
+                sb.append(CONFUSED).append("\n");
             } else {
                 for (int i = 0; i < N; i++) {
-                    if (sccIdx[i] == start) {
+                    if (start == sccIdx[i]) {
                         sb.append(i).append('\n');
                     }
                 }
@@ -55,31 +66,13 @@ public class Main {
         System.out.println(sb);
     }
 
-    private static int[] getInDegree(int N) {
-        int[] inDegree = new int[size];
-        for (int i = 0; i < N; i++) {
-            for (int next : graph[i]) {
-                if (sccIdx[i] != sccIdx[next]) {
-                    inDegree[sccIdx[next]]++;
-                }
-            }
-        }
-        return inDegree;
-    }
-
-    private static void SCC(int N) {
-        for (int i = 0; i < N; i++) {
-            if (parent[i] == 0) dfs(i);
-        }
-    }
-
-    private static int dfs(int cur) {
+    private static int SCC(int cur) {
         parent[cur] = ++idx;
         stack.push(cur);
 
         int p = parent[cur];
         for (int next : graph[cur]) {
-            if (parent[next] == 0) p = Math.min(p, dfs(next));
+            if (parent[next] == 0) p = Math.min(p, SCC(next));
             else if (!visit[next]) p = Math.min(p, parent[next]);
         }
 
@@ -95,13 +88,13 @@ public class Main {
         return p;
     }
 
-    private static void init(int N) {
-        idx = size = 0;
-        parent = new int[N];
-        sccIdx = new int[N];
-        visit = new boolean[N];
-        graph = new ArrayList[N];
-        for (int i = 0; i < N; i++) graph[i] = new ArrayList<>();
+    private static void init(int n) {
+        graph = new ArrayList[n];
+        for (int i = 0; i < n; i++) graph[i] = new ArrayList<>();
         stack = new Stack<>();
+        sccIdx = new int[n];
+        parent = new int[n];
+        visit = new boolean[n];
+        size = idx = 0;
     }
 }
