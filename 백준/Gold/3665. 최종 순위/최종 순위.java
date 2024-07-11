@@ -37,51 +37,49 @@ public class Main {
                 st = new StringTokenizer(br.readLine());
                 int a = Integer.parseInt(st.nextToken());
                 int b = Integer.parseInt(st.nextToken());
-                if (graph[a][b]) {
-                    graph[a][b] = false;
-                    graph[b][a] = true;
-                    inDegree[a]++;
-                    inDegree[b]--;
-                } else {
-                    graph[b][a] = false;
-                    graph[a][b] = true;
-                    inDegree[b]++;
-                    inDegree[a]--;
+                if (!graph[a][b]) {
+                    int tmp = a;
+                    a = b;
+                    b = tmp;
                 }
+                graph[a][b] = false;
+                graph[b][a] = true;
+                inDegree[a]++;
+                inDegree[b]--;
             }
 
-            Queue<Integer> queue = new LinkedList<>();
-            for (int i = 1; i <= N; i++) {
-                if (inDegree[i] == 0) {
-                    queue.add(i);
-                }
-            }
-
-            int count = N;
-            while(count != 0){
-                if (queue.isEmpty()) {
-                    break;
-                }
-
-                int cur = queue.poll();
-                rank[count--] = cur;
-                for (int i = 1; i <= N; i++) {
-                    if (i == cur || !graph[cur][i]) continue;
-                    if (--inDegree[i] == 0) {
-                        queue.add(i);
-                    }
-                }
-            }
-            if (count == 0) {
-                for (int i = 1; i <= N; i++) {
-                    sb.append(rank[i]).append(' ');
-                }
-            } else {
-                sb.append(FAIL);
-            }
-            sb.append('\n');
+            sb.append(topologySort(N, rank, graph, inDegree)).append('\n');
         }
         System.out.println(sb);
 
+    }
+
+    private static String topologySort(int N, int[] rank, boolean[][] graph, int[] inDegree) {
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 1; i <= N; i++) {
+            if (inDegree[i] == 0) queue.add(i);
+        }
+
+        int count = N;
+        while (count != 0) {
+            if (queue.isEmpty()) {
+                return FAIL;
+            }
+
+            int cur = queue.poll();
+            rank[count--] = cur;
+            for (int i = 1; i <= N; i++) {
+                if (i == cur || !graph[cur][i]) continue;
+                if (--inDegree[i] == 0) {
+                    queue.add(i);
+                }
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; i <= N; i++) {
+            sb.append(rank[i]).append(' ');
+        }
+        return sb.toString();
     }
 }
