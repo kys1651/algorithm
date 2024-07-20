@@ -18,7 +18,6 @@ public class Main {
     }
 
     static HashMap<Integer, ArrayList<Cat>> map = new HashMap<>();
-    static ArrayList<Integer> catPos = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
