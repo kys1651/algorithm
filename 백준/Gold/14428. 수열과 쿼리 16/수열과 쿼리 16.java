@@ -21,14 +21,8 @@ public class Main {
         }
 
         private void init(int n) {
-            for (int i = 1; i <= n; i++) {
-                // 각 인덱스를 집어 넣어줌
-                tree[len + i] = i;
-            }
-
-            for (int i = len - 1; i >= 1; i--) {
-                tree[i] = compare(tree[i * 2], tree[i * 2 + 1]);
-            }
+            for (int i = 1; i <= n; i++) tree[len + i] = i;
+            for (int i = len - 1; i >= 1; i--) tree[i] = compare(tree[i * 2], tree[i * 2 + 1]);
         }
 
         public void update(int idx, int newValue) {
@@ -44,23 +38,18 @@ public class Main {
         public int query(int idx, int s, int e, int ts, int te) {
             if(s > te || e < ts) return 0; // 범위밖이면 0
             else if (ts <= s && e <= te) return tree[idx]; // 범위에 포함되면 최소값 인덱스 리턴
-
             int mid = (s + e) >> 1;
-            int left = query(2 * idx, s, mid, ts, te);
-            int right = query(idx * 2 + 1, mid + 1, e, ts, te);
-            return compare(left, right);
+            return compare(query(2 * idx, s, mid, ts, te), query(idx * 2 + 1, mid + 1, e, ts, te));
         }
 
         private int compare(int leftIdx, int rightIdx) {
-            if (leftIdx == 0 && rightIdx == 0) return 0;
-            else if (leftIdx == 0) return rightIdx;
-            else if (rightIdx == 0) return leftIdx;
+            if (leftIdx == 0 || rightIdx == 0) return leftIdx == 0 ? rightIdx : leftIdx;
             int leftValue = arr[leftIdx];
             int rightValue = arr[rightIdx];
-            if (leftValue == rightValue) return Math.min(leftIdx, rightIdx);
-            else if(leftValue > rightValue) return rightIdx;
-            else return leftIdx;
+            return (leftValue == rightValue) ? Math.min(leftIdx, rightIdx)
+                    : (leftValue > rightValue) ? rightIdx : leftIdx;
         }
+
     }
 
     public static void main(String[] args) throws IOException {
