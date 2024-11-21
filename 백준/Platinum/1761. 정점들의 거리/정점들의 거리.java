@@ -33,8 +33,7 @@ public class Main {
             int from = Integer.parseInt(st.nextToken());
             int to = Integer.parseInt(st.nextToken());
             int cost = Integer.parseInt(st.nextToken());
-            tree[from].add(new Weight(to, cost));
-            tree[to].add(new Weight(from, cost));
+            putEdge(from, to, cost);
         }
 
         setTree(1, 1, 0, 0);
@@ -46,14 +45,13 @@ public class Main {
             st = new StringTokenizer(br.readLine());
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
-            int lca = getLCA(a, b);
-            int result = cost[a] + cost[b] - (cost[lca] * 2);
-            sb.append(result).append('\n');
+            sb.append(query(a, b)).append('\n');
         }
         System.out.println(sb);
     }
 
-    private static int getLCA(int a, int b) {
+    private static int query(int a, int b) {
+        int result = cost[a] + cost[b];
         int aH = depth[a];
         int bH = depth[b];
         if (aH < bH) {
@@ -63,12 +61,14 @@ public class Main {
         }
 
         for (int i = maxDepth - 1; i >= 0; i--) {
-            if (Math.pow(2, i) <= depth[a] - depth[b]) {
+            if ((1 << i) <= depth[a] - depth[b]) {
                 a = parent[a][i];
             }
         }
 
-        if (a == b) return a;
+        if (a == b){
+            return result - cost[a] - cost[b];
+        }
 
         for (int i = maxDepth - 1; i >= 0; i--) {
             if (parent[a][i] != parent[b][i]) {
@@ -76,13 +76,14 @@ public class Main {
                 b = parent[b][i];
             }
         }
-        return parent[a][0];
+        return result - cost[parent[a][0]] * 2;
     }
 
     private static void fillParent() {
         for (int i = 1; i <= maxDepth; i++) {
             for (int j = 1; j <= N; j++) {
-                parent[j][i] = parent[parent[j][i - 1]][i - 1];
+                int p = parent[j][i - 1];
+                parent[j][i] = parent[p][i - 1];
             }
         }
     }
@@ -110,5 +111,10 @@ public class Main {
 
     private static void getMaxDepth(int n) {
         maxDepth = (int) Math.ceil(Math.log(n) / Math.log(2)) + 1;
+    }
+
+    private static void putEdge(int from, int to, int cost) {
+        tree[from].add(new Weight(to, cost));
+        tree[to].add(new Weight(from, cost));
     }
 }
