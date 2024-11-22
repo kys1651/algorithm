@@ -14,17 +14,22 @@ public class Main {
             st = new StringTokenizer(br.readLine());
             int start = Integer.parseInt(st.nextToken());
             int end = Integer.parseInt(st.nextToken());
-            int distance = end - start;
-            int max = (int) Math.sqrt(distance);
-            if (max == Math.sqrt(distance)) {
-                answer.append(2 * max - 1);
-            } else if (distance <= max * max + max) {
-                answer.append(2 * max);
-            } else {
-                answer.append(2 * max + 1);
-            }
-            answer.append('\n');
+            answer.append(solve(start, end)).append('\n');
         }
         System.out.println(answer);
+    }
+
+    private static int solve(int from, int to) {
+        int distance = to - from;
+        int max = (int) Math.sqrt(distance);
+        int moveCount = 2 * max;
+
+        if (max == Math.sqrt(distance)) {
+            return moveCount - 1;
+        }
+        if (distance <= max * max + max) {
+            return moveCount;
+        }
+        return moveCount + 1;
     }
 }
