@@ -1,1 +1,1 @@
-# algorithm study
+# 알고리즘 정리 레포지토리
