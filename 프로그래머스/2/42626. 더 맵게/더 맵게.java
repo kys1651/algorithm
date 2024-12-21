@@ -8,15 +8,13 @@ class Solution {
         }
         
         int answer = 0;
-        while(true){
-            if(pq.isEmpty() || pq.peek() >= K) break;
+        while(!pq.isEmpty() && pq.peek() < K){
             int a = pq.poll();
             if(pq.isEmpty()){
                 answer = -1;
                 break;
             }
-            int b = pq.poll();
-            pq.add(a + b * 2);
+            pq.add(a + pq.poll() * 2);
             answer++;
         }
         
